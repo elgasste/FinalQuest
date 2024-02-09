@@ -20,6 +20,8 @@
 
 #define GAME_FPS        60
 
+#define DEBUG_FONT      "resources/fonts/consolas.ttf"
+
 #define TOGGLE_BOOL( x ) x = x ? sfFalse : sfTrue;
 
 // globals

@@ -33,7 +33,7 @@ static qDiagnosticsRenderObjects_t* qDiagnosticsRenderObjects_Create()
    sfRectangleShape_setSize( objects->backgroundRect, backgroundSize );
    sfRectangleShape_setPosition( objects->backgroundRect, backgroundPos );
    sfRectangleShape_setFillColor( objects->backgroundRect, sfBlue );
-   objects->font = qFont_CreateFromFile( "consolas.ttf" );
+   objects->font = qFont_CreateFromFile( DEBUG_FONT );
    objects->textPosition.x = WINDOW_WIDTH - backgroundSize.x + 8;
    objects->text = qText_Create();
    sfText_setFont( objects->text, objects->font );
@@ -56,7 +56,7 @@ static qDebugBarRenderObjects_t* qDebugBarRenderObjects_Create()
    sfRectangleShape_setSize( objects->backgroundRect, backgroundSize );
    sfRectangleShape_setPosition( objects->backgroundRect, backgroundPos );
    sfRectangleShape_setFillColor( objects->backgroundRect, sfWhite );
-   objects->font = qFont_CreateFromFile( "consolas.ttf" );
+   objects->font = qFont_CreateFromFile( DEBUG_FONT );
    objects->text = qText_Create();
    sfText_setFont( objects->text, objects->font );
    sfText_setCharacterSize( objects->text, 12 );
