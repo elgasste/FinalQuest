@@ -24,13 +24,13 @@ static qDiagnosticsRenderObjects_t* qDiagnosticsRenderObjects_Create()
 
    qDiagnosticsRenderObjects_t* objects = (qDiagnosticsRenderObjects_t*)qAlloc( sizeof( qDiagnosticsRenderObjects_t ), sfTrue );
 
-   objects->backgroundRect = qRectangleShape_Create();
+   objects->backgroundRect = qsfRectangleShape_Create();
    sfRectangleShape_setSize( objects->backgroundRect, backgroundSize );
    sfRectangleShape_setPosition( objects->backgroundRect, backgroundPos );
    sfRectangleShape_setFillColor( objects->backgroundRect, sfBlue );
-   objects->font = qFont_CreateFromFile( DEBUG_FONT );
+   objects->font = qsfFont_CreateFromFile( DEBUG_FONT );
    objects->textPosition.x = WINDOW_WIDTH - backgroundSize.x + 8;
-   objects->text = qText_Create();
+   objects->text = qsfText_Create();
    sfText_setFont( objects->text, objects->font );
    sfText_setCharacterSize( objects->text, 12 );
    sfText_setFillColor( objects->text, sfWhite );
@@ -47,12 +47,12 @@ static qDebugBarRenderObjects_t* qDebugBarRenderObjects_Create()
 
    qDebugBarRenderObjects_t* objects = (qDebugBarRenderObjects_t*)qAlloc( sizeof( qDebugBarRenderObjects_t ), sfTrue );
 
-   objects->backgroundRect = qRectangleShape_Create();
+   objects->backgroundRect = qsfRectangleShape_Create();
    sfRectangleShape_setSize( objects->backgroundRect, backgroundSize );
    sfRectangleShape_setPosition( objects->backgroundRect, backgroundPos );
    sfRectangleShape_setFillColor( objects->backgroundRect, sfWhite );
-   objects->font = qFont_CreateFromFile( DEBUG_FONT );
-   objects->text = qText_Create();
+   objects->font = qsfFont_CreateFromFile( DEBUG_FONT );
+   objects->text = qsfText_Create();
    sfText_setFont( objects->text, objects->font );
    sfText_setCharacterSize( objects->text, 12 );
    sfText_setFillColor( objects->text, sfBlack );
@@ -67,9 +67,9 @@ static qMapRenderObjects_t* qMapRenderObjects_Create()
 
    qMapRenderObjects_t* objects = (qMapRenderObjects_t*)qAlloc( sizeof( qMapRenderObjects_t ), sfTrue );
 
-   objects->tilesetTexture = qTexture_CreateFromFile( "resources/textures/tiles/map_tileset.png" );
+   objects->tilesetTexture = qsfTexture_CreateFromFile( "resources/textures/tiles/map_tileset.png" );
 
-   objects->tileSprite = qSprite_Create();
+   objects->tileSprite = qsfSprite_Create();
    sfSprite_setTexture( objects->tileSprite, objects->tilesetTexture, sfFalse );
    sfSprite_scale( objects->tileSprite, tilesetScale );
 
@@ -87,26 +87,26 @@ void qRenderObjects_Destroy( qRenderObjects_t* objects )
 
 void qDiagnosticsRenderObjects_Destroy( qDiagnosticsRenderObjects_t* objects )
 {
-   qText_Destroy( objects->text );
-   qFont_Destroy( objects->font );
-   qRectangleShape_Destroy( objects->backgroundRect );
+   qsfText_Destroy( objects->text );
+   qsfFont_Destroy( objects->font );
+   qsfRectangleShape_Destroy( objects->backgroundRect );
 
    qFree( objects, sizeof( qDiagnosticsRenderObjects_t ), sfTrue );
 }
 
 static void qDebugBarRenderObjects_Destroy( qDebugBarRenderObjects_t* objects )
 {
-   qText_Destroy( objects->text );
-   qFont_Destroy( objects->font );
-   qRectangleShape_Destroy( objects->backgroundRect );
+   qsfText_Destroy( objects->text );
+   qsfFont_Destroy( objects->font );
+   qsfRectangleShape_Destroy( objects->backgroundRect );
 
    qFree( objects, sizeof( qDebugBarRenderObjects_t ), sfTrue );
 }
 
 static void qMapRenderObjects_Destroy( qMapRenderObjects_t* objects )
 {
-   qSprite_Destroy( objects->tileSprite );
-   qTexture_Destroy( objects->tilesetTexture );
+   qsfSprite_Destroy( objects->tileSprite );
+   qsfTexture_Destroy( objects->tilesetTexture );
 
    qFree( objects, sizeof( qMapRenderObjects_t ), sfTrue );
 }

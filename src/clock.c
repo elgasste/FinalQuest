@@ -4,7 +4,7 @@ qClock_t* gmClock_Create()
 {
    qClock_t* clock = (qClock_t*)qAlloc( sizeof( qClock_t ), sfTrue );
 
-   clock->sfmlClock = qInnerClock_Create();
+   clock->sfmlClock = qsfClock_Create();
    clock->frameDeltaSeconds = 1.0f / GAME_FPS;
    clock->maxFrameDurationMicro = (sfInt64)( (double)clock->frameDeltaSeconds * 1000000 );
    clock->totalFrameCount = 0;
@@ -18,7 +18,7 @@ qClock_t* gmClock_Create()
 
 void qClock_Destroy( qClock_t* clock )
 {
-   qInnerClock_Destroy( clock->sfmlClock );
+   qsfClock_Destroy( clock->sfmlClock );
 
    qFree( clock, sizeof( qClock_t ), sfTrue );
 }

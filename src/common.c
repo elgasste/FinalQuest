@@ -123,109 +123,109 @@ void qFree( void* obj, size_t size, sfBool track )
    }
 }
 
-sfRenderWindow* qRenderWindow_Create( sfVideoMode mode, const char* title, sfUint32 style, const sfContextSettings* settings )
+sfRenderWindow* qsfRenderWindow_Create( sfVideoMode mode, const char* title, sfUint32 style, const sfContextSettings* settings )
 {
    INCREMENT_SFML()
    return sfRenderWindow_create( mode, title, style, settings );
 }
 
-sfClock* qInnerClock_Create()
+sfClock* qsfClock_Create()
 {
    INCREMENT_SFML()
    return sfClock_create();
 }
 
-sfRectangleShape* qRectangleShape_Create()
+sfRectangleShape* qsfRectangleShape_Create()
 {
    INCREMENT_SFML()
    return sfRectangleShape_create();
 }
 
-sfCircleShape* qCircleShape_Create()
+sfCircleShape* qsfCircleShape_Create()
 {
    INCREMENT_SFML()
    return sfCircleShape_create();
 }
 
-sfConvexShape* qConvexShape_Create()
+sfConvexShape* qsfConvexShape_Create()
 {
    INCREMENT_SFML()
    return sfConvexShape_create();
 }
 
-sfFont* qFont_CreateFromFile( const char* filePath )
+sfFont* qsfFont_CreateFromFile( const char* filePath )
 {
    INCREMENT_SFML()
    return sfFont_createFromFile( filePath );
 }
 
-sfText* qText_Create()
+sfText* qsfText_Create()
 {
    INCREMENT_SFML()
    return sfText_create();
 }
 
-sfTexture* qTexture_CreateFromFile( const char* filePath )
+sfTexture* qsfTexture_CreateFromFile( const char* filePath )
 {
    INCREMENT_SFML()
    return sfTexture_createFromFile( filePath, 0 );
 }
 
-sfSprite* qSprite_Create()
+sfSprite* qsfSprite_Create()
 {
    INCREMENT_SFML()
    return sfSprite_create();
 }
 
-void qRenderWindow_Destroy( sfRenderWindow* window )
+void qsfRenderWindow_Destroy( sfRenderWindow* window )
 {
    DECREMENT_SFML()
    sfRenderWindow_destroy( window );
 }
 
-void qInnerClock_Destroy( sfClock* clock )
+void qsfClock_Destroy( sfClock* clock )
 {
    DECREMENT_SFML()
    sfClock_destroy( clock );
 }
 
-void qRectangleShape_Destroy( sfRectangleShape* rect )
+void qsfRectangleShape_Destroy( sfRectangleShape* rect )
 {
    DECREMENT_SFML()
    sfRectangleShape_destroy( rect );
 }
 
-void qCircleShape_Destroy( sfCircleShape* circle )
+void qsfCircleShape_Destroy( sfCircleShape* circle )
 {
    DECREMENT_SFML()
    sfCircleShape_destroy( circle );
 }
 
-void qConvexShape_Destroy( sfConvexShape* shape )
+void qsfConvexShape_Destroy( sfConvexShape* shape )
 {
    DECREMENT_SFML()
    sfConvexShape_destroy( shape );
 }
 
-void qFont_Destroy( sfFont* font )
+void qsfFont_Destroy( sfFont* font )
 {
    DECREMENT_SFML()
    sfFont_destroy( font );
 }
 
-void qText_Destroy( sfText* text )
+void qsfText_Destroy( sfText* text )
 {
    DECREMENT_SFML()
    sfText_destroy( text );
 }
 
-void qTexture_Destroy( sfTexture* texture )
+void qsfTexture_Destroy( sfTexture* texture )
 {
    DECREMENT_SFML()
    sfTexture_destroy( texture );
 }
 
-void qSprite_Destroy( sfSprite* sprite )
+void qsfSprite_Destroy( sfSprite* sprite )
 {
    DECREMENT_SFML()
    sfSprite_destroy( sprite );

@@ -22,7 +22,7 @@ qRenderer_t* qRenderer_Create()
    renderer->renderObjects = qRenderObjects_Create();
    renderer->renderStates = qRenderStates_Create();
 
-   renderer->windowBackgroundRect = qRectangleShape_Create();
+   renderer->windowBackgroundRect = qsfRectangleShape_Create();
    sfRectangleShape_setSize( renderer->windowBackgroundRect, windowBackgroundSize );
    sfRectangleShape_setPosition( renderer->windowBackgroundRect, windowBackgroundPosition );
    sfRectangleShape_setFillColor( renderer->windowBackgroundRect, sfBlack );
@@ -35,7 +35,7 @@ qRenderer_t* qRenderer_Create()
 
 void qRenderer_Destroy( qRenderer_t* renderer )
 {
-   qRectangleShape_Destroy( renderer->windowBackgroundRect );
+   qsfRectangleShape_Destroy( renderer->windowBackgroundRect );
 
    qRenderStates_Destroy( renderer->renderStates );
    qRenderObjects_Destroy( renderer->renderObjects );

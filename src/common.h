@@ -49,24 +49,24 @@ void* qAlloc( size_t size, sfBool track );
 void* qCalloc( size_t count, size_t size, sfBool track );
 void qFree( void* obj, size_t size, sfBool track );
 
-sfRenderWindow* qRenderWindow_Create( sfVideoMode mode, const char* title, sfUint32 style, const sfContextSettings* settings );
-sfClock* qInnerClock_Create();
-sfRectangleShape* qRectangleShape_Create();
-sfCircleShape* qCircleShape_Create();
-sfConvexShape* qConvexShape_Create();
-sfFont* qFont_CreateFromFile( const char* filePath );
-sfText* qText_Create();
-sfTexture* qTexture_CreateFromFile( const char* filePath );
-sfSprite* qSprite_Create();
+sfRenderWindow* qsfRenderWindow_Create( sfVideoMode mode, const char* title, sfUint32 style, const sfContextSettings* settings );
+sfClock* qsfClock_Create();
+sfRectangleShape* qsfRectangleShape_Create();
+sfCircleShape* qsfCircleShape_Create();
+sfConvexShape* qsfConvexShape_Create();
+sfFont* qsfFont_CreateFromFile( const char* filePath );
+sfText* qsfText_Create();
+sfTexture* qsfTexture_CreateFromFile( const char* filePath );
+sfSprite* qsfSprite_Create();
 
-void qRenderWindow_Destroy( sfRenderWindow* window );
-void qInnerClock_Destroy( sfClock* clock );
-void qRectangleShape_Destroy( sfRectangleShape* rect );
-void qCircleShape_Destroy( sfCircleShape* circle );
-void qConvexShape_Destroy( sfConvexShape* shape );
-void qFont_Destroy( sfFont* font );
-void qText_Destroy( sfText* text );
-void qTexture_Destroy( sfTexture* texture );
-void qSprite_Destroy( sfSprite* sprite );
+void qsfRenderWindow_Destroy( sfRenderWindow* window );
+void qsfClock_Destroy( sfClock* clock );
+void qsfRectangleShape_Destroy( sfRectangleShape* rect );
+void qsfCircleShape_Destroy( sfCircleShape* circle );
+void qsfConvexShape_Destroy( sfConvexShape* shape );
+void qsfFont_Destroy( sfFont* font );
+void qsfText_Destroy( sfText* text );
+void qsfTexture_Destroy( sfTexture* texture );
+void qsfSprite_Destroy( sfSprite* sprite );
 
 #endif // COMMON_H
