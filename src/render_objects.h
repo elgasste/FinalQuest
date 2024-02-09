@@ -33,6 +33,8 @@ typedef struct qRenderObjects_t
    qDiagnosticsRenderObjects_t* diagnostics;
    qDebugBarRenderObjects_t* debugBar;
    qMapRenderObjects_t* map;
+
+   sfTexture* spriteTextures;
 }
 qRenderObjects_t;
 

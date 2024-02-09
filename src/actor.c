@@ -1,18 +1,28 @@
 #include "actor.h"
 #include "entity.h"
+#include "sprite.h"
 
-qActor_t* qActor_Create( sfVector2f mapPos, sfVector2f mapHitBoxSize, float maxVelocity )
+qActor_t* qActor_Create( sfVector2f mapPos, sfVector2f mapHitBoxSize, float maxVelocity,
+                         sfTexture* texture, uint32_t frames, float frameSeconds )
 {
    qActor_t* actor = (qActor_t*)qAlloc( sizeof( qActor_t ), sfTrue );
 
    actor->entity = qEntity_Create( mapPos, mapHitBoxSize, maxVelocity );
+   actor->sprite = qSprite_Create( texture, frames, frameSeconds );
 
    return actor;
 }
 
 void qActor_Destroy( qActor_t* actor )
 {
+   qSprite_Destroy( actor->sprite );
    qEntity_Destroy( actor->entity );
 
    qFree( actor, sizeof( qActor_t ), sfTrue );
+}
+
+void qActor_SetDirection( qActor_t* actor, qDirection_t direction )
+{
+   actor->entity->direction = direction;
+   qSprite_SetDirection( actor->sprite, direction );
 }

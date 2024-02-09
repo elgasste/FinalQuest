@@ -14,6 +14,9 @@ qRenderObjects_t* qRenderObjects_Create()
    renderObjects->debugBar = qDebugBarRenderObjects_Create();
    renderObjects->map = qMapRenderObjects_Create();
 
+   // just one sprite for now
+   renderObjects->spriteTextures = qsfTexture_CreateFromFile( "resources/textures/sprites/character0.png" );
+
    return renderObjects;
 }
 
@@ -78,6 +81,8 @@ static qMapRenderObjects_t* qMapRenderObjects_Create()
 
 void qRenderObjects_Destroy( qRenderObjects_t* objects )
 {
+   qsfTexture_Destroy( objects->spriteTextures );
+
    qMapRenderObjects_Destroy( objects->map );
    qDebugBarRenderObjects_Destroy( objects->debugBar );
    qDiagnosticsRenderObjects_Destroy( objects->diagnostics );

@@ -5,6 +5,7 @@
 #include "input_handler.h"
 #include "renderer.h"
 #include "render_states.h"
+#include "render_objects.h"
 #include "map.h"
 #include "random.h"
 #include "actor.h"
@@ -42,7 +43,7 @@ qGame_t* qGame_Create()
    }
 
    // just one actor for now
-   game->actors = qActor_Create( actorPos, actorHitBoxSize, 100.0f );
+   game->actors = qActor_Create( actorPos, actorHitBoxSize, 100.0f, game->renderer->renderObjects->spriteTextures, 4, 0.15f );
    game->controllingActor = &( game->actors[0] );
 
    game->showDiagnostics = sfFalse;
