@@ -27,3 +27,15 @@ void qActor_SetDirection( qActor_t* actor, qDirection_t direction )
    actor->entity->direction = direction;
    qSprite_SetDirection( actor->sprite, direction );
 }
+
+void qActor_Tic( qActor_t* actor, qClock_t* clock )
+{
+   if ( actor->entity->velocity.x == 0 && actor->entity->velocity.y == 0 )
+   {
+      qSprite_Stop( actor->sprite );
+   }
+   else
+   {
+      qSprite_Tic( actor->sprite, actor->entity->direction, clock );
+   }
+}

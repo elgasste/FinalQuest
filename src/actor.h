@@ -7,6 +7,7 @@
 typedef struct qEntity_t qEntity_t;
 typedef struct qSprite_t qSprite_t;
 typedef struct qSpriteTexture_t qSpriteTexture_t;
+typedef struct qClock_t qClock_t;
 
 typedef struct qActor_t
 {
@@ -20,5 +21,6 @@ qActor_t* qActor_Create( sfVector2f mapPos, sfVector2f mapHitBoxSize, float maxV
                          qSpriteTexture_t* spriteTexture, sfVector2f spriteOffset, float spriteFrameSeconds );
 void qActor_Destroy( qActor_t* actor );
 void qActor_SetDirection( qActor_t* actor, qDirection_t direction );
+void qActor_Tic( qActor_t* actor, qClock_t* clock );
 
 #endif // ACTOR_H
