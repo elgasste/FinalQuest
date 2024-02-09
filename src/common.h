@@ -13,14 +13,18 @@
 
 #define LOG_FILENAME    "log.txt"
 
-#define WINDOW_WIDTH    1024
-#define WINDOW_HEIGHT   960
+#define GRAPHICS_SCALE  2
+
+#define WINDOW_WIDTH    512 * GRAPHICS_SCALE
+#define WINDOW_HEIGHT   480 * GRAPHICS_SCALE
 #define WINDOW_BPP      32
 #define WINDOW_STYLE    sfTitlebar | sfClose
 
 #define GAME_FPS        60
 
 #define DEBUG_FONT      "resources/fonts/consolas.ttf"
+
+#define MAP_TILE_SIZE   32
 
 #define TOGGLE_BOOL( x ) x = x ? sfFalse : sfTrue;
 

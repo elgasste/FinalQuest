@@ -2,22 +2,17 @@
 
 static qDiagnosticsRenderObjects_t* qDiagnosticsRenderObjects_Create();
 static qDebugBarRenderObjects_t* qDebugBarRenderObjects_Create();
+static qOverworldMapRenderObjects_t* qOverworldMapRenderObjects_Create();
 static void qDiagnosticsRenderObjects_Destroy( qDiagnosticsRenderObjects_t* objects );
 static void qDebugBarRenderObjects_Destroy( qDebugBarRenderObjects_t* objects );
+static void qOverworldMapRenderObjects_Destroy( qOverworldMapRenderObjects_t* objects );
 
 qRenderObjects_t* qRenderObjects_Create()
 {
-   sfVector2f windowBackgroundSize = { WINDOW_WIDTH, WINDOW_HEIGHT };
-   sfVector2f windowBackgroundPosition = { 0, 0 };
-
    qRenderObjects_t* renderObjects = (qRenderObjects_t*)qAlloc( sizeof( qRenderObjects_t ), sfTrue );
-   renderObjects->diagnosticsRenderObjects = qDiagnosticsRenderObjects_Create();
-   renderObjects->debugBarRenderObjects = qDebugBarRenderObjects_Create();
-
-   renderObjects->windowBackgroundRect = qRectangleShape_Create();
-   sfRectangleShape_setSize( renderObjects->windowBackgroundRect, windowBackgroundSize );
-   sfRectangleShape_setPosition( renderObjects->windowBackgroundRect, windowBackgroundPosition );
-   sfRectangleShape_setFillColor( renderObjects->windowBackgroundRect, sfBlack );
+   renderObjects->diagnostics = qDiagnosticsRenderObjects_Create();
+   renderObjects->debugBar = qDebugBarRenderObjects_Create();
+   renderObjects->overworldMap = qOverworldMapRenderObjects_Create();
 
    return renderObjects;
 }
@@ -66,12 +61,26 @@ static qDebugBarRenderObjects_t* qDebugBarRenderObjects_Create()
    return objects;
 }
 
+static qOverworldMapRenderObjects_t* qOverworldMapRenderObjects_Create()
+{
+   sfVector2f tilesetScale = { GRAPHICS_SCALE, GRAPHICS_SCALE };
+
+   qOverworldMapRenderObjects_t* objects = (qOverworldMapRenderObjects_t*)qAlloc( sizeof( qOverworldMapRenderObjects_t ), sfTrue );
+
+   objects->tilesetTexture = qTexture_CreateFromFile( "resources/textures/tiles/overworld_tileset.png" );
+
+   objects->tileSprite = qSprite_Create();
+   sfSprite_setTexture( objects->tileSprite, objects->tilesetTexture, sfFalse );
+   sfSprite_scale( objects->tileSprite, tilesetScale );
+
+   return objects;
+}
+
 void qRenderObjects_Destroy( qRenderObjects_t* objects )
 {
-   qDebugBarRenderObjects_Destroy( objects->debugBarRenderObjects );
-   qDiagnosticsRenderObjects_Destroy( objects->diagnosticsRenderObjects );
-
-   qRectangleShape_Destroy( objects->windowBackgroundRect );
+   qOverworldMapRenderObjects_Destroy( objects->overworldMap );
+   qDebugBarRenderObjects_Destroy( objects->debugBar );
+   qDiagnosticsRenderObjects_Destroy( objects->diagnostics );
 
    qFree( objects, sizeof( qRenderObjects_t ), sfTrue );
 }
@@ -92,4 +101,12 @@ static void qDebugBarRenderObjects_Destroy( qDebugBarRenderObjects_t* objects )
    qRectangleShape_Destroy( objects->backgroundRect );
 
    qFree( objects, sizeof( qDebugBarRenderObjects_t ), sfTrue );
+}
+
+static void qOverworldMapRenderObjects_Destroy( qOverworldMapRenderObjects_t* objects )
+{
+   qSprite_Destroy( objects->tileSprite );
+   qTexture_Destroy( objects->tilesetTexture );
+
+   qFree( objects, sizeof( qOverworldMapRenderObjects_t ), sfTrue );
 }

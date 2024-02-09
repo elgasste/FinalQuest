@@ -11,6 +11,8 @@ typedef struct qRenderer_t
 {
    qRenderObjects_t* renderObjects;
    qRenderStates_t* renderStates;
+
+   sfRectangleShape* windowBackgroundRect;
 }
 qRenderer_t;
 

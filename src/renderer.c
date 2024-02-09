@@ -11,16 +11,26 @@ static void qRenderer_DrawDebugBar( qGame_t* game );
 
 qRenderer_t* qRenderer_Create()
 {
+   sfVector2f windowBackgroundSize = { WINDOW_WIDTH, WINDOW_HEIGHT };
+   sfVector2f windowBackgroundPosition = { 0, 0 };
+
    qRenderer_t* renderer = (qRenderer_t*)qAlloc( sizeof( qRenderer_t ), sfTrue );
 
    renderer->renderObjects = qRenderObjects_Create();
    renderer->renderStates = qRenderStates_Create();
+
+   renderer->windowBackgroundRect = qRectangleShape_Create();
+   sfRectangleShape_setSize( renderer->windowBackgroundRect, windowBackgroundSize );
+   sfRectangleShape_setPosition( renderer->windowBackgroundRect, windowBackgroundPosition );
+   sfRectangleShape_setFillColor( renderer->windowBackgroundRect, sfBlack );
 
    return renderer;
 }
 
 void qRenderer_Destroy( qRenderer_t* renderer )
 {
+   qRectangleShape_Destroy( renderer->windowBackgroundRect );
+
    qRenderStates_Destroy( renderer->renderStates );
    qRenderObjects_Destroy( renderer->renderObjects );
 
@@ -29,7 +39,7 @@ void qRenderer_Destroy( qRenderer_t* renderer )
 
 void qRenderer_Render( qGame_t* game )
 {
-   qWindow_DrawRectangleShape( game->window, game->renderer->renderObjects->windowBackgroundRect );
+   qWindow_DrawRectangleShape( game->window, game->renderer->windowBackgroundRect );
 
    qRenderer_DrawDebugBar( game );
 
@@ -45,7 +55,7 @@ static void qRenderer_DrawDiagnostics( qGame_t* game )
 {
    char msg[STRLEN_DEFAULT];
    char timeStr[STRLEN_SHORT];
-   qDiagnosticsRenderObjects_t* objects = game->renderer->renderObjects->diagnosticsRenderObjects;
+   qDiagnosticsRenderObjects_t* objects = game->renderer->renderObjects->diagnostics;
 
    qWindow_DrawRectangleShape( game->window, objects->backgroundRect );
 
@@ -78,7 +88,7 @@ static void qRenderer_DrawDiagnostics( qGame_t* game )
 static void qRenderer_DrawDebugBar( qGame_t* game )
 {
    qDebugBarRenderState_t* state = game->renderer->renderStates->debugBar;
-   qDebugBarRenderObjects_t* objects = game->renderer->renderObjects->debugBarRenderObjects;
+   qDebugBarRenderObjects_t* objects = game->renderer->renderObjects->debugBar;
 
    if ( state->isVisible )
    {
