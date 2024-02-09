@@ -5,17 +5,38 @@
 #include "input_handler.h"
 #include "renderer.h"
 #include "render_states.h"
+#include "map.h"
+#include "random.h"
 
 static void qGame_Tic( qGame_t* game );
 
 qGame_t* qGame_Create()
 {
+   sfVector2u mapTileCount = { 56, 56 };
+   uint32_t i, tileIndex;
+
    qGame_t* game = (qGame_t*)qAlloc( sizeof( qGame_t ), sfTrue );
 
    game->window = qWindow_Create();
    game->clock = gmClock_Create();
    game->inputState = qInputState_Create();
    game->renderer = qRenderer_Create();
+   game->overworldMap = qMap_Create( mapTileCount );
+
+   // default to grass
+   for ( i = 0; i < mapTileCount.x * mapTileCount.y; i++ )
+   {
+      game->overworldMap->tiles[i].textureIndex = 0;
+      game->overworldMap->tiles[i].isPassable = sfTrue;
+   }
+
+   // randomly generate some trees
+   for ( i = 0; i < 100; i++ )
+   {
+      tileIndex = qRandom_UInt32( 0, mapTileCount.x * mapTileCount.y );
+      game->overworldMap->tiles[tileIndex].textureIndex = 25;
+      game->overworldMap->tiles[tileIndex].isPassable = sfFalse;
+   }
 
    game->showDiagnostics = sfFalse;
 
@@ -24,6 +45,7 @@ qGame_t* qGame_Create()
 
 void qGame_Destroy( qGame_t* game )
 {
+   qMap_Destroy( game->overworldMap );
    qRenderer_Destroy( game->renderer );
    qInputState_Destroy( game->inputState );
    qClock_Destroy( game->clock );
