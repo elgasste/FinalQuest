@@ -1,23 +1,23 @@
 #include "render_objects.h"
+#include "sprite_texture.h"
 
 static qDiagnosticsRenderObjects_t* qDiagnosticsRenderObjects_Create();
 static qDebugBarRenderObjects_t* qDebugBarRenderObjects_Create();
+static qMapRenderObjects_t* qMapRenderObjects_Create();
 static void qDiagnosticsRenderObjects_Destroy( qDiagnosticsRenderObjects_t* objects );
 static void qDebugBarRenderObjects_Destroy( qDebugBarRenderObjects_t* objects );
+static void qMapRenderObjects_Destroy( qMapRenderObjects_t* objects );
 
 qRenderObjects_t* qRenderObjects_Create()
 {
-   sfVector2f windowBackgroundSize = { WINDOW_WIDTH, WINDOW_HEIGHT };
-   sfVector2f windowBackgroundPosition = { 0, 0 };
-
    qRenderObjects_t* renderObjects = (qRenderObjects_t*)qAlloc( sizeof( qRenderObjects_t ), sfTrue );
-   renderObjects->diagnosticsRenderObjects = qDiagnosticsRenderObjects_Create();
-   renderObjects->debugBarRenderObjects = qDebugBarRenderObjects_Create();
+   renderObjects->diagnostics = qDiagnosticsRenderObjects_Create();
+   renderObjects->debugBar = qDebugBarRenderObjects_Create();
+   renderObjects->map = qMapRenderObjects_Create();
 
-   renderObjects->windowBackgroundRect = qRectangleShape_Create();
-   sfRectangleShape_setSize( renderObjects->windowBackgroundRect, windowBackgroundSize );
-   sfRectangleShape_setPosition( renderObjects->windowBackgroundRect, windowBackgroundPosition );
-   sfRectangleShape_setFillColor( renderObjects->windowBackgroundRect, sfBlack );
+   // just one sprite texture for now
+   renderObjects->spriteTextures = qSpriteTexture_Create( "resources/textures/sprites/character0.png", 4 );
+   renderObjects->spriteTextureCount = 1;
 
    return renderObjects;
 }
@@ -29,13 +29,13 @@ static qDiagnosticsRenderObjects_t* qDiagnosticsRenderObjects_Create()
 
    qDiagnosticsRenderObjects_t* objects = (qDiagnosticsRenderObjects_t*)qAlloc( sizeof( qDiagnosticsRenderObjects_t ), sfTrue );
 
-   objects->backgroundRect = qRectangleShape_Create();
+   objects->backgroundRect = qsfRectangleShape_Create();
    sfRectangleShape_setSize( objects->backgroundRect, backgroundSize );
    sfRectangleShape_setPosition( objects->backgroundRect, backgroundPos );
    sfRectangleShape_setFillColor( objects->backgroundRect, sfBlue );
-   objects->font = qFont_CreateFromFile( "consolas.ttf" );
+   objects->font = qsfFont_CreateFromFile( DEBUG_FONT );
    objects->textPosition.x = WINDOW_WIDTH - backgroundSize.x + 8;
-   objects->text = qText_Create();
+   objects->text = qsfText_Create();
    sfText_setFont( objects->text, objects->font );
    sfText_setCharacterSize( objects->text, 12 );
    sfText_setFillColor( objects->text, sfWhite );
@@ -52,12 +52,12 @@ static qDebugBarRenderObjects_t* qDebugBarRenderObjects_Create()
 
    qDebugBarRenderObjects_t* objects = (qDebugBarRenderObjects_t*)qAlloc( sizeof( qDebugBarRenderObjects_t ), sfTrue );
 
-   objects->backgroundRect = qRectangleShape_Create();
+   objects->backgroundRect = qsfRectangleShape_Create();
    sfRectangleShape_setSize( objects->backgroundRect, backgroundSize );
    sfRectangleShape_setPosition( objects->backgroundRect, backgroundPos );
    sfRectangleShape_setFillColor( objects->backgroundRect, sfWhite );
-   objects->font = qFont_CreateFromFile( "consolas.ttf" );
-   objects->text = qText_Create();
+   objects->font = qsfFont_CreateFromFile( DEBUG_FONT );
+   objects->text = qsfText_Create();
    sfText_setFont( objects->text, objects->font );
    sfText_setCharacterSize( objects->text, 12 );
    sfText_setFillColor( objects->text, sfBlack );
@@ -66,30 +66,59 @@ static qDebugBarRenderObjects_t* qDebugBarRenderObjects_Create()
    return objects;
 }
 
+static qMapRenderObjects_t* qMapRenderObjects_Create()
+{
+   sfVector2f tilesetScale = { GRAPHICS_SCALE, GRAPHICS_SCALE };
+
+   qMapRenderObjects_t* objects = (qMapRenderObjects_t*)qAlloc( sizeof( qMapRenderObjects_t ), sfTrue );
+
+   objects->tilesetTexture = qsfTexture_CreateFromFile( "resources/textures/tiles/map_tileset.png" );
+
+   objects->tileSprite = qsfSprite_Create();
+   sfSprite_setTexture( objects->tileSprite, objects->tilesetTexture, sfFalse );
+   sfSprite_scale( objects->tileSprite, tilesetScale );
+
+   return objects;
+}
+
 void qRenderObjects_Destroy( qRenderObjects_t* objects )
 {
-   qDebugBarRenderObjects_Destroy( objects->debugBarRenderObjects );
-   qDiagnosticsRenderObjects_Destroy( objects->diagnosticsRenderObjects );
+   uint32_t i;
 
-   qRectangleShape_Destroy( objects->windowBackgroundRect );
+   for ( i = 0; i < objects->spriteTextureCount; i++ )
+   {
+      qSpriteTexture_Destroy( &( objects->spriteTextures[i] ) );
+   }
+
+   qMapRenderObjects_Destroy( objects->map );
+   qDebugBarRenderObjects_Destroy( objects->debugBar );
+   qDiagnosticsRenderObjects_Destroy( objects->diagnostics );
 
    qFree( objects, sizeof( qRenderObjects_t ), sfTrue );
 }
 
 void qDiagnosticsRenderObjects_Destroy( qDiagnosticsRenderObjects_t* objects )
 {
-   qText_Destroy( objects->text );
-   qFont_Destroy( objects->font );
-   qRectangleShape_Destroy( objects->backgroundRect );
+   qsfText_Destroy( objects->text );
+   qsfFont_Destroy( objects->font );
+   qsfRectangleShape_Destroy( objects->backgroundRect );
 
    qFree( objects, sizeof( qDiagnosticsRenderObjects_t ), sfTrue );
 }
 
 static void qDebugBarRenderObjects_Destroy( qDebugBarRenderObjects_t* objects )
 {
-   qText_Destroy( objects->text );
-   qFont_Destroy( objects->font );
-   qRectangleShape_Destroy( objects->backgroundRect );
+   qsfText_Destroy( objects->text );
+   qsfFont_Destroy( objects->font );
+   qsfRectangleShape_Destroy( objects->backgroundRect );
 
    qFree( objects, sizeof( qDebugBarRenderObjects_t ), sfTrue );
+}
+
+static void qMapRenderObjects_Destroy( qMapRenderObjects_t* objects )
+{
+   qsfSprite_Destroy( objects->tileSprite );
+   qsfTexture_Destroy( objects->tilesetTexture );
+
+   qFree( objects, sizeof( qMapRenderObjects_t ), sfTrue );
 }

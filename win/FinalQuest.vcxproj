@@ -61,7 +61,7 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy "C:\CSFML-2.5.1\bin\*.dll" "$(OutDir)" /Y
-xcopy "$(SolutionDir)..\src\resources\fonts\*.*" "$(OutDir)" /Y</Command>
+xcopy "$(SolutionDir)..\src\resources" "$(OutDir)\resources\" /S /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -86,32 +86,45 @@ xcopy "$(SolutionDir)..\src\resources\fonts\*.*" "$(OutDir)" /Y</Command>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "C:\CSFML-2.5.1\bin\*.dll" "$(OutDir)" /Y
-xcopy "$(SolutionDir)..\src\resources\fonts\*.*" "$(OutDir)" /Y</Command>
+xcopy "$(SolutionDir)..\src\resources" "$(OutDir)\resources\" /S /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\actor.h" />
     <ClInclude Include="..\src\clock.h" />
     <ClInclude Include="..\src\common.h" />
+    <ClInclude Include="..\src\entity.h" />
+    <ClInclude Include="..\src\enums.h" />
     <ClInclude Include="..\src\game.h" />
     <ClInclude Include="..\src\input_handler.h" />
     <ClInclude Include="..\src\input_state.h" />
+    <ClInclude Include="..\src\map.h" />
+    <ClInclude Include="..\src\random.h" />
     <ClInclude Include="..\src\renderer.h" />
     <ClInclude Include="..\src\render_objects.h" />
     <ClInclude Include="..\src\render_states.h" />
+    <ClInclude Include="..\src\sprite.h" />
+    <ClInclude Include="..\src\sprite_texture.h" />
     <ClInclude Include="..\src\strings.h" />
     <ClInclude Include="..\src\time_util.h" />
     <ClInclude Include="..\src\window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\actor.c" />
     <ClCompile Include="..\src\clock.c" />
     <ClCompile Include="..\src\common.c" />
+    <ClCompile Include="..\src\entity.c" />
     <ClCompile Include="..\src\game.c" />
     <ClCompile Include="..\src\input_handler.c" />
     <ClCompile Include="..\src\input_state.c" />
     <ClCompile Include="..\src\main.c" />
+    <ClCompile Include="..\src\map.c" />
+    <ClCompile Include="..\src\random.c" />
     <ClCompile Include="..\src\renderer.c" />
     <ClCompile Include="..\src\render_objects.c" />
     <ClCompile Include="..\src\render_states.c" />
+    <ClCompile Include="..\src\sprite.c" />
+    <ClCompile Include="..\src\sprite_texture.c" />
     <ClCompile Include="..\src\time_util.c" />
     <ClCompile Include="..\src\window.c" />
   </ItemGroup>

@@ -7,7 +7,7 @@ qWindow_t* qWindow_Create()
    sfVideoMode videoMode = { WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_BPP };
    qWindow_t* window = (qWindow_t*)qAlloc( sizeof( qWindow_t ), sfTrue );
 
-   window->sfmlWindow = qRenderWindow_Create( videoMode, STR_WINDOW_TITLE, WINDOW_STYLE, 0 );
+   window->sfmlWindow = qsfRenderWindow_Create( videoMode, STR_WINDOW_TITLE, WINDOW_STYLE, 0 );
 
    sfRenderWindow_setKeyRepeatEnabled( window->sfmlWindow, sfFalse );
    window->wantToClose = sfFalse;
@@ -17,7 +17,7 @@ qWindow_t* qWindow_Create()
 
 void qWindow_Destroy( qWindow_t* window )
 {
-   qRenderWindow_Destroy( window->sfmlWindow );
+   qsfRenderWindow_Destroy( window->sfmlWindow );
 
    qFree( window, sizeof( qWindow_t ), sfTrue );
 }
@@ -61,6 +61,11 @@ void qWindow_DrawRectangleShape( qWindow_t* window, sfRectangleShape* rect )
 void qWindow_DrawText( qWindow_t* window, sfText* text )
 {
    sfRenderWindow_drawText( window->sfmlWindow, text, 0 );
+}
+
+void qWindow_DrawSprite( qWindow_t* window, sfSprite* sprite )
+{
+   sfRenderWindow_drawSprite( window->sfmlWindow, sprite, 0 );
 }
 
 sfBool qWindow_IsOpen( qWindow_t* window )
