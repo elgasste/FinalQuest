@@ -7,6 +7,7 @@
 #include "render_states.h"
 #include "map.h"
 #include "random.h"
+#include "actor.h"
 
 static void qGame_Tic( qGame_t* game );
 
@@ -14,6 +15,8 @@ qGame_t* qGame_Create()
 {
    sfVector2u mapTileCount = { 56, 56 };
    uint32_t i, tileIndex;
+   sfVector2f actorPos = { 128, 128 };
+   sfVector2f actorHitBoxSize = { 26, 16 };
 
    qGame_t* game = (qGame_t*)qAlloc( sizeof( qGame_t ), sfTrue );
 
@@ -38,6 +41,10 @@ qGame_t* qGame_Create()
       game->map->tiles[tileIndex].isPassable = sfFalse;
    }
 
+   // just one actor for now
+   game->actors = qActor_Create( actorPos, actorHitBoxSize, 100.0f );
+   game->controllingActor = &( game->actors[0] );
+
    game->showDiagnostics = sfFalse;
 
    return game;
@@ -45,6 +52,7 @@ qGame_t* qGame_Create()
 
 void qGame_Destroy( qGame_t* game )
 {
+   qActor_Destroy( game->actors );
    qMap_Destroy( game->map );
    qRenderer_Destroy( game->renderer );
    qInputState_Destroy( game->inputState );

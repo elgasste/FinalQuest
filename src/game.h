@@ -8,6 +8,7 @@ typedef struct qClock_t qClock_t;
 typedef struct qInputState_t qInputState_t;
 typedef struct qRenderer_t qRenderer_t;
 typedef struct qMap_t qMap_t;
+typedef struct qActor_t qActor_t;
 
 typedef struct qGame_t
 {
@@ -16,6 +17,8 @@ typedef struct qGame_t
    qInputState_t* inputState;
    qRenderer_t* renderer;
    qMap_t* map;
+   qActor_t* actors;
+   qActor_t* controllingActor;
 
    sfBool showDiagnostics;
 }
