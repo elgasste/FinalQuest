@@ -31,8 +31,8 @@ qRenderer_t* qRenderer_Create()
    sfRectangleShape_setPosition( renderer->windowBackgroundRect, windowBackgroundPosition );
    sfRectangleShape_setFillColor( renderer->windowBackgroundRect, sfBlack );
 
-   renderer->mapViewRect.width = WINDOW_WIDTH;
-   renderer->mapViewRect.height = WINDOW_HEIGHT;
+   renderer->mapViewRect.width = WINDOW_WIDTH / GRAPHICS_SCALE;
+   renderer->mapViewRect.height = WINDOW_HEIGHT / GRAPHICS_SCALE;
 
    return renderer;
 }
