@@ -104,6 +104,7 @@ xcopy "$(SolutionDir)..\src\resources" "$(OutDir)\resources\" /S /Y</Command>
     <ClInclude Include="..\src\render_objects.h" />
     <ClInclude Include="..\src\render_states.h" />
     <ClInclude Include="..\src\sprite.h" />
+    <ClInclude Include="..\src\sprite_texture.h" />
     <ClInclude Include="..\src\strings.h" />
     <ClInclude Include="..\src\time_util.h" />
     <ClInclude Include="..\src\window.h" />
@@ -123,6 +124,7 @@ xcopy "$(SolutionDir)..\src\resources" "$(OutDir)\resources\" /S /Y</Command>
     <ClCompile Include="..\src\render_objects.c" />
     <ClCompile Include="..\src\render_states.c" />
     <ClCompile Include="..\src\sprite.c" />
+    <ClCompile Include="..\src\sprite_texture.c" />
     <ClCompile Include="..\src\time_util.c" />
     <ClCompile Include="..\src\window.c" />
   </ItemGroup>

@@ -49,6 +49,9 @@
     <ClCompile Include="..\src\sprite.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\sprite_texture.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\clock.h">
@@ -100,6 +103,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\sprite_texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

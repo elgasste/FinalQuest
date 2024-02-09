@@ -1,4 +1,5 @@
 #include "render_objects.h"
+#include "sprite_texture.h"
 
 static qDiagnosticsRenderObjects_t* qDiagnosticsRenderObjects_Create();
 static qDebugBarRenderObjects_t* qDebugBarRenderObjects_Create();
@@ -14,8 +15,9 @@ qRenderObjects_t* qRenderObjects_Create()
    renderObjects->debugBar = qDebugBarRenderObjects_Create();
    renderObjects->map = qMapRenderObjects_Create();
 
-   // just one sprite for now
-   renderObjects->spriteTextures = qsfTexture_CreateFromFile( "resources/textures/sprites/character0.png" );
+   // just one sprite texture for now
+   renderObjects->spriteTextures = qSpriteTexture_Create( "resources/textures/sprites/character0.png", 4 );
+   renderObjects->spriteTextureCount = 1;
 
    return renderObjects;
 }
@@ -81,7 +83,12 @@ static qMapRenderObjects_t* qMapRenderObjects_Create()
 
 void qRenderObjects_Destroy( qRenderObjects_t* objects )
 {
-   qsfTexture_Destroy( objects->spriteTextures );
+   uint32_t i;
+
+   for ( i = 0; i < objects->spriteTextureCount; i++ )
+   {
+      qSpriteTexture_Destroy( &( objects->spriteTextures[i] ) );
+   }
 
    qMapRenderObjects_Destroy( objects->map );
    qDebugBarRenderObjects_Destroy( objects->debugBar );

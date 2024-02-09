@@ -1,20 +1,21 @@
 #include "sprite.h"
+#include "sprite_texture.h"
 #include "clock.h"
 
-qSprite_t* qSprite_Create( sfTexture* texture, uint32_t frames, float frameSeconds )
+qSprite_t* qSprite_Create( qSpriteTexture_t* texture, float frameSeconds )
 {
    sfIntRect textureRect = { 0, 0, 32, 32 };
    sfVector2f scale = { GRAPHICS_SCALE, GRAPHICS_SCALE };
 
    qSprite_t* sprite = (qSprite_t*)qAlloc( sizeof( qSprite_t ), sfTrue );
 
+   sprite->texture = texture;
    sprite->sfmlSprite = qsfSprite_Create();
 
-   sfSprite_setTexture( sprite->sfmlSprite, texture, sfFalse );
+   sfSprite_setTexture( sprite->sfmlSprite, texture->sfmlTexture, sfFalse );
    sfSprite_setTextureRect( sprite->sfmlSprite, textureRect );
    sfSprite_scale( sprite->sfmlSprite, scale );
 
-   sprite->frames = frames;
    sprite->frameSeconds = frameSeconds;
    sprite->elapsedSeconds = 0;
 
@@ -52,7 +53,7 @@ void qSprite_Tic( qSprite_t* sprite, qDirection_t direction, qClock_t* clock )
       sprite->elapsedSeconds -= sprite->frameSeconds;
       textureRect.left += textureRect.width;
 
-      if ( textureRect.left >= (int32_t)( textureRect.width * sprite->frames ) )
+      if ( textureRect.left >= (int32_t)( textureRect.width * sprite->texture->frameCount ) )
       {
          textureRect.left = 0;
       }

@@ -18,6 +18,7 @@ typedef struct qGame_t
    qRenderer_t* renderer;
    qMap_t* map;
    qActor_t* actors;
+   uint32_t actorCount;
    qActor_t* controllingActor;
 
    sfBool showDiagnostics;

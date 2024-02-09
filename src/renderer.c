@@ -6,11 +6,15 @@
 #include "clock.h"
 #include "time_util.h"
 #include "map.h"
+#include "actor.h"
+#include "entity.h"
+#include "sprite.h"
 
 static void qRenderer_DrawDiagnostics( qGame_t* game );
 static void qRenderer_DrawDebugBar( qGame_t* game );
 static void qRenderer_SetMapView( qGame_t* game );
 static void qRenderer_DrawMap( qGame_t* game );
+static void qRenderer_DrawActors( qGame_t* game );
 
 qRenderer_t* qRenderer_Create()
 {
@@ -49,6 +53,7 @@ void qRenderer_Render( qGame_t* game )
 
    qRenderer_SetMapView( game );
    qRenderer_DrawMap( game );
+   qRenderer_DrawActors( game );
 
    qRenderer_DrawDebugBar( game );
 
@@ -112,12 +117,13 @@ static void qRenderer_SetMapView( qGame_t* game )
 {
    qRenderer_t* renderer = game->renderer;
    qMap_t* map = game->map;
-   uint32_t scaledTileSize = MAP_TILE_SIZE * GRAPHICS_SCALE;
-   sfVector2f mapSize = { (float)( map->tileCount.x * scaledTileSize ), (float)( map->tileCount.y * scaledTileSize ) };
-   sfVector2f entityPos = { 0, 0 };
+   sfVector2f mapSize = { (float)( map->tileCount.x * MAP_TILE_SIZE ), (float)( map->tileCount.y * MAP_TILE_SIZE ) };
+   sfVector2f actorCenter = {
+      game->controllingActor->entity->mapPos.x + ( game->controllingActor->entity->mapHitBoxSize.x / 2 ),
+      game->controllingActor->entity->mapPos.y + ( game->controllingActor->entity->mapHitBoxSize.y / 2 ) };
 
-   renderer->mapViewRect.left = entityPos.x - ( WINDOW_WIDTH / 2 );
-   renderer->mapViewRect.top = entityPos.y - ( WINDOW_HEIGHT / 2 );
+   renderer->mapViewRect.left = actorCenter.x - ( ( WINDOW_WIDTH / GRAPHICS_SCALE ) / 2 );
+   renderer->mapViewRect.top = actorCenter.y - ( ( WINDOW_HEIGHT / GRAPHICS_SCALE ) / 2 );
 
    if ( mapSize.x < renderer->mapViewRect.width )
    {
@@ -132,21 +138,22 @@ static void qRenderer_SetMapView( qGame_t* game )
       renderer->mapViewPadding.x = 0;
       renderer->mapTilePixelOffset.x = 0;
       renderer->mapViewStart.x = 0;
-      renderer->mapViewEnd.x = (uint32_t)( renderer->mapViewRect.width / scaledTileSize ) + 1;
+      renderer->mapViewEnd.x = (uint32_t)( renderer->mapViewRect.width / MAP_TILE_SIZE ) + 1;
    }
    else if ( ( renderer->mapViewRect.left + renderer->mapViewRect.width ) >= mapSize.x )
    {
       renderer->mapViewRect.left = mapSize.x - renderer->mapViewRect.width - 1;
       renderer->mapViewPadding.x = 0;
-      renderer->mapTilePixelOffset.x = -( renderer->mapViewRect.left - (float)( (int32_t)renderer->mapViewRect.left / scaledTileSize ) * scaledTileSize );
+      renderer->mapTilePixelOffset.x = -( renderer->mapViewRect.left - (float)( (int32_t)renderer->mapViewRect.left / MAP_TILE_SIZE ) * MAP_TILE_SIZE );
       renderer->mapViewEnd.x = map->tileCount.x;
-      renderer->mapViewStart.x = renderer->mapViewEnd.x - (uint32_t)( renderer->mapViewRect.width / scaledTileSize ) - 1;
+      renderer->mapViewStart.x = renderer->mapViewEnd.x - (uint32_t)( renderer->mapViewRect.width / MAP_TILE_SIZE ) - 1;
    }
    else
    {
-      renderer->mapTilePixelOffset.x = -( renderer->mapViewRect.left - (float)( (int32_t)renderer->mapViewRect.left / scaledTileSize ) * scaledTileSize );
-      renderer->mapViewStart.x = (uint32_t)( renderer->mapViewRect.left / scaledTileSize );
-      renderer->mapViewEnd.x = renderer->mapViewStart.x + (uint32_t)( renderer->mapViewRect.width / scaledTileSize ) + 1;
+      renderer->mapTilePixelOffset.x = -( renderer->mapViewRect.left - (float)( (int32_t)renderer->mapViewRect.left / MAP_TILE_SIZE ) * MAP_TILE_SIZE );
+      renderer->mapViewStart.x = (uint32_t)( renderer->mapViewRect.left / MAP_TILE_SIZE );
+      renderer->mapViewEnd.x = renderer->mapViewStart.x + (uint32_t)( renderer->mapViewRect.width / MAP_TILE_SIZE ) + 1;
+      renderer->mapViewPadding.x = 0;
    }
 
    if ( mapSize.y < renderer->mapViewRect.height )
@@ -162,21 +169,22 @@ static void qRenderer_SetMapView( qGame_t* game )
       renderer->mapViewPadding.y = 0;
       renderer->mapTilePixelOffset.y = 0;
       renderer->mapViewStart.y = 0;
-      renderer->mapViewEnd.y = (uint32_t)( renderer->mapViewRect.height / scaledTileSize ) + 1;
+      renderer->mapViewEnd.y = (uint32_t)( renderer->mapViewRect.height / MAP_TILE_SIZE ) + 1;
    }
    else if ( ( renderer->mapViewRect.top + renderer->mapViewRect.height ) >= mapSize.y )
    {
       renderer->mapViewRect.top = mapSize.y - renderer->mapViewRect.height - 1;
       renderer->mapViewPadding.y = 0;
-      renderer->mapTilePixelOffset.y = -( renderer->mapViewRect.top - (float)( (int32_t)renderer->mapViewRect.top / scaledTileSize ) * scaledTileSize );
+      renderer->mapTilePixelOffset.y = -( renderer->mapViewRect.top - (float)( (int32_t)renderer->mapViewRect.top / MAP_TILE_SIZE ) * MAP_TILE_SIZE );
       renderer->mapViewEnd.y = map->tileCount.y;
-      renderer->mapViewStart.y = renderer->mapViewEnd.y - (uint32_t)( renderer->mapViewRect.height / scaledTileSize ) - 1;
+      renderer->mapViewStart.y = renderer->mapViewEnd.y - (uint32_t)( renderer->mapViewRect.height / MAP_TILE_SIZE ) - 1;
    }
    else
    {
-      renderer->mapTilePixelOffset.y = -( renderer->mapViewRect.top - (float)( (int32_t)renderer->mapViewRect.top / scaledTileSize ) * scaledTileSize );
-      renderer->mapViewStart.y = (uint32_t)( renderer->mapViewRect.top / scaledTileSize );
-      renderer->mapViewEnd.y = renderer->mapViewStart.y + (uint32_t)( renderer->mapViewRect.height / scaledTileSize ) + 1;
+      renderer->mapTilePixelOffset.y = -( renderer->mapViewRect.top - (float)( (int32_t)renderer->mapViewRect.top / MAP_TILE_SIZE ) * MAP_TILE_SIZE );
+      renderer->mapViewStart.y = (uint32_t)( renderer->mapViewRect.top / MAP_TILE_SIZE );
+      renderer->mapViewEnd.y = renderer->mapViewStart.y + (uint32_t)( renderer->mapViewRect.height / MAP_TILE_SIZE ) + 1;
+      renderer->mapViewPadding.y = 0;
    }
 }
 
@@ -191,7 +199,6 @@ static void qRenderer_DrawMap( qGame_t* game )
    sfIntRect textureRect = { 0, 0, MAP_TILE_SIZE, MAP_TILE_SIZE };
    sfVector2u textureSize = sfTexture_getSize( game->renderer->renderObjects->map->tilesetTexture );
    sfVector2u textureTileCount = { textureSize.x / MAP_TILE_SIZE, textureSize.y / MAP_TILE_SIZE };
-   uint32_t scaledTileSize = MAP_TILE_SIZE * GRAPHICS_SCALE;
 
    for ( row = 0, tileRow = renderer->mapViewStart.y; tileRow <= renderer->mapViewEnd.y; row++, tileRow++ )
    {
@@ -199,15 +206,38 @@ static void qRenderer_DrawMap( qGame_t* game )
       {
          tile = &( map->tiles[( tileRow * map->tileCount.x ) + tileCol] );
 
-         tilePos.x = ( (float)col * scaledTileSize ) + renderer->mapTilePixelOffset.x + renderer->mapViewPadding.x;
-         tilePos.y = ( (float)row * scaledTileSize ) + renderer->mapTilePixelOffset.y + renderer->mapViewPadding.y;
          textureRect.left = ( tile->textureIndex % textureTileCount.x ) * MAP_TILE_SIZE;
          textureRect.top = ( tile->textureIndex / textureTileCount.x ) * MAP_TILE_SIZE;
+         tilePos.x = ( ( (float)col * MAP_TILE_SIZE ) + renderer->mapTilePixelOffset.x + renderer->mapViewPadding.x ) * GRAPHICS_SCALE;
+         tilePos.y = ( ( (float)row * MAP_TILE_SIZE ) + renderer->mapTilePixelOffset.y + renderer->mapViewPadding.y ) * GRAPHICS_SCALE;
 
          sfSprite_setTextureRect( objects->tileSprite, textureRect );
          sfSprite_setPosition( objects->tileSprite, tilePos );
 
          qWindow_DrawSprite( game->window, objects->tileSprite );
       }
+   }
+}
+
+static void qRenderer_DrawActors( qGame_t* game )
+{
+   qRenderer_t* renderer = game->renderer;
+   qActor_t* actor;
+   sfVector2f spritePos;
+   uint32_t i;
+
+   for ( i = 0; i < game->actorCount; i++ )
+   {
+      actor = &( game->actors[i] );
+
+      spritePos.x = ( renderer->mapViewPadding.x > 0 )
+         ? ( actor->entity->mapPos.x + actor->spriteOffset.x + renderer->mapViewPadding.x ) * GRAPHICS_SCALE
+         : ( actor->entity->mapPos.x + actor->spriteOffset.x - renderer->mapViewRect.left ) * GRAPHICS_SCALE;
+      spritePos.y = ( renderer->mapViewPadding.y > 0 )
+         ? ( actor->entity->mapPos.y + actor->spriteOffset.y + renderer->mapViewPadding.y ) * GRAPHICS_SCALE
+         : ( actor->entity->mapPos.y + actor->spriteOffset.y - renderer->mapViewRect.top ) * GRAPHICS_SCALE;
+
+      qSprite_SetPosition( actor->sprite, spritePos );
+      qWindow_DrawSprite( game->window, actor->sprite->sfmlSprite );
    }
 }

@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+typedef struct qSpriteTexture_t qSpriteTexture_t;
+
 typedef struct qDiagnosticsRenderObjects_t
 {
    sfRectangleShape* backgroundRect;
@@ -34,7 +36,8 @@ typedef struct qRenderObjects_t
    qDebugBarRenderObjects_t* debugBar;
    qMapRenderObjects_t* map;
 
-   sfTexture* spriteTextures;
+   qSpriteTexture_t* spriteTextures;
+   uint32_t spriteTextureCount;
 }
 qRenderObjects_t;
 

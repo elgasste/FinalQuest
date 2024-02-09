@@ -3,12 +3,13 @@
 #include "sprite.h"
 
 qActor_t* qActor_Create( sfVector2f mapPos, sfVector2f mapHitBoxSize, float maxVelocity,
-                         sfTexture* texture, uint32_t frames, float frameSeconds )
+                         qSpriteTexture_t* spriteTexture, sfVector2f spriteOffset, float spriteFrameSeconds )
 {
    qActor_t* actor = (qActor_t*)qAlloc( sizeof( qActor_t ), sfTrue );
 
    actor->entity = qEntity_Create( mapPos, mapHitBoxSize, maxVelocity );
-   actor->sprite = qSprite_Create( texture, frames, frameSeconds );
+   actor->sprite = qSprite_Create( spriteTexture, spriteFrameSeconds );
+   actor->spriteOffset = spriteOffset;
 
    return actor;
 }
