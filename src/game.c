@@ -21,21 +21,21 @@ qGame_t* qGame_Create()
    game->clock = gmClock_Create();
    game->inputState = qInputState_Create();
    game->renderer = qRenderer_Create();
-   game->overworldMap = qMap_Create( mapTileCount );
+   game->map = qMap_Create( mapTileCount );
 
    // default to grass
    for ( i = 0; i < mapTileCount.x * mapTileCount.y; i++ )
    {
-      game->overworldMap->tiles[i].textureIndex = 0;
-      game->overworldMap->tiles[i].isPassable = sfTrue;
+      game->map->tiles[i].textureIndex = 0;
+      game->map->tiles[i].isPassable = sfTrue;
    }
 
    // randomly generate some trees
    for ( i = 0; i < 100; i++ )
    {
       tileIndex = qRandom_UInt32( 0, mapTileCount.x * mapTileCount.y );
-      game->overworldMap->tiles[tileIndex].textureIndex = 25;
-      game->overworldMap->tiles[tileIndex].isPassable = sfFalse;
+      game->map->tiles[tileIndex].textureIndex = 25;
+      game->map->tiles[tileIndex].isPassable = sfFalse;
    }
 
    game->showDiagnostics = sfFalse;
@@ -45,7 +45,7 @@ qGame_t* qGame_Create()
 
 void qGame_Destroy( qGame_t* game )
 {
-   qMap_Destroy( game->overworldMap );
+   qMap_Destroy( game->map );
    qRenderer_Destroy( game->renderer );
    qInputState_Destroy( game->inputState );
    qClock_Destroy( game->clock );

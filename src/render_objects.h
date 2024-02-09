@@ -21,18 +21,18 @@ typedef struct qDebugBarRenderObjects_t
 }
 qDebugBarRenderObjects_t;
 
-typedef struct qOverworldMapRenderObjects_t
+typedef struct qMapRenderObjects_t
 {
    sfTexture* tilesetTexture;
    sfSprite* tileSprite;
 }
-qOverworldMapRenderObjects_t;
+qMapRenderObjects_t;
 
 typedef struct qRenderObjects_t
 {
    qDiagnosticsRenderObjects_t* diagnostics;
    qDebugBarRenderObjects_t* debugBar;
-   qOverworldMapRenderObjects_t* overworldMap;
+   qMapRenderObjects_t* map;
 }
 qRenderObjects_t;
 

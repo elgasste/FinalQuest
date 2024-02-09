@@ -15,7 +15,7 @@ typedef struct qGame_t
    qClock_t* clock;
    qInputState_t* inputState;
    qRenderer_t* renderer;
-   qMap_t* overworldMap;
+   qMap_t* map;
 
    sfBool showDiagnostics;
 }

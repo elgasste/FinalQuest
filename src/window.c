@@ -63,6 +63,11 @@ void qWindow_DrawText( qWindow_t* window, sfText* text )
    sfRenderWindow_drawText( window->sfmlWindow, text, 0 );
 }
 
+void qWindow_DrawSprite( qWindow_t* window, sfSprite* sprite )
+{
+   sfRenderWindow_drawSprite( window->sfmlWindow, sprite, 0 );
+}
+
 sfBool qWindow_IsOpen( qWindow_t* window )
 {
    return sfRenderWindow_isOpen( window->sfmlWindow );

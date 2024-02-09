@@ -13,6 +13,12 @@ typedef struct qRenderer_t
    qRenderStates_t* renderStates;
 
    sfRectangleShape* windowBackgroundRect;
+
+   sfFloatRect mapViewRect;
+   sfVector2f mapViewPadding;
+   sfVector2f mapTilePixelOffset;
+   sfVector2u mapViewStart;
+   sfVector2u mapViewEnd;
 }
 qRenderer_t;
 
