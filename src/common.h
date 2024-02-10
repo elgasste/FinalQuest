@@ -15,8 +15,8 @@
 
 #define GRAPHICS_SCALE  3
 
-#define WINDOW_WIDTH    ( 512 * GRAPHICS_SCALE )
-#define WINDOW_HEIGHT   ( 480 * GRAPHICS_SCALE )
+#define WINDOW_WIDTH    ( 768 * GRAPHICS_SCALE )
+#define WINDOW_HEIGHT   ( 432 * GRAPHICS_SCALE )
 #define WINDOW_BPP      32
 #define WINDOW_STYLE    sfTitlebar | sfClose
 
