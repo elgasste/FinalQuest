@@ -18,6 +18,9 @@
 
 #define STR_WINDOW_TITLE                  "CSFML Game Base"
 
+#define STR_ON                            "on"
+#define STR_OFF                           "off"
+
 #define STR_FRAMERATEFORMATTER            "  Frame Rate: %d"
 #define STR_TOTALFRAMESFORMATTER          "Total Frames: %d"
 #define STR_LAGFRAMESFORMATTER            "  Lag Frames: %d"
@@ -31,5 +34,8 @@
 #define STR_ERROR_OPENLOGFILE             "Could not open logfile to write message"
 #define STR_ERROR_WRITELOGFILE            "Could not write message to logfile"
 #define STR_ERROR_CLOSELOGFILE            "Could not close logfile"
+
+#define STR_CHEAT_NOCLIPFORMATTER         "Toggled no-clip mode %s"
+#define STR_CHEAT_CLEARED                 "Cleared all cheats"
 
 #endif // STRINGS_H
