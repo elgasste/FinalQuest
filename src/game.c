@@ -56,6 +56,7 @@ qGame_t* qGame_Create()
 
    game->showDiagnostics = sfFalse;
    game->cheatNoClip = sfFalse;
+   game->cheatFast = sfFalse;
 
    return game;
 }

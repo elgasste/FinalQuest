@@ -27,7 +27,10 @@
 #define MAP_TILE_SIZE   32
 
 #define CHEAT_NOCLIP    "fqclip"
+#define CHEAT_FAST      "fqfast"
 #define CHEAT_CLEAR     "fqclear"
+
+#define FAST_VELOCITY   500.0f
 
 #define TOGGLE_BOOL( x ) x = x ? sfFalse : sfTrue;
 

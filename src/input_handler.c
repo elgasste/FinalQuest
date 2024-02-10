@@ -131,6 +131,7 @@ static void qInputHandler_CheckCheats( qGame_t* game )
    int32_t cheatStringLength, i, l, lastIndex, matchCount;
    static const char* cheats[] = {
       CHEAT_NOCLIP,
+      CHEAT_FAST,
       CHEAT_CLEAR
    };
    static int32_t cheatCount = (int32_t)( sizeof( cheats ) / sizeof( const char* ) );
@@ -181,9 +182,16 @@ static void qInputHandler_ApplyCheat( qGame_t* game )
       snprintf( cheatMsg, STRLEN_SHORT, STR_CHEAT_NOCLIPFORMATTER, game->cheatNoClip ? STR_ON : STR_OFF );
       qGame_ShowDebugMessage( game, cheatMsg );
    }
+   else if ( !strcmp( cheat, CHEAT_FAST ) )
+   {
+      TOGGLE_BOOL( game->cheatFast );
+      snprintf( cheatMsg, STRLEN_SHORT, STR_CHEAT_FASTFORMATTER, game->cheatFast ? STR_ON : STR_OFF );
+      qGame_ShowDebugMessage( game, cheatMsg );
+   }
    else if ( !strcmp( cheat, CHEAT_CLEAR ) )
    {
       game->cheatNoClip = sfFalse;
+      game->cheatFast = sfFalse;
       qGame_ShowDebugMessage( game, STR_CHEAT_CLEARED );
    }
 

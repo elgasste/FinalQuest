@@ -43,7 +43,16 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
    qMapTile_t* tile;
    uint32_t newTileIndex;
 
-   newPos.x += entity->velocity.x * game->clock->frameDeltaSeconds;
+   if ( actor == game->controllingActor && game->cheatFast && entity->velocity.x != 0 )
+   {
+      newPos.x += ( entity->velocity.x < 0 )
+         ? -FAST_VELOCITY * game->clock->frameDeltaSeconds
+         : FAST_VELOCITY * game->clock->frameDeltaSeconds;
+   }
+   else
+   {
+      newPos.x += entity->velocity.x * game->clock->frameDeltaSeconds;
+   }
 
    if ( newPos.x <= 0 )
    {
@@ -75,7 +84,16 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
       }
    }
 
-   newPos.y += entity->velocity.y * game->clock->frameDeltaSeconds;
+   if ( actor == game->controllingActor && game->cheatFast && entity->velocity.y != 0 )
+   {
+      newPos.y += ( entity->velocity.y < 0 )
+         ? -FAST_VELOCITY * game->clock->frameDeltaSeconds
+         : FAST_VELOCITY * game->clock->frameDeltaSeconds;
+   }
+   else
+   {
+      newPos.y += entity->velocity.y * game->clock->frameDeltaSeconds;
+   }
 
    if ( newPos.y <= 0 )
    {

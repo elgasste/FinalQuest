@@ -27,6 +27,7 @@ typedef struct qGame_t
 
    sfBool showDiagnostics;
    sfBool cheatNoClip;
+   sfBool cheatFast;
 }
 qGame_t;
 
