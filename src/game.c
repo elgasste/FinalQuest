@@ -10,6 +10,7 @@
 #include "random.h"
 #include "actor.h"
 #include "sprite_texture.h"
+#include "physics.h"
 
 static void qGame_Tic( qGame_t* game );
 
@@ -28,7 +29,9 @@ qGame_t* qGame_Create()
    game->window = qWindow_Create();
    game->clock = gmClock_Create();
    game->inputState = qInputState_Create();
+   game->inputHandler = qInputHandler_Create();
    game->renderer = qRenderer_Create();
+   game->physics = qPhysics_Create();
    game->map = qMap_Create( mapTileCount );
 
    // default to grass
@@ -52,6 +55,8 @@ qGame_t* qGame_Create()
    game->controllingActor = &( game->actors[0] );
 
    game->showDiagnostics = sfFalse;
+   game->cheatNoClip = sfFalse;
+   game->cheatFast = sfFalse;
 
    return game;
 }
@@ -66,7 +71,9 @@ void qGame_Destroy( qGame_t* game )
    }
 
    qMap_Destroy( game->map );
+   qPhysics_Destroy( game->physics );
    qRenderer_Destroy( game->renderer );
+   qInputHandler_Destroy( game->inputHandler );
    qInputState_Destroy( game->inputState );
    qClock_Destroy( game->clock );
    qWindow_Destroy( game->window );
@@ -97,6 +104,7 @@ void qGame_Run( qGame_t* game )
 
 static void qGame_Tic( qGame_t* game )
 {
+   qPhysics_Tic( game );
    qRenderStates_Tic( game->renderer->renderStates, game->clock );
 }
 
