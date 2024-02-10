@@ -8,6 +8,8 @@
 #define COLLISION_PADDING 0.01f
 
 static void qPhysics_TicActor( qGame_t* game, qActor_t* actor );
+static void qPhysics_ClipActorToMapHorizontal( qGame_t* game, qActor_t* actor, sfVector2f* newPos );
+static void qPhysics_ClipActorToMapVertical( qGame_t* game, qActor_t* actor, sfVector2f* newPos );
 
 qPhysics_t* qPhysics_Create()
 {
@@ -37,10 +39,7 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
 {
    qEntity_t* entity = actor->entity;
    sfVector2f newPos = entity->mapPos;
-   sfVector2f mapSize = { (float)( game->map->tileCount.x * MAP_TILE_SIZE ), (float)( game->map->tileCount.y * MAP_TILE_SIZE ) };
    sfVector2f entityCenterPos;
-   uint32_t startRow, endRow, startCol, endCol, row, col;
-   qMapTile_t* tile;
    uint32_t newTileIndex;
 
    if ( actor == game->controllingActor && game->cheatFast && entity->velocity.x != 0 )
@@ -54,35 +53,7 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
       newPos.x += entity->velocity.x * game->clock->frameDeltaSeconds;
    }
 
-   if ( newPos.x <= 0 )
-   {
-      newPos.x = COLLISION_PADDING;
-   }
-   else if ( newPos.x + entity->mapHitBoxSize.x >= mapSize.x )
-   {
-      newPos.x = mapSize.x - entity->mapHitBoxSize.x - COLLISION_PADDING;
-   }
-   else if ( newPos.x != entity->mapPos.x && !game->cheatNoClip )
-   {
-      startRow = (uint32_t)( newPos.y / MAP_TILE_SIZE );
-      endRow = (uint32_t)( ( newPos.y + entity->mapHitBoxSize.y ) / MAP_TILE_SIZE );
-      col = ( newPos.x < entity->mapPos.x )
-         ? (uint32_t)( newPos.x / MAP_TILE_SIZE )
-         : (uint32_t)( ( newPos.x + entity->mapHitBoxSize.x ) / MAP_TILE_SIZE );
-
-      for ( row = startRow; row <= endRow; row++ )
-      {
-         tile = &( game->map->tiles[( row * game->map->tileCount.x ) + col] );
-
-         if ( !tile->isPassable )
-         {
-            newPos.x = ( newPos.x < entity->mapPos.x )
-               ? ( ( col + 1 ) * MAP_TILE_SIZE ) + COLLISION_PADDING
-               : ( col * MAP_TILE_SIZE ) - entity->mapHitBoxSize.x - COLLISION_PADDING;
-            break;
-         }
-      }
-   }
+   qPhysics_ClipActorToMapHorizontal( game, actor, &newPos );
 
    if ( actor == game->controllingActor && game->cheatFast && entity->velocity.y != 0 )
    {
@@ -95,35 +66,7 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
       newPos.y += entity->velocity.y * game->clock->frameDeltaSeconds;
    }
 
-   if ( newPos.y <= 0 )
-   {
-      newPos.y = COLLISION_PADDING;
-   }
-   else if ( newPos.y + entity->mapHitBoxSize.y >= mapSize.y )
-   {
-      newPos.y = mapSize.y - entity->mapHitBoxSize.y - COLLISION_PADDING;
-   }
-   else if ( newPos.y != entity->mapPos.y && !game->cheatNoClip )
-   {
-      startCol = (uint32_t)( newPos.x / MAP_TILE_SIZE );
-      endCol = (uint32_t)( ( newPos.x + entity->mapHitBoxSize.x ) / MAP_TILE_SIZE );
-      row = ( newPos.y < entity->mapPos.y )
-         ? (uint32_t)( newPos.y / MAP_TILE_SIZE )
-         : (uint32_t)( ( newPos.y + entity->mapHitBoxSize.y ) / MAP_TILE_SIZE );
-
-      for ( col = startCol; col <= endCol; col++ )
-      {
-         tile = &( game->map->tiles[( row * game->map->tileCount.x ) + col] );
-
-         if ( !tile->isPassable )
-         {
-            newPos.y = ( newPos.y < entity->mapPos.y )
-               ? ( ( row + 1 ) * MAP_TILE_SIZE ) + COLLISION_PADDING
-               : ( row * MAP_TILE_SIZE ) - entity->mapHitBoxSize.y - COLLISION_PADDING;
-            break;
-         }
-      }
-   }
+   qPhysics_ClipActorToMapVertical( game, actor, &newPos );
 
    entity->mapPos = newPos;
    qActor_Tic( actor, game->clock );
@@ -137,5 +80,81 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
    if ( newTileIndex != game->physics->entityMapTileCache )
    {
       game->physics->entityMapTileCache = newTileIndex;
+   }
+}
+
+static void qPhysics_ClipActorToMapHorizontal( qGame_t* game, qActor_t* actor, sfVector2f* newPos )
+{
+   qEntity_t* entity = actor->entity;
+   qMapTile_t* tile;
+   float mapSizeX = (float)( game->map->tileCount.x * MAP_TILE_SIZE );
+   uint32_t startRow, endRow, row, col;
+
+   if ( newPos->x <= 0 )
+   {
+      newPos->x = COLLISION_PADDING;
+   }
+   else if ( newPos->x + entity->mapHitBoxSize.x >= mapSizeX )
+   {
+      newPos->x = mapSizeX - entity->mapHitBoxSize.x - COLLISION_PADDING;
+   }
+   else if ( newPos->x != entity->mapPos.x && !game->cheatNoClip )
+   {
+      startRow = (uint32_t)( newPos->y / MAP_TILE_SIZE );
+      endRow = (uint32_t)( ( newPos->y + entity->mapHitBoxSize.y ) / MAP_TILE_SIZE );
+      col = ( newPos->x < entity->mapPos.x )
+         ? (uint32_t)( newPos->x / MAP_TILE_SIZE )
+         : (uint32_t)( ( newPos->x + entity->mapHitBoxSize.x ) / MAP_TILE_SIZE );
+
+      for ( row = startRow; row <= endRow; row++ )
+      {
+         tile = &( game->map->tiles[( row * game->map->tileCount.x ) + col] );
+
+         if ( !tile->isPassable )
+         {
+            newPos->x = ( newPos->x < entity->mapPos.x )
+               ? ( ( col + 1 ) * MAP_TILE_SIZE ) + COLLISION_PADDING
+               : ( col * MAP_TILE_SIZE ) - entity->mapHitBoxSize.x - COLLISION_PADDING;
+            break;
+         }
+      }
+   }
+}
+
+static void qPhysics_ClipActorToMapVertical( qGame_t* game, qActor_t* actor, sfVector2f* newPos )
+{
+   qEntity_t* entity = actor->entity;
+   qMapTile_t* tile;
+   float mapSizeY = (float)( game->map->tileCount.y * MAP_TILE_SIZE );
+   uint32_t startCol, endCol, row, col;
+
+   if ( newPos->y <= 0 )
+   {
+      newPos->y = COLLISION_PADDING;
+   }
+   else if ( newPos->y + entity->mapHitBoxSize.y >= mapSizeY )
+   {
+      newPos->y = mapSizeY - entity->mapHitBoxSize.y - COLLISION_PADDING;
+   }
+   else if ( newPos->y != entity->mapPos.y && !game->cheatNoClip )
+   {
+      startCol = (uint32_t)( newPos->x / MAP_TILE_SIZE );
+      endCol = (uint32_t)( ( newPos->x + entity->mapHitBoxSize.x ) / MAP_TILE_SIZE );
+      row = ( newPos->y < entity->mapPos.y )
+         ? (uint32_t)( newPos->y / MAP_TILE_SIZE )
+         : (uint32_t)( ( newPos->y + entity->mapHitBoxSize.y ) / MAP_TILE_SIZE );
+
+      for ( col = startCol; col <= endCol; col++ )
+      {
+         tile = &( game->map->tiles[( row * game->map->tileCount.x ) + col] );
+
+         if ( !tile->isPassable )
+         {
+            newPos->y = ( newPos->y < entity->mapPos.y )
+               ? ( ( row + 1 ) * MAP_TILE_SIZE ) + COLLISION_PADDING
+               : ( row * MAP_TILE_SIZE ) - entity->mapHitBoxSize.y - COLLISION_PADDING;
+            break;
+         }
+      }
    }
 }
