@@ -4,12 +4,14 @@
 #include "entity.h"
 #include "map.h"
 #include "clock.h"
+#include "math_util.h"
 
 #define COLLISION_PADDING 0.01f
 
 static void qPhysics_TicActor( qGame_t* game, qActor_t* actor );
 static void qPhysics_ClipActorToMapHorizontal( qGame_t* game, qActor_t* actor, sfVector2f* newPos );
 static void qPhysics_ClipActorToMapVertical( qGame_t* game, qActor_t* actor, sfVector2f* newPos );
+static void qPhysics_ClipActorToActors( qGame_t* game, qActor_t* actor, sfVector2f* newPos, sfBool horizontal );
 
 qPhysics_t* qPhysics_Create()
 {
@@ -54,6 +56,7 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
    }
 
    qPhysics_ClipActorToMapHorizontal( game, actor, &newPos );
+   qPhysics_ClipActorToActors( game, actor, &newPos, sfTrue );
 
    if ( actor == game->controllingActor && game->cheatFast && entity->velocity.y != 0 )
    {
@@ -67,6 +70,7 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
    }
 
    qPhysics_ClipActorToMapVertical( game, actor, &newPos );
+   qPhysics_ClipActorToActors( game, actor, &newPos, sfFalse );
 
    entity->mapPos = newPos;
    qActor_Tic( actor, game->clock );
@@ -154,6 +158,55 @@ static void qPhysics_ClipActorToMapVertical( qGame_t* game, qActor_t* actor, sfV
                ? ( ( row + 1 ) * MAP_TILE_SIZE ) + COLLISION_PADDING
                : ( row * MAP_TILE_SIZE ) - entity->mapHitBoxSize.y - COLLISION_PADDING;
             break;
+         }
+      }
+   }
+}
+
+static void qPhysics_ClipActorToActors( qGame_t* game, qActor_t* actor, sfVector2f* newPos, sfBool horizontal )
+{
+   qEntity_t* entity = actor->entity;
+   qEntity_t* otherEntity;
+   qActor_t* otherActor;
+   uint32_t i;
+
+   for ( i = 0; i < game->actorCount; i++ )
+   {
+      otherActor = &( game->actors[i] );
+
+      if ( otherActor == actor )
+      {
+         continue;
+      }
+
+      otherEntity = otherActor->entity;
+
+      if ( qMathUtil_RectsOverlap( newPos->x, newPos->y,
+                                   newPos->x + entity->mapHitBoxSize.x, newPos->y + entity->mapHitBoxSize.y,
+                                   otherEntity->mapPos.x, otherEntity->mapPos.y,
+                                   otherEntity->mapPos.x + otherEntity->mapHitBoxSize.x, otherEntity->mapPos.y + otherEntity->mapHitBoxSize.y ) )
+      {
+         if ( horizontal && newPos->x >= otherEntity->mapPos.x && newPos->x <= otherEntity->mapPos.x )
+         {
+            if ( newPos->x < otherEntity->mapPos.x + ( otherEntity->mapHitBoxSize.x / 2 ) )
+            {
+               newPos->x = otherEntity->mapPos.x - entity->mapHitBoxSize.x - COLLISION_PADDING;
+            }
+            else
+            {
+               newPos->x = entity->mapPos.x + entity->mapHitBoxSize.x + COLLISION_PADDING;
+            }
+         }
+         else if ( !horizontal && newPos->y >= otherEntity->mapPos.y && newPos->y <= otherEntity->mapPos.y )
+         {
+            if ( newPos->y < otherEntity->mapPos.y + ( otherEntity->mapHitBoxSize.y / 2 ) )
+            {
+               newPos->y = otherEntity->mapPos.y - entity->mapHitBoxSize.y - COLLISION_PADDING;
+            }
+            else
+            {
+               newPos->y = entity->mapPos.y + entity->mapHitBoxSize.y + COLLISION_PADDING;
+            }
          }
       }
    }
