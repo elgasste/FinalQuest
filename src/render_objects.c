@@ -1,14 +1,14 @@
 #include "render_objects.h"
 #include "sprite_texture.h"
 
-static qDiagnosticsRenderObjects_t* qDiagnosticsRenderObjects_Create();
-static qDebugBarRenderObjects_t* qDebugBarRenderObjects_Create();
-static qMapRenderObjects_t* qMapRenderObjects_Create();
-static qMapMenuRenderObjects_t* qMapMenuRenderObjects_Create();
-static void qDiagnosticsRenderObjects_Destroy( qDiagnosticsRenderObjects_t* objects );
-static void qDebugBarRenderObjects_Destroy( qDebugBarRenderObjects_t* objects );
-static void qMapRenderObjects_Destroy( qMapRenderObjects_t* objects );
-static void qMapMenuRenderObjects_Destroy( qMapMenuRenderObjects_t* objects );
+static qDiagnosticsRenderObjects_t* qRenderObjects_CreateDiagnostics();
+static qDebugBarRenderObjects_t* qRenderObjects_CreateDebugBar();
+static qMapRenderObjects_t* qRenderObjects_CreateMap();
+static qMapMenuRenderObjects_t* qRenderObjects_CreateMapMenu();
+static void qRenderObjects_DestroyDiagnostics( qDiagnosticsRenderObjects_t* objects );
+static void qRenderObjects_DestroyDebugBar( qDebugBarRenderObjects_t* objects );
+static void qRenderObjects_DestroyMap( qMapRenderObjects_t* objects );
+static void qRenderObjects_DestroyMapMenu( qMapMenuRenderObjects_t* objects );
 static void gmRenderObjects_BuildDialogBackground( sfConvexShape* shape,
                                                    float x, float y,
                                                    float w, float h,
@@ -18,9 +18,9 @@ static void gmRenderObjects_BuildDialogBackground( sfConvexShape* shape,
 qRenderObjects_t* qRenderObjects_Create()
 {
    qRenderObjects_t* renderObjects = (qRenderObjects_t*)qAlloc( sizeof( qRenderObjects_t ), sfTrue );
-   renderObjects->diagnostics = qDiagnosticsRenderObjects_Create();
-   renderObjects->debugBar = qDebugBarRenderObjects_Create();
-   renderObjects->map = qMapRenderObjects_Create();
+   renderObjects->diagnostics = qRenderObjects_CreateDiagnostics();
+   renderObjects->debugBar = qRenderObjects_CreateDebugBar();
+   renderObjects->map = qRenderObjects_CreateMap();
 
    renderObjects->spriteTextureCount = 3;
    renderObjects->spriteTextures = (qSpriteTexture_t*)qAlloc( sizeof( qSpriteTexture_t ) * renderObjects->spriteTextureCount, sfTrue );
@@ -31,7 +31,7 @@ qRenderObjects_t* qRenderObjects_Create()
    return renderObjects;
 }
 
-static qDiagnosticsRenderObjects_t* qDiagnosticsRenderObjects_Create()
+static qDiagnosticsRenderObjects_t* qRenderObjects_CreateDiagnostics()
 {
    sfVector2f backgroundSize = { 180, 64 };
    sfVector2f backgroundPos = { WINDOW_WIDTH - backgroundSize.x, 0 };
@@ -53,7 +53,7 @@ static qDiagnosticsRenderObjects_t* qDiagnosticsRenderObjects_Create()
    return objects;
 }
 
-static qDebugBarRenderObjects_t* qDebugBarRenderObjects_Create()
+static qDebugBarRenderObjects_t* qRenderObjects_CreateDebugBar()
 {
    sfVector2f backgroundSize = { 250, 16 };
    sfVector2f backgroundPos = { 10, 10 };
@@ -75,7 +75,7 @@ static qDebugBarRenderObjects_t* qDebugBarRenderObjects_Create()
    return objects;
 }
 
-static qMapRenderObjects_t* qMapRenderObjects_Create()
+static qMapRenderObjects_t* qRenderObjects_CreateMap()
 {
    sfVector2f tilesetScale = { GRAPHICS_SCALE, GRAPHICS_SCALE };
 
@@ -90,7 +90,7 @@ static qMapRenderObjects_t* qMapRenderObjects_Create()
    return objects;
 }
 
-static qMapMenuRenderObjects_t* qMapMenuRenderObjects_Create()
+static qMapMenuRenderObjects_t* qRenderObjects_CreateMapMenu()
 {
    sfVector2f textScale = { GRAPHICS_SCALE, GRAPHICS_SCALE };
    qMapMenuRenderObjects_t* objects = (qMapMenuRenderObjects_t*)qAlloc( sizeof( qMapMenuRenderObjects_t ), sfTrue );
@@ -130,14 +130,14 @@ void qRenderObjects_Destroy( qRenderObjects_t* objects )
 
    qFree( objects->spriteTextures, sizeof( qSpriteTexture_t ) * objects->spriteTextureCount, sfTrue );
 
-   qMapRenderObjects_Destroy( objects->map );
-   qDebugBarRenderObjects_Destroy( objects->debugBar );
-   qDiagnosticsRenderObjects_Destroy( objects->diagnostics );
+   qRenderObjects_DestroyMap( objects->map );
+   qRenderObjects_DestroyDebugBar( objects->debugBar );
+   qRenderObjects_DestroyDiagnostics( objects->diagnostics );
 
    qFree( objects, sizeof( qRenderObjects_t ), sfTrue );
 }
 
-void qDiagnosticsRenderObjects_Destroy( qDiagnosticsRenderObjects_t* objects )
+void qRenderObjects_DestroyDiagnostics( qDiagnosticsRenderObjects_t* objects )
 {
    qsfText_Destroy( objects->text );
    qsfFont_Destroy( objects->font );
@@ -146,7 +146,7 @@ void qDiagnosticsRenderObjects_Destroy( qDiagnosticsRenderObjects_t* objects )
    qFree( objects, sizeof( qDiagnosticsRenderObjects_t ), sfTrue );
 }
 
-static void qDebugBarRenderObjects_Destroy( qDebugBarRenderObjects_t* objects )
+static void qRenderObjects_DestroyDebugBar( qDebugBarRenderObjects_t* objects )
 {
    qsfText_Destroy( objects->text );
    qsfFont_Destroy( objects->font );
@@ -155,7 +155,7 @@ static void qDebugBarRenderObjects_Destroy( qDebugBarRenderObjects_t* objects )
    qFree( objects, sizeof( qDebugBarRenderObjects_t ), sfTrue );
 }
 
-static void qMapRenderObjects_Destroy( qMapRenderObjects_t* objects )
+static void qRenderObjects_DestroyMap( qMapRenderObjects_t* objects )
 {
    qsfSprite_Destroy( objects->tileSprite );
    qsfTexture_Destroy( objects->tilesetTexture );
@@ -163,7 +163,7 @@ static void qMapRenderObjects_Destroy( qMapRenderObjects_t* objects )
    qFree( objects, sizeof( qMapRenderObjects_t ), sfTrue );
 }
 
-static void qMapMenuRenderObjects_Destroy( qMapMenuRenderObjects_t* objects )
+static void qRenderObjects_DestroyMapMenu( qMapMenuRenderObjects_t* objects )
 {
    qsfText_Destroy( objects->text );
    qsfFont_Destroy( objects->font );
