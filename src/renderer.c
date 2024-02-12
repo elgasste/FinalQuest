@@ -9,6 +9,7 @@
 #include "actor.h"
 #include "entity.h"
 #include "sprite.h"
+#include "physics.h"
 
 static void qRenderer_DrawDiagnostics( qGame_t* game );
 static void qRenderer_DrawDebugBar( qGame_t* game );
@@ -254,7 +255,7 @@ static void qRenderer_DrawActors( qGame_t* game )
    sfVector2f spritePos;
    uint32_t i;
 
-   if ( game->actorsMoved )
+   if ( game->physics->actorMoved )
    {
       qRenderer_OrderActors( game );
    }

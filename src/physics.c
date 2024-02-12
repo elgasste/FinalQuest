@@ -31,7 +31,7 @@ void qPhysics_Tic( qGame_t* game )
 {
    uint32_t i;
 
-   game->actorsMoved = sfFalse;
+   game->physics->actorMoved = sfFalse;
 
    for ( i = 0; i < game->actorCount; i++ )
    {
@@ -76,7 +76,7 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
 
    if ( qMathUtil_Vector2fEqual( &( entity->mapPos ), &newPos ) )
    {
-      game->actorsMoved = sfTrue;
+      game->physics->actorMoved = sfTrue;
    }
 
    entity->mapPos = newPos;

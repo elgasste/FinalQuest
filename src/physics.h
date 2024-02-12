@@ -8,6 +8,7 @@ typedef struct qGame_t qGame_t;
 typedef struct qPhysics_t
 {
    uint32_t entityMapTileCache;
+   sfBool actorMoved;
 }
 qPhysics_t;
 
