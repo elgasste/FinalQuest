@@ -9,12 +9,14 @@
 #include "actor.h"
 #include "entity.h"
 #include "sprite.h"
+#include "physics.h"
 
 static void qRenderer_DrawDiagnostics( qGame_t* game );
 static void qRenderer_DrawDebugBar( qGame_t* game );
 static void qRenderer_SetMapView( qGame_t* game );
 static void qRenderer_DrawMap( qGame_t* game );
 static void qRenderer_DrawActors( qGame_t* game );
+static void qRenderer_OrderActors( qGame_t* game );
 
 qRenderer_t* qRenderer_Create()
 {
@@ -47,6 +49,20 @@ void qRenderer_Destroy( qRenderer_t* renderer )
    qFree( renderer, sizeof( qRenderer_t ), sfTrue );
 }
 
+void qRenderer_ChangeActors( qGame_t* game )
+{
+   uint32_t i;
+   qActor_t* actor;
+
+   for ( i = 0; i < game->actorCount; i++ )
+   {
+      actor = &( game->actors[i] );
+      game->renderer->orderedActors[i] = actor;
+   }
+
+   qRenderer_OrderActors( game );
+}
+
 void qRenderer_Render( qGame_t* game )
 {
    qWindow_DrawRectangleShape( game->window, game->renderer->windowBackgroundRect );
@@ -63,6 +79,19 @@ void qRenderer_Render( qGame_t* game )
    }
 
    qWindow_Display( game->window );
+}
+
+int qRenderer_ActorCmp( const void* a, const void* b )
+{
+   qActor_t* actorA = *(qActor_t**)a;
+   qActor_t* actorB = *(qActor_t**)b;
+
+   return ( actorA->entity->mapPos.y > actorB->entity->mapPos.y );
+}
+
+static void qRenderer_OrderActors( qGame_t* game )
+{
+   qsort( game->renderer->orderedActors, game->actorCount, sizeof( qActor_t* ), qRenderer_ActorCmp );
 }
 
 static void qRenderer_DrawDiagnostics( qGame_t* game )
@@ -226,9 +255,14 @@ static void qRenderer_DrawActors( qGame_t* game )
    sfVector2f spritePos;
    uint32_t i;
 
+   if ( game->physics->actorMoved )
+   {
+      qRenderer_OrderActors( game );
+   }
+
    for ( i = 0; i < game->actorCount; i++ )
    {
-      actor = &( game->actors[i] );
+      actor = renderer->orderedActors[i];
 
       spritePos.x = ( renderer->mapViewPadding.x > 0 )
          ? ( actor->entity->mapPos.x + actor->spriteOffset.x + renderer->mapViewPadding.x ) * GRAPHICS_SCALE

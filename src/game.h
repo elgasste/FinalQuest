@@ -24,6 +24,7 @@ typedef struct qGame_t
    qActor_t* actors;
    uint32_t actorCount;
    qActor_t* controllingActor;
+   uint32_t controllingActorIndex;
 
    sfBool showDiagnostics;
    sfBool cheatNoClip;
@@ -36,5 +37,6 @@ void qGame_Destroy( qGame_t* game );
 void qGame_Run( qGame_t* game );
 void qGame_Close( qGame_t* game );
 void qGame_ShowDebugMessage( qGame_t* game, const char* msg );
+void qGame_SwitchControllingActor( qGame_t* game );
 
 #endif // GAME_H

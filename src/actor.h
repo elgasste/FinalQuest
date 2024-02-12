@@ -17,9 +17,9 @@ typedef struct qActor_t
 }
 qActor_t;
 
-qActor_t* qActor_Create( sfVector2f mapPos, sfVector2f mapHitBoxSize, float maxVelocity,
-                         qSpriteTexture_t* spriteTexture, sfVector2f spriteOffset, float spriteFrameSeconds );
-void qActor_Destroy( qActor_t* actor );
+void qActor_Setup( qActor_t* actor, sfVector2f mapPos, sfVector2f mapHitBoxSize, float maxVelocity,
+                   qSpriteTexture_t* spriteTexture, sfVector2f spriteOffset, float spriteFrameSeconds );
+void qActor_Cleanup( qActor_t* actor );
 void qActor_SetDirection( qActor_t* actor, qDirection_t direction );
 void qActor_Tic( qActor_t* actor, qClock_t* clock );
 
