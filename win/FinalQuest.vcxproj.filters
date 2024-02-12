@@ -52,6 +52,12 @@
     <ClCompile Include="..\src\sprite_texture.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\math_util.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\physics.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\clock.h">
@@ -106,6 +112,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\sprite_texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\math_util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\physics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
