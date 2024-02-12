@@ -32,6 +32,8 @@
 
 #define FAST_VELOCITY   500.0f
 
+#define MAX_ACTORS      256
+
 #define TOGGLE_BOOL( x ) x = x ? sfFalse : sfTrue;
 
 // globals

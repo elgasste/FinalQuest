@@ -31,6 +31,8 @@ void qPhysics_Tic( qGame_t* game )
 {
    uint32_t i;
 
+   game->actorsMoved = sfFalse;
+
    for ( i = 0; i < game->actorCount; i++ )
    {
       qPhysics_TicActor( game, &( game->actors[i] ) );
@@ -71,6 +73,11 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
 
    qPhysics_ClipActorToMapVertical( game, actor, &newPos );
    qPhysics_ClipActorToActors( game, actor, &newPos, sfFalse );
+
+   if ( qMathUtil_Vector2fEqual( &( entity->mapPos ), &newPos ) )
+   {
+      game->actorsMoved = sfTrue;
+   }
 
    entity->mapPos = newPos;
    qActor_Tic( actor, game->clock );

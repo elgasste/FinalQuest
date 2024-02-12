@@ -6,6 +6,7 @@
 typedef struct qRenderObjects_t qRenderObjects_t;
 typedef struct qRenderStates_t qRenderStates_t;
 typedef struct qGame_t qGame_t;
+typedef struct qActor_t qActor_t;
 
 typedef struct qRenderer_t
 {
@@ -19,11 +20,14 @@ typedef struct qRenderer_t
    sfVector2f mapTilePixelOffset;
    sfVector2u mapViewStart;
    sfVector2u mapViewEnd;
+
+   qActor_t* orderedActors[MAX_ACTORS];
 }
 qRenderer_t;
 
 qRenderer_t* qRenderer_Create();
 void qRenderer_Destroy( qRenderer_t* renderer );
+void qRenderer_ChangeActors( qGame_t* game );
 void qRenderer_Render( qGame_t* game );
 
 #endif // RENDERER_H

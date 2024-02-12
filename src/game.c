@@ -58,6 +58,7 @@ qGame_t* qGame_Create()
    qActor_Setup( &( game->actors[2] ), actor3Pos, actorHitBoxSize, 80.0f, &( game->renderer->renderObjects->spriteTextures[0] ), actorSpriteOffset, 0.15f );
    game->controllingActor = &( game->actors[0] );
    game->controllingActorIndex = 0;
+   qRenderer_ChangeActors( game );
 
    game->showDiagnostics = sfFalse;
    game->cheatNoClip = sfFalse;

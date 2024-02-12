@@ -25,6 +25,7 @@ typedef struct qGame_t
    uint32_t actorCount;
    qActor_t* controllingActor;
    uint32_t controllingActorIndex;
+   sfBool actorsMoved;
 
    sfBool showDiagnostics;
    sfBool cheatNoClip;
