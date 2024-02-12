@@ -5,10 +5,12 @@ static qDiagnosticsRenderObjects_t* qRenderObjects_CreateDiagnostics();
 static qDebugBarRenderObjects_t* qRenderObjects_CreateDebugBar();
 static qMapRenderObjects_t* qRenderObjects_CreateMap();
 static qMapMenuRenderObjects_t* qRenderObjects_CreateMapMenu();
+static qScreenFadeRenderObjects_t* qRenderObjects_CreateScreenFade();
 static void qRenderObjects_DestroyDiagnostics( qDiagnosticsRenderObjects_t* objects );
 static void qRenderObjects_DestroyDebugBar( qDebugBarRenderObjects_t* objects );
 static void qRenderObjects_DestroyMap( qMapRenderObjects_t* objects );
 static void qRenderObjects_DestroyMapMenu( qMapMenuRenderObjects_t* objects );
+static void qRenderObjects_DestroyScreenFade( qScreenFadeRenderObjects_t* objects );
 static void gmRenderObjects_BuildDialogBackground( sfConvexShape* shape,
                                                    float x, float y,
                                                    float w, float h,
@@ -22,6 +24,7 @@ qRenderObjects_t* qRenderObjects_Create()
    renderObjects->debugBar = qRenderObjects_CreateDebugBar();
    renderObjects->map = qRenderObjects_CreateMap();
    renderObjects->mapMenu = qRenderObjects_CreateMapMenu();
+   renderObjects->screenFade = qRenderObjects_CreateScreenFade();
 
    renderObjects->spriteTextureCount = 3;
    renderObjects->spriteTextures = (qSpriteTexture_t*)qAlloc( sizeof( qSpriteTexture_t ) * renderObjects->spriteTextureCount, sfTrue );
@@ -121,6 +124,25 @@ static qMapMenuRenderObjects_t* qRenderObjects_CreateMapMenu()
    return objects;
 }
 
+static qScreenFadeRenderObjects_t* qRenderObjects_CreateScreenFade()
+{
+   sfVector2f v = { 0, 0 };
+
+   qScreenFadeRenderObjects_t* objects = (qScreenFadeRenderObjects_t*)qAlloc( sizeof( qScreenFadeRenderObjects_t ), sfTrue );
+
+   objects->screenRect = qsfRectangleShape_Create();
+
+   sfRectangleShape_setPosition( objects->screenRect, v );
+   v.x = WINDOW_WIDTH;
+   v.y = WINDOW_HEIGHT;
+   sfRectangleShape_setSize( objects->screenRect, v );
+
+   objects->lightColor = sfWhite;
+   objects->darkColor = sfBlack;
+
+   return objects;
+}
+
 void qRenderObjects_Destroy( qRenderObjects_t* objects )
 {
    uint32_t i;
@@ -132,6 +154,7 @@ void qRenderObjects_Destroy( qRenderObjects_t* objects )
 
    qFree( objects->spriteTextures, sizeof( qSpriteTexture_t ) * objects->spriteTextureCount, sfTrue );
 
+   qRenderObjects_DestroyScreenFade( objects->screenFade );
    qRenderObjects_DestroyMapMenu( objects->mapMenu );
    qRenderObjects_DestroyMap( objects->map );
    qRenderObjects_DestroyDebugBar( objects->debugBar );
@@ -173,6 +196,13 @@ static void qRenderObjects_DestroyMapMenu( qMapMenuRenderObjects_t* objects )
    qsfConvexShape_Destroy( objects->backgroundShape );
 
    qFree( objects, sizeof( qMapMenuRenderObjects_t ), sfTrue );
+}
+
+static void qRenderObjects_DestroyScreenFade( qScreenFadeRenderObjects_t* objects )
+{
+   qsfRectangleShape_Destroy( objects->screenRect );
+
+   qFree( objects, sizeof( qScreenFadeRenderObjects_t ), sfTrue );
 }
 
 static void gmRenderObjects_BuildDialogBackground( sfConvexShape* shape,
