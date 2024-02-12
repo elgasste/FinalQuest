@@ -23,6 +23,7 @@
 #define GAME_FPS        60
 
 #define DEBUG_FONT      "resources/fonts/consolas.ttf"
+#define GAME_FONT       "resources/fonts/abaddon_bold.ttf"
 
 #define MAP_TILE_SIZE   32
 
