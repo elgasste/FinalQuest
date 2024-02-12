@@ -27,7 +27,7 @@ qRenderer_t;
 
 qRenderer_t* qRenderer_Create();
 void qRenderer_Destroy( qRenderer_t* renderer );
-void qRenderer_ChangeActors( qGame_t* game );
+void qRenderer_UpdateActors( qGame_t* game );
 void qRenderer_Render( qGame_t* game );
 
 #endif // RENDERER_H

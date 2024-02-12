@@ -49,7 +49,7 @@ void qRenderer_Destroy( qRenderer_t* renderer )
    qFree( renderer, sizeof( qRenderer_t ), sfTrue );
 }
 
-void qRenderer_ChangeActors( qGame_t* game )
+void qRenderer_UpdateActors( qGame_t* game )
 {
    uint32_t i;
    qActor_t* actor;
