@@ -1,5 +1,3 @@
-#include <string.h>
-
 #include "input_handler.h"
 #include "game.h"
 #include "input_state.h"

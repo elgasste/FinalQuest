@@ -12,6 +12,7 @@ typedef struct qRenderer_t qRenderer_t;
 typedef struct qPhysics_t qPhysics_t;
 typedef struct qMap_t qMap_t;
 typedef struct qActor_t qActor_t;
+typedef struct qMenus_t qMenus_t;
 
 typedef struct qGame_t
 {
@@ -25,6 +26,7 @@ typedef struct qGame_t
    qGameState_t state;
 
    qMap_t* map;
+   qMenus_t* menus;
 
    qActor_t* actors;
    uint32_t actorCount;
@@ -43,5 +45,6 @@ void qGame_Run( qGame_t* game );
 void qGame_Close( qGame_t* game );
 void qGame_ShowDebugMessage( qGame_t* game, const char* msg );
 void qGame_SwitchControllingActor( qGame_t* game );
+void qGame_SetState( qGame_t* game, qGameState_t state );
 
 #endif // GAME_H

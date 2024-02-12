@@ -11,6 +11,7 @@
 #include "actor.h"
 #include "sprite_texture.h"
 #include "physics.h"
+#include "menu.h"
 
 static void qGame_Tic( qGame_t* game );
 
@@ -37,6 +38,15 @@ qGame_t* qGame_Create()
    game->renderer = qRenderer_Create();
    game->physics = qPhysics_Create();
    game->map = qMap_Create( mapTileCount );
+
+   game->menus = (qMenus_t*)qAlloc( sizeof( qMenus_t ), sfTrue );
+   game->menus->map = (qMenu_t*)qAlloc( sizeof( qMenu_t ), sfTrue );
+   game->menus->map->optionCount = 2;
+   game->menus->map->options = (qMenuOption_t*)qAlloc( sizeof( qMenuOption_t ) * 2, sfTrue );
+   game->menus->map->options[0].command = qMenuCommand_CloseMenu;
+   snprintf( game->menus->map->options[0].label, STRLEN_SHORT - 1, STR_MENU_CLOSEMENU );
+   game->menus->map->options[1].command = qMenuCommand_Quit;
+   snprintf( game->menus->map->options[1].label, STRLEN_SHORT - 1, STR_MENU_QUITGAME );
 
    // default to grass
    for ( i = 0; i < mapTileCount.x * mapTileCount.y; i++ )
@@ -83,6 +93,7 @@ void qGame_Destroy( qGame_t* game )
 
    qFree( game->actors, sizeof( qActor_t ) * game->actorCount, sfTrue );
 
+   qMenus_Destroy( game->menus );
    qMap_Destroy( game->map );
    qPhysics_Destroy( game->physics );
    qRenderer_Destroy( game->renderer );
@@ -147,4 +158,14 @@ void qGame_SwitchControllingActor( qGame_t* game )
    }
 
    game->controllingActor = &( game->actors[game->controllingActorIndex] );
+}
+
+void qGame_SetState( qGame_t* game, qGameState_t state )
+{
+   if ( state == qGameState_Map )
+   {
+      qRenderStates_ResetMenu( game->renderer->renderStates->menu );
+   }
+
+   game->state = state;
 }

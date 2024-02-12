@@ -100,6 +100,7 @@ xcopy "$(SolutionDir)..\src\resources" "$(OutDir)\resources\" /S /Y</Command>
     <ClInclude Include="..\src\input_state.h" />
     <ClInclude Include="..\src\map.h" />
     <ClInclude Include="..\src\math_util.h" />
+    <ClInclude Include="..\src\menu.h" />
     <ClInclude Include="..\src\physics.h" />
     <ClInclude Include="..\src\random.h" />
     <ClInclude Include="..\src\renderer.h" />
@@ -122,6 +123,7 @@ xcopy "$(SolutionDir)..\src\resources" "$(OutDir)\resources\" /S /Y</Command>
     <ClCompile Include="..\src\main.c" />
     <ClCompile Include="..\src\map.c" />
     <ClCompile Include="..\src\math_util.c" />
+    <ClCompile Include="..\src\menu.c" />
     <ClCompile Include="..\src\physics.c" />
     <ClCompile Include="..\src\random.c" />
     <ClCompile Include="..\src\renderer.c" />
