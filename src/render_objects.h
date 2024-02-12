@@ -38,6 +38,7 @@ typedef struct qMapMenuRenderObjects_t
    sfVector2f menuPos;
    sfVector2f itemsOffset;
    sfVector2f caratOffset;
+   float lineSize;
 }
 qMapMenuRenderObjects_t;
 

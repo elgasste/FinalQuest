@@ -3,8 +3,13 @@
 #include "input_state.h"
 #include "actor.h"
 #include "entity.h"
+#include "menu.h"
+#include "renderer.h"
+#include "render_states.h"
 
 static void qInputHandler_HandleMapInput( qGame_t* game );
+static void qInputHandler_HandleMapMenuInput( qGame_t* game );
+static sfBool qInputHandler_HandleMenuSelection( qGame_t* game, qMenu_t* menu );
 static void qInputHandler_CheckCheats( qGame_t* game );
 static void qInputHandler_ApplyCheat( qGame_t* game );
 
@@ -24,12 +29,6 @@ void qInputHandler_Destroy( qInputHandler_t* inputHandler )
 
 void qInputHandler_HandleInput( qGame_t* game )
 {
-   if ( qInputState_WasKeyPressed( game->inputState, sfKeyEscape ) )
-   {
-      qGame_Close( game );
-      return;
-   }
-
    qInputHandler_CheckCheats( game );
 
    if ( qInputState_WasKeyPressed( game->inputState, sfKeyF8 ) )
@@ -51,6 +50,9 @@ void qInputHandler_HandleInput( qGame_t* game )
       case qGameState_Map:
          qInputHandler_HandleMapInput( game );
          break;
+      case qGameState_MapMenu:
+         qInputHandler_HandleMapMenuInput( game );
+         break;
    }
 }
 
@@ -64,9 +66,16 @@ static void qInputHandler_HandleMapInput( qGame_t* game )
    sfBool rightIsDown = qInputState_IsKeyDown( sfKeyRight );
    sfBool downIsDown = qInputState_IsKeyDown( sfKeyDown );
 
+   if ( qInputState_WasKeyPressed( game->inputState, sfKeyEscape ) )
+   {
+      qGame_SetState( game, qGameState_MapMenu );
+      return;
+   }
+
    if ( qInputState_WasKeyPressed( game->inputState, sfKeyTab ) )
    {
       qGame_SwitchControllingActor( game );
+      return;
    }
 
    if ( leftIsDown && !rightIsDown )
@@ -132,6 +141,41 @@ static void qInputHandler_HandleMapInput( qGame_t* game )
          entity->direction = qDirection_Down;
       }
    }
+}
+
+static void qInputHandler_HandleMapMenuInput( qGame_t* game )
+{
+   qMenu_t* menu = game->menus->map;
+
+   if ( qInputState_WasKeyPressed( game->inputState, sfKeyEscape ) )
+   {
+      qGame_SetState( game, qGameState_Map );
+   }
+   else if ( qInputHandler_HandleMenuSelection( game, game->menus->map ) )
+   {
+      qGame_ExecuteMenuCommand( game, menu->options[menu->selectedIndex].command );
+   }
+}
+
+static sfBool qInputHandler_HandleMenuSelection( qGame_t* game, qMenu_t* menu )
+{
+   qMenuOption_t* selectedOption;
+
+   if ( qInputState_WasKeyPressed( game->inputState, sfKeyUp ) )
+   {
+      qMenu_ScrollUp( menu, game->renderer->renderStates->menu );
+   }
+   else if ( qInputState_WasKeyPressed( game->inputState, sfKeyDown ) )
+   {
+      qMenu_ScrollDown( menu, game->renderer->renderStates->menu );
+   }
+   else if ( qInputState_WasKeyPressed( game->inputState, sfKeyReturn ) )
+   {
+      selectedOption = &( menu->options[menu->selectedIndex] );
+      return sfTrue;
+   }
+
+   return sfFalse;
 }
 
 static void qInputHandler_CheckCheats( qGame_t* game )

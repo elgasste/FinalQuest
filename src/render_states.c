@@ -1,10 +1,13 @@
 #include "render_states.h"
 #include "clock.h"
+#include "game.h"
+#include "renderer.h"
 
 static qDebugBarRenderState_t* qRenderStates_CreateDebugBar();
 static qMenuRenderState_t* qRenderStates_CreateMenu();
 static void qRenderStates_DestroyDebugBar( qDebugBarRenderState_t* state );
 static void qRenderStates_DestroyMenu( qMenuRenderState_t* state );
+static void qRenderStates_TicMenu( qGame_t* game );
 
 qRenderStates_t* qRenderStates_Create()
 {
@@ -33,6 +36,7 @@ static qMenuRenderState_t* qRenderStates_CreateMenu()
 {
    qMenuRenderState_t* state = (qMenuRenderState_t*)qAlloc( sizeof( qMenuRenderState_t ), sfTrue );
 
+   state->caratBlinkSeconds = 0.25f;
    qRenderStates_ResetMenu( state );
 
    return state;
@@ -57,11 +61,13 @@ static void qRenderStates_DestroyMenu( qMenuRenderState_t* state )
    qFree( state, sizeof( qMenuRenderState_t ), sfTrue );
 }
 
-void qRenderStates_Tic( qRenderStates_t* states, qClock_t* clock )
+void qRenderStates_Tic( qGame_t* game )
 {
+   qRenderStates_t* states = game->renderer->renderStates;
+
    if ( states->debugBar->isVisible )
    {
-      states->debugBar->elapsedSeconds += clock->frameDeltaSeconds;
+      states->debugBar->elapsedSeconds += game->clock->frameDeltaSeconds;
 
       if ( states->debugBar->elapsedSeconds > states->debugBar->visibleSeconds )
       {
@@ -69,10 +75,28 @@ void qRenderStates_Tic( qRenderStates_t* states, qClock_t* clock )
          states->debugBar->elapsedSeconds = 0;
       }
    }
+
+   qRenderStates_TicMenu( game );
 }
 
 void qRenderStates_ResetMenu( qMenuRenderState_t* state )
 {
    state->showCarat = sfTrue;
    state->caratElapsedSeconds = 0;
+}
+
+static void qRenderStates_TicMenu( qGame_t* game )
+{
+   qRenderStates_t* states = game->renderer->renderStates;
+
+   if ( game->state == qGameState_MapMenu )
+   {
+      states->menu->caratElapsedSeconds += game->clock->frameDeltaSeconds;
+
+      while( states->menu->caratElapsedSeconds > states->menu->caratBlinkSeconds )
+      {
+         TOGGLE_BOOL( states->menu->showCarat );
+         states->menu->caratElapsedSeconds -= states->menu->caratBlinkSeconds;
+      }
+   }
 }

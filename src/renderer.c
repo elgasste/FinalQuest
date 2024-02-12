@@ -76,6 +76,12 @@ void qRenderer_Render( qGame_t* game )
          qRenderer_DrawMap( game );
          qRenderer_DrawActors( game );
          break;
+      case qGameState_MapMenu:
+         qRenderer_SetMapView( game );
+         qRenderer_DrawMap( game );
+         qRenderer_DrawActors( game );
+         qRenderer_DrawMapMenu( game );
+         break;
    }
 
    qRenderer_DrawDebugBar( game );
@@ -270,14 +276,14 @@ static void qRenderer_DrawMapMenu( qGame_t* game )
       if ( menu->selectedIndex == i && renderState->showCarat )
       {
          pos.x = objects->menuPos.x + objects->itemsOffset.x + objects->caratOffset.x;
-         pos.y = objects->menuPos.y + objects->itemsOffset.y + objects->caratOffset.y + ( i * MENU_LINESIZE );
+         pos.y = objects->menuPos.y + objects->itemsOffset.y + objects->caratOffset.y + ( i * objects->lineSize );
          sfText_setPosition( objects->text, pos );
          sfText_setString( objects->text, STR_MENU_CARAT );
          qWindow_DrawText( game->window, objects->text );
       }
 
       pos.x = objects->menuPos.x + objects->itemsOffset.x;
-      pos.y = objects->menuPos.y + objects->itemsOffset.y + ( i * MENU_LINESIZE );
+      pos.y = objects->menuPos.y + objects->itemsOffset.y + ( i * objects->lineSize );
       sfText_setPosition( objects->text, pos );
       sfText_setString( objects->text, menu->options[i].label );
       qWindow_DrawText( game->window, objects->text );

@@ -46,5 +46,6 @@ void qGame_Close( qGame_t* game );
 void qGame_ShowDebugMessage( qGame_t* game, const char* msg );
 void qGame_SwitchControllingActor( qGame_t* game );
 void qGame_SetState( qGame_t* game, qGameState_t state );
+void qGame_ExecuteMenuCommand( qGame_t* game, qMenuCommand_t command );
 
 #endif // GAME_H

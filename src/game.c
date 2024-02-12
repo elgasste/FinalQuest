@@ -38,15 +38,7 @@ qGame_t* qGame_Create()
    game->renderer = qRenderer_Create();
    game->physics = qPhysics_Create();
    game->map = qMap_Create( mapTileCount );
-
-   game->menus = (qMenus_t*)qAlloc( sizeof( qMenus_t ), sfTrue );
-   game->menus->map = (qMenu_t*)qAlloc( sizeof( qMenu_t ), sfTrue );
-   game->menus->map->optionCount = 2;
-   game->menus->map->options = (qMenuOption_t*)qAlloc( sizeof( qMenuOption_t ) * 2, sfTrue );
-   game->menus->map->options[0].command = qMenuCommand_CloseMenu;
-   snprintf( game->menus->map->options[0].label, STRLEN_SHORT - 1, STR_MENU_CLOSEMENU );
-   game->menus->map->options[1].command = qMenuCommand_Quit;
-   snprintf( game->menus->map->options[1].label, STRLEN_SHORT - 1, STR_MENU_QUITGAME );
+   game->menus = qMenus_Create();
 
    // default to grass
    for ( i = 0; i < mapTileCount.x * mapTileCount.y; i++ )
@@ -107,7 +99,7 @@ void qGame_Destroy( qGame_t* game )
 
 void qGame_Run( qGame_t* game )
 {
-   game->state = qGameState_Map;
+   qGame_SetState( game, qGameState_Map );
 
    while ( qWindow_IsOpen( game->window ) )
    {
@@ -131,7 +123,7 @@ void qGame_Run( qGame_t* game )
 static void qGame_Tic( qGame_t* game )
 {
    qPhysics_Tic( game );
-   qRenderStates_Tic( game->renderer->renderStates, game->clock );
+   qRenderStates_Tic( game );
 }
 
 void qGame_Close( qGame_t* game )
@@ -165,7 +157,24 @@ void qGame_SetState( qGame_t* game, qGameState_t state )
    if ( state == qGameState_Map )
    {
       qRenderStates_ResetMenu( game->renderer->renderStates->menu );
+      game->menus->map->selectedIndex = 0;
    }
 
    game->state = state;
+}
+
+void qGame_ExecuteMenuCommand( qGame_t* game, qMenuCommand_t command )
+{
+   switch ( command )
+   {
+      case qMenuCommand_Quit:
+         qGame_Close( game );
+         break;
+      case qMenuCommand_CloseMenu:
+         if ( game->state == qGameState_MapMenu )
+         {
+            qGame_SetState( game, qGameState_Map );
+         }
+         break;
+   }
 }

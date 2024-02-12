@@ -32,9 +32,6 @@
 
 #define MAP_TILE_SIZE               32
 
-#define MENU_CARAT_BLINKSECONDS     0.25f
-#define MENU_LINESIZE               40.0f
-
 #define CHEAT_NOCLIP                "fqclip"
 #define CHEAT_FAST                  "fqfast"
 #define CHEAT_CLEAR                 "fqclear"

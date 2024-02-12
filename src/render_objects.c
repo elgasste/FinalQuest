@@ -21,6 +21,7 @@ qRenderObjects_t* qRenderObjects_Create()
    renderObjects->diagnostics = qRenderObjects_CreateDiagnostics();
    renderObjects->debugBar = qRenderObjects_CreateDebugBar();
    renderObjects->map = qRenderObjects_CreateMap();
+   renderObjects->mapMenu = qRenderObjects_CreateMapMenu();
 
    renderObjects->spriteTextureCount = 3;
    renderObjects->spriteTextures = (qSpriteTexture_t*)qAlloc( sizeof( qSpriteTexture_t ) * renderObjects->spriteTextureCount, sfTrue );
@@ -95,18 +96,19 @@ static qMapMenuRenderObjects_t* qRenderObjects_CreateMapMenu()
    sfVector2f textScale = { GRAPHICS_SCALE, GRAPHICS_SCALE };
    qMapMenuRenderObjects_t* objects = (qMapMenuRenderObjects_t*)qAlloc( sizeof( qMapMenuRenderObjects_t ), sfTrue );
 
-   objects->menuPos.x = 64;
-   objects->menuPos.y = 64;
-   objects->itemsOffset.x = 48;
-   objects->itemsOffset.y = 32;
-   objects->caratOffset.x = -32;
+   objects->menuPos.x = 32 * GRAPHICS_SCALE;
+   objects->menuPos.y = 32 * GRAPHICS_SCALE;
+   objects->itemsOffset.x = 32 * GRAPHICS_SCALE;
+   objects->itemsOffset.y = 16 * GRAPHICS_SCALE;
+   objects->caratOffset.x = -16 * GRAPHICS_SCALE;
    objects->caratOffset.y = 0;
+   objects->lineSize = 20 * GRAPHICS_SCALE;
 
    objects->backgroundShape = qsfConvexShape_Create();
    gmRenderObjects_BuildDialogBackground( objects->backgroundShape,
                                           objects->menuPos.x, objects->menuPos.y,
-                                          256, 150,
-                                          16,
+                                          136 * GRAPHICS_SCALE, 76 * GRAPHICS_SCALE,
+                                          8 * GRAPHICS_SCALE,
                                           DIALOG_BACKDROP_LIGHTCOLOR );
 
    objects->font = qsfFont_CreateFromFile( GAME_FONT );
@@ -130,6 +132,7 @@ void qRenderObjects_Destroy( qRenderObjects_t* objects )
 
    qFree( objects->spriteTextures, sizeof( qSpriteTexture_t ) * objects->spriteTextureCount, sfTrue );
 
+   qRenderObjects_DestroyMapMenu( objects->mapMenu );
    qRenderObjects_DestroyMap( objects->map );
    qRenderObjects_DestroyDebugBar( objects->debugBar );
    qRenderObjects_DestroyDiagnostics( objects->diagnostics );
