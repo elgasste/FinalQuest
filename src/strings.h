@@ -26,6 +26,10 @@
 #define STR_LAGFRAMESFORMATTER            "  Lag Frames: %d"
 #define STR_ELAPSEDTIMEFORMATTER          "Elapsed Time: %s"
 
+#define STR_MENU_CARAT                    ">"
+#define STR_MENU_QUITGAME                 "Quit Game"
+#define STR_MENU_CLOSEMENU                "Close Menu"
+
 #define STR_DEBUG_DIAGNOSTICSON           "Toggled diagnostics on"
 #define STR_DEBUG_DIAGNOSTICSOFF          "Toggled diagnostics off"
 

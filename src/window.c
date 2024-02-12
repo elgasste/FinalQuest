@@ -68,6 +68,11 @@ void qWindow_DrawSprite( qWindow_t* window, sfSprite* sprite )
    sfRenderWindow_drawSprite( window->sfmlWindow, sprite, 0 );
 }
 
+void qWindow_DrawConvexShape( qWindow_t* window, sfConvexShape* shape )
+{
+   sfRenderWindow_drawConvexShape( window->sfmlWindow, shape, 0 );
+}
+
 sfBool qWindow_IsOpen( qWindow_t* window )
 {
    return sfRenderWindow_isOpen( window->sfmlWindow );

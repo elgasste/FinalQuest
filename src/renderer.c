@@ -10,11 +10,13 @@
 #include "entity.h"
 #include "sprite.h"
 #include "physics.h"
+#include "menu.h"
 
 static void qRenderer_DrawDiagnostics( qGame_t* game );
 static void qRenderer_DrawDebugBar( qGame_t* game );
 static void qRenderer_SetMapView( qGame_t* game );
 static void qRenderer_DrawMap( qGame_t* game );
+static void qRenderer_DrawMapMenu( qGame_t* game );
 static void qRenderer_DrawActors( qGame_t* game );
 static void qRenderer_OrderActors( qGame_t* game );
 
@@ -67,9 +69,20 @@ void qRenderer_Render( qGame_t* game )
 {
    qWindow_DrawRectangleShape( game->window, game->renderer->windowBackgroundRect );
 
-   qRenderer_SetMapView( game );
-   qRenderer_DrawMap( game );
-   qRenderer_DrawActors( game );
+   switch ( game->state )
+   {
+      case qGameState_Map:
+         qRenderer_SetMapView( game );
+         qRenderer_DrawMap( game );
+         qRenderer_DrawActors( game );
+         break;
+      case qGameState_MapMenu:
+         qRenderer_SetMapView( game );
+         qRenderer_DrawMap( game );
+         qRenderer_DrawActors( game );
+         qRenderer_DrawMapMenu( game );
+         break;
+   }
 
    qRenderer_DrawDebugBar( game );
 
@@ -245,6 +258,35 @@ static void qRenderer_DrawMap( qGame_t* game )
 
          qWindow_DrawSprite( game->window, objects->tileSprite );
       }
+   }
+}
+
+static void qRenderer_DrawMapMenu( qGame_t* game )
+{
+   sfVector2f pos;
+   qMapMenuRenderObjects_t* objects = game->renderer->renderObjects->mapMenu;
+   qMenuRenderState_t* renderState = game->renderer->renderStates->menu;
+   qMenu_t* menu = game->menus->map;
+   uint32_t i;
+
+   qWindow_DrawConvexShape( game->window, objects->backgroundShape );
+
+   for ( i = 0; i < menu->optionCount; i++ )
+   {
+      if ( menu->selectedIndex == i && renderState->showCarat )
+      {
+         pos.x = objects->menuPos.x + objects->itemsOffset.x + objects->caratOffset.x;
+         pos.y = objects->menuPos.y + objects->itemsOffset.y + objects->caratOffset.y + ( i * objects->lineSize );
+         sfText_setPosition( objects->text, pos );
+         sfText_setString( objects->text, STR_MENU_CARAT );
+         qWindow_DrawText( game->window, objects->text );
+      }
+
+      pos.x = objects->menuPos.x + objects->itemsOffset.x;
+      pos.y = objects->menuPos.y + objects->itemsOffset.y + ( i * objects->lineSize );
+      sfText_setPosition( objects->text, pos );
+      sfText_setString( objects->text, menu->options[i].label );
+      qWindow_DrawText( game->window, objects->text );
    }
 }
 

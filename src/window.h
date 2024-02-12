@@ -20,6 +20,7 @@ void qWindow_HandleEvents( qGame_t* game );
 void qWindow_DrawRectangleShape( qWindow_t* window, sfRectangleShape* rect );
 void qWindow_DrawText( qWindow_t* window, sfText* text );
 void qWindow_DrawSprite( qWindow_t* window, sfSprite* sprite );
+void qWindow_DrawConvexShape( qWindow_t* window, sfConvexShape* shape );
 sfBool qWindow_IsOpen( qWindow_t* window );
 
 #endif // WINDOW_H

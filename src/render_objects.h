@@ -30,11 +30,24 @@ typedef struct qMapRenderObjects_t
 }
 qMapRenderObjects_t;
 
+typedef struct qMapMenuRenderObjects_t
+{
+   sfConvexShape* backgroundShape;
+   sfFont* font;
+   sfText* text;
+   sfVector2f menuPos;
+   sfVector2f itemsOffset;
+   sfVector2f caratOffset;
+   float lineSize;
+}
+qMapMenuRenderObjects_t;
+
 typedef struct qRenderObjects_t
 {
    qDiagnosticsRenderObjects_t* diagnostics;
    qDebugBarRenderObjects_t* debugBar;
    qMapRenderObjects_t* map;
+   qMapMenuRenderObjects_t* mapMenu;
 
    qSpriteTexture_t* spriteTextures;
    uint32_t spriteTextureCount;

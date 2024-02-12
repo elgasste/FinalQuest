@@ -4,35 +4,41 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <SFML/Graphics.h>
 
 #include "strings.h"
 
-#define STRLEN_DEFAULT  512
-#define STRLEN_SHORT    32
+#define STRLEN_DEFAULT              512
+#define STRLEN_SHORT                32
 
-#define LOG_FILENAME    "log.txt"
+#define LOG_FILENAME                "log.txt"
 
-#define GRAPHICS_SCALE  3
+#define GRAPHICS_SCALE              3
 
-#define WINDOW_WIDTH    ( 768 * GRAPHICS_SCALE )
-#define WINDOW_HEIGHT   ( 432 * GRAPHICS_SCALE )
-#define WINDOW_BPP      32
-#define WINDOW_STYLE    sfTitlebar | sfClose
+#define WINDOW_WIDTH                ( 768 * GRAPHICS_SCALE )
+#define WINDOW_HEIGHT               ( 432 * GRAPHICS_SCALE )
+#define WINDOW_BPP                  32
+#define WINDOW_STYLE                sfTitlebar | sfClose
 
-#define GAME_FPS        60
+#define GAME_FPS                    60
 
-#define DEBUG_FONT      "resources/fonts/consolas.ttf"
+#define DEBUG_FONT                  "resources/fonts/consolas.ttf"
+#define GAME_FONT                   "resources/fonts/abaddon_bold.ttf"
+#define GAME_FONT_SIZE              16
+#define GAME_FONT_COLOR             sfColor_fromRGB( 224, 224, 224 )
+#define DIALOG_BACKDROP_LIGHTCOLOR  sfColor_fromRGBA( 0, 0, 0, 192 )
+#define DIALOG_BACKDROP_DARKCOLOR   sfColor_fromRGBA( 255, 255, 255, 24 )
 
-#define MAP_TILE_SIZE   32
+#define MAP_TILE_SIZE               32
 
-#define CHEAT_NOCLIP    "fqclip"
-#define CHEAT_FAST      "fqfast"
-#define CHEAT_CLEAR     "fqclear"
+#define CHEAT_NOCLIP                "fqclip"
+#define CHEAT_FAST                  "fqfast"
+#define CHEAT_CLEAR                 "fqclear"
 
-#define FAST_VELOCITY   500.0f
+#define FAST_VELOCITY               500.0f
 
-#define MAX_ACTORS      256
+#define MAX_ACTORS                  256
 
 #define TOGGLE_BOOL( x ) x = x ? sfFalse : sfTrue;
 
