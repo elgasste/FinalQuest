@@ -67,9 +67,14 @@ void qRenderer_Render( qGame_t* game )
 {
    qWindow_DrawRectangleShape( game->window, game->renderer->windowBackgroundRect );
 
-   qRenderer_SetMapView( game );
-   qRenderer_DrawMap( game );
-   qRenderer_DrawActors( game );
+   switch ( game->state )
+   {
+      case qGameState_Map:
+         qRenderer_SetMapView( game );
+         qRenderer_DrawMap( game );
+         qRenderer_DrawActors( game );
+         break;
+   }
 
    qRenderer_DrawDebugBar( game );
 

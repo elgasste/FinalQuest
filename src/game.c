@@ -96,6 +96,8 @@ void qGame_Destroy( qGame_t* game )
 
 void qGame_Run( qGame_t* game )
 {
+   game->state = qGameState_Map;
+
    while ( qWindow_IsOpen( game->window ) )
    {
       qClock_StartFrame( game->clock );

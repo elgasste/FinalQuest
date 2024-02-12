@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "common.h"
+#include "enums.h"
 
 typedef struct qWindow_t qWindow_t;
 typedef struct qClock_t qClock_t;
@@ -20,7 +21,11 @@ typedef struct qGame_t
    qInputHandler_t* inputHandler;
    qRenderer_t* renderer;
    qPhysics_t* physics;
+
+   qGameState_t state;
+
    qMap_t* map;
+
    qActor_t* actors;
    uint32_t actorCount;
    qActor_t* controllingActor;

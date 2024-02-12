@@ -8,6 +8,7 @@
 
 #define COLLISION_PADDING 0.01f
 
+static void qPhysics_TicActors( qGame_t* game );
 static void qPhysics_TicActor( qGame_t* game, qActor_t* actor );
 static void qPhysics_ClipActorToMapHorizontal( qGame_t* game, qActor_t* actor, sfVector2f* newPos );
 static void qPhysics_ClipActorToMapVertical( qGame_t* game, qActor_t* actor, sfVector2f* newPos );
@@ -28,6 +29,16 @@ void qPhysics_Destroy( qPhysics_t* physics )
 }
 
 void qPhysics_Tic( qGame_t* game )
+{
+   switch ( game->state )
+   {
+      case qGameState_Map:
+         qPhysics_TicActors( game );
+         break;
+   }
+}
+
+static void qPhysics_TicActors( qGame_t* game )
 {
    uint32_t i;
 

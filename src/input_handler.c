@@ -48,12 +48,12 @@ void qInputHandler_HandleInput( qGame_t* game )
       }
    }
 
-   if ( qInputState_WasKeyPressed( game->inputState, sfKeyTab ) )
+   switch ( game->state )
    {
-      qGame_SwitchControllingActor( game );
+      case qGameState_Map:
+         qInputHandler_HandleMapInput( game );
+         break;
    }
-
-   qInputHandler_HandleMapInput( game );
 }
 
 static void qInputHandler_HandleMapInput( qGame_t* game )
@@ -65,6 +65,11 @@ static void qInputHandler_HandleMapInput( qGame_t* game )
    sfBool upIsDown = qInputState_IsKeyDown( sfKeyUp );
    sfBool rightIsDown = qInputState_IsKeyDown( sfKeyRight );
    sfBool downIsDown = qInputState_IsKeyDown( sfKeyDown );
+
+   if ( qInputState_WasKeyPressed( game->inputState, sfKeyTab ) )
+   {
+      qGame_SwitchControllingActor( game );
+   }
 
    if ( leftIsDown && !rightIsDown )
    {
