@@ -21,8 +21,10 @@ qGame_t* qGame_Create()
    sfVector2f actor1Pos = { 896, 896 };
    sfVector2f actor2Pos = { 928, 896 };
    sfVector2f actor3Pos = { 864, 896 };
-   sfVector2f actorHitBoxSize = { 26, 16 };
-   sfVector2f actorSpriteOffset = { -3, -16 };
+   sfVector2f humanHitBoxSize = { 26, 16 };
+   sfVector2f dogHitBoxSize = { 24, 10 };
+   sfVector2f humanSpriteOffset = { -3, -16 };
+   sfVector2f dogSpriteOffset = { -4, -22 };
 
    qGame_t* game = (qGame_t*)qAlloc( sizeof( qGame_t ), sfTrue );
 
@@ -53,9 +55,9 @@ qGame_t* qGame_Create()
 
    game->actorCount = 3;
    game->actors = (qActor_t*)qAlloc( sizeof( qActor_t ) * game->actorCount, sfTrue );
-   qActor_Setup( &( game->actors[0] ), actor1Pos, actorHitBoxSize, 100.0f, &( game->renderer->renderObjects->spriteTextures[0] ), actorSpriteOffset, 0.15f );
-   qActor_Setup( &( game->actors[1] ), actor2Pos, actorHitBoxSize, 150.0f, &( game->renderer->renderObjects->spriteTextures[1] ), actorSpriteOffset, 0.15f );
-   qActor_Setup( &( game->actors[2] ), actor3Pos, actorHitBoxSize, 80.0f, &( game->renderer->renderObjects->spriteTextures[2] ), actorSpriteOffset, 0.15f );
+   qActor_Setup( &( game->actors[0] ), actor1Pos, humanHitBoxSize, 100.0f, &( game->renderer->renderObjects->spriteTextures[0] ), humanSpriteOffset, 0.15f );
+   qActor_Setup( &( game->actors[1] ), actor2Pos, humanHitBoxSize, 90.0f, &( game->renderer->renderObjects->spriteTextures[1] ), humanSpriteOffset, 0.15f );
+   qActor_Setup( &( game->actors[2] ), actor3Pos, dogHitBoxSize, 150.0f, &( game->renderer->renderObjects->spriteTextures[2] ), dogSpriteOffset, 0.15f );
    game->controllingActor = &( game->actors[0] );
    game->controllingActorIndex = 0;
    qRenderer_UpdateActors( game );
