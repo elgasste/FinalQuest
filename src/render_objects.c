@@ -4,9 +4,16 @@
 static qDiagnosticsRenderObjects_t* qDiagnosticsRenderObjects_Create();
 static qDebugBarRenderObjects_t* qDebugBarRenderObjects_Create();
 static qMapRenderObjects_t* qMapRenderObjects_Create();
+static qMapMenuRenderObjects_t* qMapMenuRenderObjects_Create();
 static void qDiagnosticsRenderObjects_Destroy( qDiagnosticsRenderObjects_t* objects );
 static void qDebugBarRenderObjects_Destroy( qDebugBarRenderObjects_t* objects );
 static void qMapRenderObjects_Destroy( qMapRenderObjects_t* objects );
+static void qMapMenuRenderObjects_Destroy( qMapMenuRenderObjects_t* objects );
+static void gmRenderObjects_BuildDialogBackground( sfConvexShape* shape,
+                                                   float x, float y,
+                                                   float w, float h,
+                                                   float cornerRadius,
+                                                   sfColor color );
 
 qRenderObjects_t* qRenderObjects_Create()
 {
@@ -83,6 +90,35 @@ static qMapRenderObjects_t* qMapRenderObjects_Create()
    return objects;
 }
 
+static qMapMenuRenderObjects_t* qMapMenuRenderObjects_Create()
+{
+   sfVector2f textScale = { GRAPHICS_SCALE, GRAPHICS_SCALE };
+   qMapMenuRenderObjects_t* objects = (qMapMenuRenderObjects_t*)qAlloc( sizeof( qMapMenuRenderObjects_t ), sfTrue );
+
+   objects->menuPos.x = 64;
+   objects->menuPos.y = 64;
+   objects->itemsOffset.x = 48;
+   objects->itemsOffset.y = 32;
+   objects->caratOffset.x = -32;
+   objects->caratOffset.y = 0;
+
+   objects->backgroundShape = qsfConvexShape_Create();
+   gmRenderObjects_BuildDialogBackground( objects->backgroundShape,
+                                          objects->menuPos.x, objects->menuPos.y,
+                                          256, 150,
+                                          16,
+                                          DIALOG_BACKDROP_LIGHTCOLOR );
+
+   objects->font = qsfFont_CreateFromFile( GAME_FONT );
+   objects->text = qsfText_Create();
+   sfText_setFont( objects->text, objects->font );
+   sfText_setCharacterSize( objects->text, GAME_FONT_SIZE );
+   sfText_scale( objects->text, textScale );
+   sfText_setFillColor( objects->text, GAME_FONT_COLOR );
+
+   return objects;
+}
+
 void qRenderObjects_Destroy( qRenderObjects_t* objects )
 {
    uint32_t i;
@@ -125,4 +161,47 @@ static void qMapRenderObjects_Destroy( qMapRenderObjects_t* objects )
    qsfTexture_Destroy( objects->tilesetTexture );
 
    qFree( objects, sizeof( qMapRenderObjects_t ), sfTrue );
+}
+
+static void qMapMenuRenderObjects_Destroy( qMapMenuRenderObjects_t* objects )
+{
+   qsfText_Destroy( objects->text );
+   qsfFont_Destroy( objects->font );
+   qsfConvexShape_Destroy( objects->backgroundShape );
+
+   qFree( objects, sizeof( qMapMenuRenderObjects_t ), sfTrue );
+}
+
+static void gmRenderObjects_BuildDialogBackground( sfConvexShape* shape,
+                                                   float x, float y,
+                                                   float w, float h,
+                                                   float cornerRadius,
+                                                   sfColor color )
+{
+   sfVector2f pt = { x, y };
+
+   sfConvexShape_setPointCount( shape, 8 );
+   sfConvexShape_setPosition( shape, pt );
+   sfConvexShape_setFillColor( shape, color );
+
+   pt.x = cornerRadius;
+   pt.y = 0;
+   sfConvexShape_setPoint( shape, 0, pt );
+   pt.x = w - cornerRadius;
+   sfConvexShape_setPoint( shape, 1, pt );
+   pt.x = w;
+   pt.y = cornerRadius;
+   sfConvexShape_setPoint( shape, 2, pt );
+   pt.y = h - cornerRadius;
+   sfConvexShape_setPoint( shape, 3, pt );
+   pt.x = w - cornerRadius;
+   pt.y = h;
+   sfConvexShape_setPoint( shape, 4, pt );
+   pt.x = cornerRadius;
+   sfConvexShape_setPoint( shape, 5, pt );
+   pt.x = 0;
+   pt.y = h - cornerRadius;
+   sfConvexShape_setPoint( shape, 6, pt );
+   pt.y = cornerRadius;
+   sfConvexShape_setPoint( shape, 7, pt );
 }
