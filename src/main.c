@@ -28,17 +28,17 @@ int main()
    qGame_Destroy( game );
    printf( STR_CONSOLE_BURRITO );
 
-   snprintf( memStr, STRLEN_DEFAULT, "%s: %llu", STR_MAIN_MEMALLOCATED, g_memAllocated );
+   snprintf( memStr, STRLEN_DEFAULT - 1, "%s: %llu", STR_MAIN_MEMALLOCATED, g_memAllocated );
    qLog_Msg( memStr );
-   snprintf( memStr, STRLEN_DEFAULT, "%s: %llu", STR_MAIN_MEMFREED, g_memFreed );
+   snprintf( memStr, STRLEN_DEFAULT - 1, "%s: %llu", STR_MAIN_MEMFREED, g_memFreed );
    qLog_Msg( memStr );
-   snprintf( memStr, STRLEN_DEFAULT, "%s: %llu", STR_MAIN_MEMMAX, g_maxMemCounter );
+   snprintf( memStr, STRLEN_DEFAULT - 1, "%s: %llu", STR_MAIN_MEMMAX, g_maxMemCounter );
    qLog_Msg( memStr );
-   snprintf( memStr, STRLEN_DEFAULT, "%s: %u", STR_MAIN_SFMLOBJCREATED, g_sfmlObjectsCreated );
+   snprintf( memStr, STRLEN_DEFAULT - 1, "%s: %u", STR_MAIN_SFMLOBJCREATED, g_sfmlObjectsCreated );
    qLog_Msg( memStr );
-   snprintf( memStr, STRLEN_DEFAULT, "%s: %u", STR_MAIN_SFMLOBJDESTROYED, g_sfmlObjectsDestroyed );
+   snprintf( memStr, STRLEN_DEFAULT - 1, "%s: %u", STR_MAIN_SFMLOBJDESTROYED, g_sfmlObjectsDestroyed );
    qLog_Msg( memStr );
-   snprintf( memStr, STRLEN_DEFAULT, "%s: %u", STR_MAIN_SFMLOBJMAX, g_maxSfmlObjectCounter );
+   snprintf( memStr, STRLEN_DEFAULT - 1, "%s: %u", STR_MAIN_SFMLOBJMAX, g_maxSfmlObjectCounter );
    qLog_Msg( memStr );
    qLog_Newline();
 

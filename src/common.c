@@ -35,7 +35,7 @@ void qLog_Msg( const char* msg )
 
    if ( !logFile )
    {
-      snprintf( errorMsg, STRLEN_DEFAULT, "%s: \"%s\"", STR_ERROR_OPENLOGFILE, msg );
+      snprintf( errorMsg, STRLEN_DEFAULT - 1, "%s: \"%s\"", STR_ERROR_OPENLOGFILE, msg );
       qExitWithError( errorMsg );
    }
 
@@ -46,7 +46,7 @@ void qLog_Msg( const char* msg )
    {
       if ( fprintf( logFile, msg ) < 0 )
       {
-         snprintf( errorMsg, STRLEN_DEFAULT, "%s: \"%s\"", STR_ERROR_WRITELOGFILE, msg );
+         snprintf( errorMsg, STRLEN_DEFAULT - 1, "%s: \"%s\"", STR_ERROR_WRITELOGFILE, msg );
          qExitWithError( errorMsg );
       }
    }
@@ -57,7 +57,7 @@ void qLog_Msg( const char* msg )
                     tm->tm_hour, tm->tm_min, tm->tm_sec,
                     msg ) < 0 )
       {
-         snprintf( errorMsg, STRLEN_DEFAULT, "%s: \"%s\"", STR_ERROR_WRITELOGFILE, msg );
+         snprintf( errorMsg, STRLEN_DEFAULT - 1, "%s: \"%s\"", STR_ERROR_WRITELOGFILE, msg );
          qExitWithError( errorMsg );
       }
    }
@@ -76,7 +76,7 @@ void qLog_Newline()
 void qExitWithError( const char* msg )
 {
    char output[STRLEN_DEFAULT];
-   snprintf( output, STRLEN_DEFAULT, "%s: %s\n\n", STR_ERROR, msg );
+   snprintf( output, STRLEN_DEFAULT - 1, "%s: %s\n\n", STR_ERROR, msg );
    printf( output );
    exit( 1 );
 }

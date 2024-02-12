@@ -104,26 +104,26 @@ static void qRenderer_DrawDiagnostics( qGame_t* game )
 
    objects->textPosition.y = 4;
    sfText_setPosition( objects->text, objects->textPosition );
-   snprintf( msg, STRLEN_DEFAULT, STR_FRAMERATEFORMATTER, GAME_FPS );
+   snprintf( msg, STRLEN_DEFAULT - 1, STR_FRAMERATEFORMATTER, GAME_FPS );
    sfText_setString( objects->text, msg );
    qWindow_DrawText( game->window, objects->text );
 
    objects->textPosition.y += objects->lineSpacing;
    sfText_setPosition( objects->text, objects->textPosition );
-   snprintf( msg, STRLEN_DEFAULT, STR_TOTALFRAMESFORMATTER, game->clock->totalFrameCount );
+   snprintf( msg, STRLEN_DEFAULT - 1, STR_TOTALFRAMESFORMATTER, game->clock->totalFrameCount );
    sfText_setString( objects->text, msg );
    qWindow_DrawText( game->window, objects->text );
 
    objects->textPosition.y += objects->lineSpacing;
    sfText_setPosition( objects->text, objects->textPosition );
-   snprintf( msg, STRLEN_DEFAULT, STR_LAGFRAMESFORMATTER, game->clock->lagFrameCount );
+   snprintf( msg, STRLEN_DEFAULT - 1, STR_LAGFRAMESFORMATTER, game->clock->lagFrameCount );
    sfText_setString( objects->text, msg );
    qWindow_DrawText( game->window, objects->text );
 
    objects->textPosition.y += objects->lineSpacing;
    sfText_setPosition( objects->text, objects->textPosition );
-   qTimeUtil_FormatTime( timeStr, STRLEN_SHORT, (int32_t)( game->clock->realTotalDurationMicro / 1000000 ) );
-   snprintf( msg, STRLEN_DEFAULT, STR_ELAPSEDTIMEFORMATTER, timeStr );
+   qTimeUtil_FormatTime( timeStr, STRLEN_SHORT - 1, (int32_t)( game->clock->realTotalDurationMicro / 1000000 ) );
+   snprintf( msg, STRLEN_DEFAULT - 1, STR_ELAPSEDTIMEFORMATTER, timeStr );
    sfText_setString( objects->text, msg );
    qWindow_DrawText( game->window, objects->text );
 }

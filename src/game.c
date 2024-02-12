@@ -125,7 +125,7 @@ void qGame_ShowDebugMessage( qGame_t* game, const char* msg )
 {
    qDebugBarRenderState_t* state = game->renderer->renderStates->debugBar;
 
-   snprintf( state->msgBuffer, state->msgBufferLen, "%s", msg );
+   snprintf( state->msgBuffer, state->msgBufferLen - 1, "%s", msg );
    state->isVisible = sfTrue;
    state->elapsedSeconds = 0;
 }

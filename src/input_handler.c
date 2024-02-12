@@ -184,13 +184,13 @@ static void qInputHandler_ApplyCheat( qGame_t* game )
    if ( !strcmp( cheat, CHEAT_NOCLIP ) )
    {
       TOGGLE_BOOL( game->cheatNoClip );
-      snprintf( cheatMsg, STRLEN_SHORT, STR_CHEAT_NOCLIPFORMATTER, game->cheatNoClip ? STR_ON : STR_OFF );
+      snprintf( cheatMsg, STRLEN_SHORT - 1, STR_CHEAT_NOCLIPFORMATTER, game->cheatNoClip ? STR_ON : STR_OFF );
       qGame_ShowDebugMessage( game, cheatMsg );
    }
    else if ( !strcmp( cheat, CHEAT_FAST ) )
    {
       TOGGLE_BOOL( game->cheatFast );
-      snprintf( cheatMsg, STRLEN_SHORT, STR_CHEAT_FASTFORMATTER, game->cheatFast ? STR_ON : STR_OFF );
+      snprintf( cheatMsg, STRLEN_SHORT - 1, STR_CHEAT_FASTFORMATTER, game->cheatFast ? STR_ON : STR_OFF );
       qGame_ShowDebugMessage( game, cheatMsg );
    }
    else if ( !strcmp( cheat, CHEAT_CLEAR ) )
