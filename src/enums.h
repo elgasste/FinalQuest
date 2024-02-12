@@ -4,7 +4,8 @@
 typedef enum qGameState_t
 {
    qGameState_Map = 0,
-   qGameState_MapMenu
+   qGameState_MapMenu,
+   qGameState_Battle
 }
 qGameState_t;
 

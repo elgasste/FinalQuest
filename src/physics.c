@@ -18,7 +18,7 @@ qPhysics_t* qPhysics_Create()
 {
    qPhysics_t* physics = (qPhysics_t*)qAlloc( sizeof( qPhysics_t ), sfTrue );
 
-   physics->entityMapTileCache = 0;
+   physics->actorTileCache = 0;
 
    return physics;
 }
@@ -36,6 +36,14 @@ void qPhysics_Tic( qGame_t* game )
          qPhysics_TicActors( game );
          break;
    }
+}
+
+void qPhysics_ResetActorTileCache( qGame_t* game )
+{
+   qEntity_t* entity = game->controllingActor->entity;
+   sfVector2f entityCenterPos = { entity->mapPos.x + entity->mapHitBoxSize.x, entity->mapPos.y + entity->mapHitBoxSize.y };
+
+   game->physics->actorTileCache = qMap_TileIndexFromPos( game->map, entityCenterPos );
 }
 
 static void qPhysics_TicActors( qGame_t* game )
@@ -97,11 +105,16 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
 
    entityCenterPos.x = entity->mapPos.x + ( entity->mapHitBoxSize.x / 2 );
    entityCenterPos.y = entity->mapPos.y + ( entity->mapHitBoxSize.y / 2 );
-   newTileIndex = qMap_TileIndexFromPos( game->map, entityCenterPos );
 
-   if ( newTileIndex != game->physics->entityMapTileCache )
+   if ( actor == game->controllingActor )
    {
-      game->physics->entityMapTileCache = newTileIndex;
+      newTileIndex = qMap_TileIndexFromPos( game->map, entityCenterPos );
+
+      if ( newTileIndex != game->physics->actorTileCache )
+      {
+         game->physics->actorTileCache = newTileIndex;
+         qGame_RollEncounter( game, newTileIndex );
+      }
    }
 }
 

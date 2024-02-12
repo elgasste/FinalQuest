@@ -40,11 +40,12 @@ qGame_t* qGame_Create()
    game->map = qMap_Create( mapTileCount );
    game->menus = qMenus_Create();
 
-   // default to grass
+   // default to grass with 5% encounter rate
    for ( i = 0; i < mapTileCount.x * mapTileCount.y; i++ )
    {
       game->map->tiles[i].textureIndex = 0;
       game->map->tiles[i].isPassable = sfTrue;
+      game->map->tiles[i].encounterRate = 5;
    }
 
    // randomly generate some trees
@@ -53,6 +54,7 @@ qGame_t* qGame_Create()
       tileIndex = qRandom_UInt32( 0, mapTileCount.x * mapTileCount.y );
       game->map->tiles[tileIndex].textureIndex = 25;
       game->map->tiles[tileIndex].isPassable = sfFalse;
+      game->map->tiles[tileIndex].encounterRate = 0;
    }
 
    game->actorCount = 3;
@@ -66,6 +68,7 @@ qGame_t* qGame_Create()
    game->controllingActor = &( game->actors[0] );
    game->controllingActorIndex = 0;
    qRenderer_UpdateActors( game );
+   qPhysics_ResetActorTileCache( game );
 
    game->showDiagnostics = sfFalse;
    game->cheatNoClip = sfFalse;
@@ -150,6 +153,7 @@ void qGame_SwitchControllingActor( qGame_t* game )
    }
 
    game->controllingActor = &( game->actors[game->controllingActorIndex] );
+   qPhysics_ResetActorTileCache( game );
 }
 
 void qGame_SetState( qGame_t* game, qGameState_t state )
@@ -176,5 +180,15 @@ void qGame_ExecuteMenuCommand( qGame_t* game, qMenuCommand_t command )
             qGame_SetState( game, qGameState_Map );
          }
          break;
+   }
+}
+
+void qGame_RollEncounter( qGame_t* game, uint32_t mapTileIndex )
+{
+   qMapTile_t* tile = &( game->map->tiles[mapTileIndex] );
+
+   if ( tile->encounterRate > 0 && qRandom_Percent() <= tile->encounterRate )
+   {
+      qGame_SetState( game, qGameState_Battle );
    }
 }
