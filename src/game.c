@@ -73,6 +73,7 @@ qGame_t* qGame_Create()
    game->showDiagnostics = sfFalse;
    game->cheatNoClip = sfFalse;
    game->cheatFast = sfFalse;
+   game->cheatNoEncounters = sfFalse;
 
    return game;
 }
@@ -183,11 +184,11 @@ void qGame_ExecuteMenuCommand( qGame_t* game, qMenuCommand_t command )
    }
 }
 
-void qGame_RollEncounter( qGame_t* game, uint32_t mapTileIndex )
+void qGame_RollEncounter( qGame_t* game, uint32_t mapTileIndex, sfBool force )
 {
    qMapTile_t* tile = &( game->map->tiles[mapTileIndex] );
 
-   if ( tile->encounterRate > 0 && qRandom_Percent() <= tile->encounterRate )
+   if ( force || ( !game->cheatNoEncounters && tile->encounterRate > 0 && qRandom_Percent() <= tile->encounterRate ) )
    {
       qGame_SetState( game, qGameState_Battle );
    }

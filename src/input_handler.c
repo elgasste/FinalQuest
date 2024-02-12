@@ -6,11 +6,12 @@
 #include "menu.h"
 #include "renderer.h"
 #include "render_states.h"
+#include "physics.h"
 
 static void qInputHandler_HandleMapInput( qGame_t* game );
 static void qInputHandler_HandleMapMenuInput( qGame_t* game );
 static sfBool qInputHandler_HandleMenuSelection( qGame_t* game, qMenu_t* menu );
-static void qInputHandler_CheckCheats( qGame_t* game );
+static sfBool qInputHandler_CheckCheats( qGame_t* game );
 static void qInputHandler_ApplyCheat( qGame_t* game );
 
 qInputHandler_t* qInputHandler_Create()
@@ -29,7 +30,10 @@ void qInputHandler_Destroy( qInputHandler_t* inputHandler )
 
 void qInputHandler_HandleInput( qGame_t* game )
 {
-   qInputHandler_CheckCheats( game );
+   if ( qInputHandler_CheckCheats( game ) )
+   {
+      return;
+   }
 
    if ( qInputState_WasKeyPressed( game->inputState, sfKeyF8 ) )
    {
@@ -184,12 +188,14 @@ static sfBool qInputHandler_HandleMenuSelection( qGame_t* game, qMenu_t* menu )
    return sfFalse;
 }
 
-static void qInputHandler_CheckCheats( qGame_t* game )
+static sfBool qInputHandler_CheckCheats( qGame_t* game )
 {
    int32_t cheatStringLength, i, l, lastIndex, matchCount;
    static const char* cheats[] = {
       CHEAT_NOCLIP,
       CHEAT_FAST,
+      CHEAT_ENCOUNTER,
+      CHEAT_NOENCOUNTERS,
       CHEAT_CLEAR
    };
    static int32_t cheatCount = (int32_t)( sizeof( cheats ) / sizeof( const char* ) );
@@ -197,7 +203,7 @@ static void qInputHandler_CheckCheats( qGame_t* game )
 
    if ( !game->inputState->keyWasPressed )
    {
-      return;
+      return sfFalse;
    }
 
    cheatStringLength = (int32_t)strlen( inputHandler->cheatString );
@@ -219,7 +225,7 @@ static void qInputHandler_CheckCheats( qGame_t* game )
       else if ( cheatStringLength == l && !strcmp( cheats[i], inputHandler->cheatString ) )
       {
          qInputHandler_ApplyCheat( game );
-         return;
+         return sfTrue;
       }
    }
 
@@ -227,6 +233,8 @@ static void qInputHandler_CheckCheats( qGame_t* game )
    {
       inputHandler->cheatString[0] = '\0';
    }
+
+   return sfFalse;
 }
 
 static void qInputHandler_ApplyCheat( qGame_t* game )
@@ -246,10 +254,23 @@ static void qInputHandler_ApplyCheat( qGame_t* game )
       snprintf( cheatMsg, STRLEN_SHORT - 1, STR_CHEAT_FASTFORMATTER, game->cheatFast ? STR_ON : STR_OFF );
       qGame_ShowDebugMessage( game, cheatMsg );
    }
+   else if ( !strcmp( cheat, CHEAT_ENCOUNTER ) )
+   {
+      qGame_RollEncounter( game, game->physics->actorTileCache, sfTrue );
+      snprintf( cheatMsg, STRLEN_SHORT - 1, STR_CHEAT_ENCOUNTER );
+      qGame_ShowDebugMessage( game, cheatMsg );
+   }
+   else if ( !strcmp( cheat, CHEAT_NOENCOUNTERS ) )
+   {
+      TOGGLE_BOOL( game->cheatNoEncounters );
+      snprintf( cheatMsg, STRLEN_SHORT - 1, STR_CHEAT_NOENCOUNTERSFORMATTER, game->cheatNoEncounters ? STR_ON : STR_OFF );
+      qGame_ShowDebugMessage( game, cheatMsg );
+   }
    else if ( !strcmp( cheat, CHEAT_CLEAR ) )
    {
       game->cheatNoClip = sfFalse;
       game->cheatFast = sfFalse;
+      game->cheatNoEncounters = sfFalse;
       qGame_ShowDebugMessage( game, STR_CHEAT_CLEARED );
    }
 

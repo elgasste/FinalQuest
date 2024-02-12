@@ -113,7 +113,7 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
       if ( newTileIndex != game->physics->actorTileCache )
       {
          game->physics->actorTileCache = newTileIndex;
-         qGame_RollEncounter( game, newTileIndex );
+         qGame_RollEncounter( game, newTileIndex, sfFalse );
       }
    }
 }
