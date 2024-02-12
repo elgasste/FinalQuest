@@ -57,6 +57,7 @@ qGame_t* qGame_Create()
    qActor_Setup( &( game->actors[1] ), actor2Pos, actorHitBoxSize, 150.0f, &( game->renderer->renderObjects->spriteTextures[0] ), actorSpriteOffset, 0.15f );
    qActor_Setup( &( game->actors[2] ), actor3Pos, actorHitBoxSize, 80.0f, &( game->renderer->renderObjects->spriteTextures[0] ), actorSpriteOffset, 0.15f );
    game->controllingActor = &( game->actors[0] );
+   game->controllingActorIndex = 0;
 
    game->showDiagnostics = sfFalse;
    game->cheatNoClip = sfFalse;
@@ -126,4 +127,16 @@ void qGame_ShowDebugMessage( qGame_t* game, const char* msg )
    snprintf( state->msgBuffer, state->msgBufferLen, "%s", msg );
    state->isVisible = sfTrue;
    state->elapsedSeconds = 0;
+}
+
+void qGame_SwitchControllingActor( qGame_t* game )
+{
+   game->controllingActorIndex++;
+
+   if ( game->controllingActorIndex >= game->actorCount )
+   {
+      game->controllingActorIndex = 0;
+   }
+
+   game->controllingActor = &( game->actors[game->controllingActorIndex] );
 }

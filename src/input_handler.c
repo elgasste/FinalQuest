@@ -48,6 +48,11 @@ void qInputHandler_HandleInput( qGame_t* game )
       }
    }
 
+   if ( qInputState_WasKeyPressed( game->inputState, sfKeyTab ) )
+   {
+      qGame_SwitchControllingActor( game );
+   }
+
    qInputHandler_HandleMapInput( game );
 }
 
