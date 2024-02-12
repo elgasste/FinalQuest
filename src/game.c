@@ -19,8 +19,8 @@ qGame_t* qGame_Create()
    sfVector2u mapTileCount = { 56, 56 };
    uint32_t i, tileIndex;
    sfVector2f actor1Pos = { 896, 896 };
-   sfVector2f actor2Pos = { 64, 64 };
-   sfVector2f actor3Pos = { 256, 832 };
+   sfVector2f actor2Pos = { 928, 896 };
+   sfVector2f actor3Pos = { 864, 896 };
    sfVector2f actorHitBoxSize = { 26, 16 };
    sfVector2f actorSpriteOffset = { -3, -16 };
 
@@ -51,14 +51,14 @@ qGame_t* qGame_Create()
       game->map->tiles[tileIndex].isPassable = sfFalse;
    }
 
-   game->actors = (qActor_t*)qAlloc( sizeof( qActor_t ) * 3, sfTrue );
    game->actorCount = 3;
+   game->actors = (qActor_t*)qAlloc( sizeof( qActor_t ) * game->actorCount, sfTrue );
    qActor_Setup( &( game->actors[0] ), actor1Pos, actorHitBoxSize, 100.0f, &( game->renderer->renderObjects->spriteTextures[0] ), actorSpriteOffset, 0.15f );
-   qActor_Setup( &( game->actors[1] ), actor2Pos, actorHitBoxSize, 150.0f, &( game->renderer->renderObjects->spriteTextures[0] ), actorSpriteOffset, 0.15f );
-   qActor_Setup( &( game->actors[2] ), actor3Pos, actorHitBoxSize, 80.0f, &( game->renderer->renderObjects->spriteTextures[0] ), actorSpriteOffset, 0.15f );
+   qActor_Setup( &( game->actors[1] ), actor2Pos, actorHitBoxSize, 150.0f, &( game->renderer->renderObjects->spriteTextures[1] ), actorSpriteOffset, 0.15f );
+   qActor_Setup( &( game->actors[2] ), actor3Pos, actorHitBoxSize, 80.0f, &( game->renderer->renderObjects->spriteTextures[2] ), actorSpriteOffset, 0.15f );
    game->controllingActor = &( game->actors[0] );
    game->controllingActorIndex = 0;
-   qRenderer_ChangeActors( game );
+   qRenderer_UpdateActors( game );
 
    game->showDiagnostics = sfFalse;
    game->cheatNoClip = sfFalse;

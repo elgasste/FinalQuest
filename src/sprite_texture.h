@@ -10,7 +10,7 @@ typedef struct qSpriteTexture_t
 }
 qSpriteTexture_t;
 
-qSpriteTexture_t* qSpriteTexture_Create( const char* filePath, uint32_t frameCount );
-void qSpriteTexture_Destroy( qSpriteTexture_t* texture );
+void qSpriteTexture_Setup( qSpriteTexture_t* texture, const char* filePath, uint32_t frameCount );
+void qSpriteTexture_Cleanup( qSpriteTexture_t* texture );
 
 #endif // SPRITE_TEXTURE_H

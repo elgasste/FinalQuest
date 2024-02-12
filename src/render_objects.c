@@ -15,9 +15,11 @@ qRenderObjects_t* qRenderObjects_Create()
    renderObjects->debugBar = qDebugBarRenderObjects_Create();
    renderObjects->map = qMapRenderObjects_Create();
 
-   // just one sprite texture for now
-   renderObjects->spriteTextures = qSpriteTexture_Create( "resources/textures/sprites/character0.png", 4 );
-   renderObjects->spriteTextureCount = 1;
+   renderObjects->spriteTextureCount = 3;
+   renderObjects->spriteTextures = (qSpriteTexture_t*)qAlloc( sizeof( qSpriteTexture_t ) * renderObjects->spriteTextureCount, sfTrue );
+   qSpriteTexture_Setup( &( renderObjects->spriteTextures[0] ), "resources/textures/sprites/male0.png", 4 );
+   qSpriteTexture_Setup( &( renderObjects->spriteTextures[1] ), "resources/textures/sprites/female0.png", 4 );
+   qSpriteTexture_Setup( &( renderObjects->spriteTextures[2] ), "resources/textures/sprites/dog0.png", 4 );
 
    return renderObjects;
 }
@@ -87,8 +89,10 @@ void qRenderObjects_Destroy( qRenderObjects_t* objects )
 
    for ( i = 0; i < objects->spriteTextureCount; i++ )
    {
-      qSpriteTexture_Destroy( &( objects->spriteTextures[i] ) );
+      qSpriteTexture_Cleanup( &( objects->spriteTextures[i] ) );
    }
+
+   qFree( objects->spriteTextures, sizeof( qSpriteTexture_t ) * objects->spriteTextureCount, sfTrue );
 
    qMapRenderObjects_Destroy( objects->map );
    qDebugBarRenderObjects_Destroy( objects->debugBar );
