@@ -18,7 +18,9 @@ qGame_t* qGame_Create()
 {
    sfVector2u mapTileCount = { 56, 56 };
    uint32_t i, tileIndex;
-   sfVector2f actorPos = { 896, 896 };
+   sfVector2f actor1Pos = { 896, 896 };
+   sfVector2f actor2Pos = { 64, 64 };
+   sfVector2f actor3Pos = { 256, 832 };
    sfVector2f actorHitBoxSize = { 26, 16 };
    sfVector2f actorSpriteOffset = { -3, -16 };
 
@@ -49,9 +51,11 @@ qGame_t* qGame_Create()
       game->map->tiles[tileIndex].isPassable = sfFalse;
    }
 
-   // just one actor for now
-   game->actors = qActor_Create( actorPos, actorHitBoxSize, 100.0f, &( game->renderer->renderObjects->spriteTextures[0] ), actorSpriteOffset, 0.15f );
-   game->actorCount = 1;
+   game->actors = (qActor_t*)qAlloc( sizeof( qActor_t ) * 3, sfTrue );
+   game->actorCount = 3;
+   qActor_Setup( &( game->actors[0] ), actor1Pos, actorHitBoxSize, 100.0f, &( game->renderer->renderObjects->spriteTextures[0] ), actorSpriteOffset, 0.15f );
+   qActor_Setup( &( game->actors[1] ), actor2Pos, actorHitBoxSize, 150.0f, &( game->renderer->renderObjects->spriteTextures[0] ), actorSpriteOffset, 0.15f );
+   qActor_Setup( &( game->actors[2] ), actor3Pos, actorHitBoxSize, 80.0f, &( game->renderer->renderObjects->spriteTextures[0] ), actorSpriteOffset, 0.15f );
    game->controllingActor = &( game->actors[0] );
 
    game->showDiagnostics = sfFalse;
@@ -67,8 +71,10 @@ void qGame_Destroy( qGame_t* game )
 
    for ( i = 0; i < game->actorCount; i++ )
    {
-      qActor_Destroy( &( game->actors[i] ) );
+      qActor_Cleanup( &( game->actors[i] ) );
    }
+
+   qFree( game->actors, sizeof( qActor_t ) * game->actorCount, sfTrue );
 
    qMap_Destroy( game->map );
    qPhysics_Destroy( game->physics );

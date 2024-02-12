@@ -169,6 +169,9 @@ static void qPhysics_ClipActorToActors( qGame_t* game, qActor_t* actor, sfVector
    qEntity_t* otherEntity;
    qActor_t* otherActor;
    uint32_t i;
+   float newRightX = newPos->x + entity->mapHitBoxSize.x;
+   float newBottomY = newPos->y + entity->mapHitBoxSize.y;
+   float otherRightX, otherBottomY;
 
    for ( i = 0; i < game->actorCount; i++ )
    {
@@ -180,32 +183,31 @@ static void qPhysics_ClipActorToActors( qGame_t* game, qActor_t* actor, sfVector
       }
 
       otherEntity = otherActor->entity;
+      otherRightX = otherEntity->mapPos.x + otherEntity->mapHitBoxSize.x;
+      otherBottomY = otherEntity->mapPos.y + otherEntity->mapHitBoxSize.y;
 
-      if ( qMathUtil_RectsOverlap( newPos->x, newPos->y,
-                                   newPos->x + entity->mapHitBoxSize.x, newPos->y + entity->mapHitBoxSize.y,
-                                   otherEntity->mapPos.x, otherEntity->mapPos.y,
-                                   otherEntity->mapPos.x + otherEntity->mapHitBoxSize.x, otherEntity->mapPos.y + otherEntity->mapHitBoxSize.y ) )
+      if ( qMathUtil_RectsOverlap( newPos->x, newPos->y, newRightX, newBottomY, otherEntity->mapPos.x, otherEntity->mapPos.y, otherRightX, otherBottomY ) )
       {
-         if ( horizontal && newPos->x >= otherEntity->mapPos.x && newPos->x <= otherEntity->mapPos.x )
+         if ( horizontal )
          {
-            if ( newPos->x < otherEntity->mapPos.x + ( otherEntity->mapHitBoxSize.x / 2 ) )
+            if ( entity->velocity.x > 0 && newRightX >= otherEntity->mapPos.x && newRightX <= otherRightX )
             {
                newPos->x = otherEntity->mapPos.x - entity->mapHitBoxSize.x - COLLISION_PADDING;
             }
-            else
+            else if ( entity->velocity.x < 0 && newPos->x >= otherEntity->mapPos.x && newPos->x <= otherRightX )
             {
-               newPos->x = entity->mapPos.x + entity->mapHitBoxSize.x + COLLISION_PADDING;
+               newPos->x = otherRightX + COLLISION_PADDING;
             }
          }
-         else if ( !horizontal && newPos->y >= otherEntity->mapPos.y && newPos->y <= otherEntity->mapPos.y )
+         else
          {
-            if ( newPos->y < otherEntity->mapPos.y + ( otherEntity->mapHitBoxSize.y / 2 ) )
+            if ( entity->velocity.y > 0 && newBottomY >= otherEntity->mapPos.y && newBottomY <= otherBottomY )
             {
                newPos->y = otherEntity->mapPos.y - entity->mapHitBoxSize.y - COLLISION_PADDING;
             }
-            else
+            else if ( entity->velocity.y < 0 && newPos->y >= otherEntity->mapPos.y && newPos->y <= otherBottomY )
             {
-               newPos->y = entity->mapPos.y + entity->mapHitBoxSize.y + COLLISION_PADDING;
+               newPos->y = otherBottomY + COLLISION_PADDING;
             }
          }
       }
