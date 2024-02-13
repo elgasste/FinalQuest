@@ -36,6 +36,7 @@ typedef struct qGame_t
    sfBool showDiagnostics;
    sfBool cheatNoClip;
    sfBool cheatFast;
+   sfBool cheatNoEncounters;
 }
 qGame_t;
 
@@ -47,5 +48,6 @@ void qGame_ShowDebugMessage( qGame_t* game, const char* msg );
 void qGame_SwitchControllingActor( qGame_t* game );
 void qGame_SetState( qGame_t* game, qGameState_t state );
 void qGame_ExecuteMenuCommand( qGame_t* game, qMenuCommand_t command );
+void qGame_RollEncounter( qGame_t* game, uint32_t mapTileIndex, sfBool force );
 
 #endif // GAME_H

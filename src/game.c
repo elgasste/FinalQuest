@@ -14,6 +14,7 @@
 #include "menu.h"
 
 static void qGame_Tic( qGame_t* game );
+static void qGame_ScreenFadeComplete( qGame_t* game );
 
 qGame_t* qGame_Create()
 {
@@ -40,11 +41,12 @@ qGame_t* qGame_Create()
    game->map = qMap_Create( mapTileCount );
    game->menus = qMenus_Create();
 
-   // default to grass
+   // default to grass with 5% encounter rate
    for ( i = 0; i < mapTileCount.x * mapTileCount.y; i++ )
    {
       game->map->tiles[i].textureIndex = 0;
       game->map->tiles[i].isPassable = sfTrue;
+      game->map->tiles[i].encounterRate = 5;
    }
 
    // randomly generate some trees
@@ -53,6 +55,7 @@ qGame_t* qGame_Create()
       tileIndex = qRandom_UInt32( 0, mapTileCount.x * mapTileCount.y );
       game->map->tiles[tileIndex].textureIndex = 25;
       game->map->tiles[tileIndex].isPassable = sfFalse;
+      game->map->tiles[tileIndex].encounterRate = 0;
    }
 
    game->actorCount = 3;
@@ -66,10 +69,12 @@ qGame_t* qGame_Create()
    game->controllingActor = &( game->actors[0] );
    game->controllingActorIndex = 0;
    qRenderer_UpdateActors( game );
+   qPhysics_ResetActorTileCache( game );
 
    game->showDiagnostics = sfFalse;
    game->cheatNoClip = sfFalse;
    game->cheatFast = sfFalse;
+   game->cheatNoEncounters = sfFalse;
 
    return game;
 }
@@ -122,7 +127,11 @@ void qGame_Run( qGame_t* game )
 
 static void qGame_Tic( qGame_t* game )
 {
-   qPhysics_Tic( game );
+   if ( !game->renderer->renderStates->screenFade->isRunning )
+   {
+      qPhysics_Tic( game );
+   }
+
    qRenderStates_Tic( game );
 }
 
@@ -150,14 +159,23 @@ void qGame_SwitchControllingActor( qGame_t* game )
    }
 
    game->controllingActor = &( game->actors[game->controllingActorIndex] );
+   qPhysics_ResetActorTileCache( game );
 }
 
 void qGame_SetState( qGame_t* game, qGameState_t state )
 {
-   if ( state == qGameState_Map )
+   switch ( state )
    {
-      qRenderStates_ResetMenu( game->renderer->renderStates->menu );
-      game->menus->map->selectedIndex = 0;
+      case qGameState_Map:
+         qRenderStates_ResetMenu( game->renderer->renderStates->menu );
+         game->menus->map->selectedIndex = 0;
+         break;
+      case qGameState_FadeMapToBattle:
+         qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfTrue, sfTrue, sfTrue, &qGame_ScreenFadeComplete );
+         break;
+      case qGameState_FadeBattleOut:
+         qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfTrue, sfTrue, sfFalse, &qGame_ScreenFadeComplete );
+         break;
    }
 
    game->state = state;
@@ -175,6 +193,37 @@ void qGame_ExecuteMenuCommand( qGame_t* game, qMenuCommand_t command )
          {
             qGame_SetState( game, qGameState_Map );
          }
+         break;
+   }
+}
+
+void qGame_RollEncounter( qGame_t* game, uint32_t mapTileIndex, sfBool force )
+{
+   qMapTile_t* tile = &( game->map->tiles[mapTileIndex] );
+
+   if ( force || ( !game->cheatNoEncounters && tile->encounterRate > 0 && qRandom_Percent() <= tile->encounterRate ) )
+   {
+      qGame_SetState( game, qGameState_FadeMapToBattle );
+   }
+}
+
+static void qGame_ScreenFadeComplete( qGame_t* game )
+{
+   switch ( game->state )
+   {
+      case qGameState_FadeMapToBattle:
+         qGame_SetState( game, qGameState_FadeBattleIn );
+         qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfFalse, sfFalse, sfTrue, &qGame_ScreenFadeComplete );
+         break;
+      case qGameState_FadeBattleIn:
+         qGame_SetState( game, qGameState_Battle );
+         break;
+      case qGameState_FadeBattleOut:
+         qGame_SetState( game, qGameState_FadeBattleToMap );
+         qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfFalse, sfFalse, sfFalse, &qGame_ScreenFadeComplete );
+         break;
+      case qGameState_FadeBattleToMap:
+         qGame_SetState( game, qGameState_Map );
          break;
    }
 }

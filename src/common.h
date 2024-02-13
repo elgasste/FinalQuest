@@ -10,7 +10,7 @@
 #include "strings.h"
 
 #define STRLEN_DEFAULT              512
-#define STRLEN_SHORT                32
+#define STRLEN_SHORT                64
 
 #define LOG_FILENAME                "log.txt"
 
@@ -34,6 +34,8 @@
 
 #define CHEAT_NOCLIP                "fqclip"
 #define CHEAT_FAST                  "fqfast"
+#define CHEAT_ENCOUNTER             "fqfight"
+#define CHEAT_NOENCOUNTERS          "fqinvis"
 #define CHEAT_CLEAR                 "fqclear"
 
 #define FAST_VELOCITY               500.0f

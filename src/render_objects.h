@@ -42,12 +42,21 @@ typedef struct qMapMenuRenderObjects_t
 }
 qMapMenuRenderObjects_t;
 
+typedef struct qScreenFadeRenderObjects_t
+{
+   sfRectangleShape* screenRect;
+   sfColor lightColor;
+   sfColor darkColor;
+}
+qScreenFadeRenderObjects_t;
+
 typedef struct qRenderObjects_t
 {
    qDiagnosticsRenderObjects_t* diagnostics;
    qDebugBarRenderObjects_t* debugBar;
    qMapRenderObjects_t* map;
    qMapMenuRenderObjects_t* mapMenu;
+   qScreenFadeRenderObjects_t* screenFade;
 
    qSpriteTexture_t* spriteTextures;
    uint32_t spriteTextureCount;

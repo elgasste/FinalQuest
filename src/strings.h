@@ -41,6 +41,8 @@
 
 #define STR_CHEAT_NOCLIPFORMATTER         "Toggled no-clip mode %s"
 #define STR_CHEAT_FASTFORMATTER           "Toggled fast mode %s"
+#define STR_CHEAT_ENCOUNTER               "Forced an encounter"
+#define STR_CHEAT_NOENCOUNTERSFORMATTER   "Toggled no-encounters mode %s"
 #define STR_CHEAT_CLEARED                 "Cleared all cheats"
 
 #endif // STRINGS_H

@@ -23,10 +23,26 @@ typedef struct qMenuRenderState_t
 }
 qMenuRenderState_t;
 
+typedef struct qScreenFadeRenderState_t
+{
+   sfBool isRunning;
+   sfBool isFading;
+   sfBool isPausing;
+   sfBool fadeOut;
+   sfBool pause;
+   sfBool isLightColor;
+   float fadeSeconds;
+   float pauseSeconds;
+   float elapsedSeconds;
+   void (*fadeCompleteFnc)( qGame_t* );
+}
+qScreenFadeRenderState_t;
+
 typedef struct qRenderStates_t
 {
    qDebugBarRenderState_t* debugBar;
    qMenuRenderState_t* menu;
+   qScreenFadeRenderState_t* screenFade;
 }
 qRenderStates_t;
 
@@ -34,5 +50,11 @@ qRenderStates_t* qRenderStates_Create();
 void qRenderStates_Destroy( qRenderStates_t* states );
 void qRenderStates_Tic( qGame_t* game );
 void qRenderStates_ResetMenu( qMenuRenderState_t* state );
+void qRenderStates_ResetScreenFade( qScreenFadeRenderState_t* state );
+void qRenderStates_StartScreenFade( qScreenFadeRenderState_t* state,
+                                    sfBool fadeOut,
+                                    sfBool pause,
+                                    sfBool isLightColor,
+                                    void (*fadeCompleteFnc)(qGame_t*) );
 
 #endif // RENDER_STATES_H

@@ -7,6 +7,7 @@ typedef struct qMapTile_t
 {
    uint32_t textureIndex;
    sfBool isPassable;
+   uint8_t encounterRate;
 }
 qMapTile_t;
 
