@@ -137,7 +137,11 @@ void qRenderStates_ResetScreenFade( qScreenFadeRenderState_t* state )
    state->elapsedSeconds = 0;
 }
 
-void qRenderStates_StartScreenFade( qScreenFadeRenderState_t* state, sfBool fadeOut, sfBool pause, sfBool isLightColor )
+void qRenderStates_StartScreenFade( qScreenFadeRenderState_t* state,
+                                    sfBool fadeOut,
+                                    sfBool pause,
+                                    sfBool isLightColor,
+                                    void (*fadeCompleteFnc)(qGame_t*) )
 {
    qRenderStates_ResetScreenFade( state );
    state->fadeOut = fadeOut;
@@ -145,6 +149,7 @@ void qRenderStates_StartScreenFade( qScreenFadeRenderState_t* state, sfBool fade
    state->isLightColor = isLightColor;
    state->isRunning = sfTrue;
    state->isFading = sfTrue;
+   state->fadeCompleteFnc = fadeCompleteFnc;
 }
 
 static void qRenderStates_TicScreenFade( qGame_t* game )
@@ -172,6 +177,7 @@ static void qRenderStates_TicScreenFade( qGame_t* game )
          else
          {
             state->isRunning = sfFalse;
+            ( *state->fadeCompleteFnc )( game );
          }
       }
    }
@@ -181,6 +187,7 @@ static void qRenderStates_TicScreenFade( qGame_t* game )
       {
          state->isPausing = sfFalse;
          state->isRunning = sfFalse;
+         ( *state->fadeCompleteFnc )( game );
       }
    }
 }

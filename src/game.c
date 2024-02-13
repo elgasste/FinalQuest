@@ -14,6 +14,7 @@
 #include "menu.h"
 
 static void qGame_Tic( qGame_t* game );
+static void qGame_ScreenFadeComplete( qGame_t* game );
 
 qGame_t* qGame_Create()
 {
@@ -126,7 +127,11 @@ void qGame_Run( qGame_t* game )
 
 static void qGame_Tic( qGame_t* game )
 {
-   qPhysics_Tic( game );
+   if ( !game->renderer->renderStates->screenFade->isRunning )
+   {
+      qPhysics_Tic( game );
+   }
+
    qRenderStates_Tic( game );
 }
 
@@ -159,10 +164,15 @@ void qGame_SwitchControllingActor( qGame_t* game )
 
 void qGame_SetState( qGame_t* game, qGameState_t state )
 {
-   if ( state == qGameState_Map )
+   switch ( state )
    {
-      qRenderStates_ResetMenu( game->renderer->renderStates->menu );
-      game->menus->map->selectedIndex = 0;
+      case qGameState_Map:
+         qRenderStates_ResetMenu( game->renderer->renderStates->menu );
+         game->menus->map->selectedIndex = 0;
+         break;
+      case qGameState_FadeMapToBattle:
+         qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfTrue, sfTrue, sfTrue, &qGame_ScreenFadeComplete );
+         break;
    }
 
    game->state = state;
@@ -190,6 +200,20 @@ void qGame_RollEncounter( qGame_t* game, uint32_t mapTileIndex, sfBool force )
 
    if ( force || ( !game->cheatNoEncounters && tile->encounterRate > 0 && qRandom_Percent() <= tile->encounterRate ) )
    {
-      qGame_SetState( game, qGameState_Battle );
+      qGame_SetState( game, qGameState_FadeMapToBattle );
+   }
+}
+
+static void qGame_ScreenFadeComplete( qGame_t* game )
+{
+   switch ( game->state )
+   {
+      case qGameState_FadeMapToBattle:
+         qGame_SetState( game, qGameState_FadeBattleIn );
+         qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfFalse, sfFalse, sfTrue,&qGame_ScreenFadeComplete );
+         break;
+      case qGameState_FadeBattleIn:
+         qGame_SetState( game, qGameState_Battle );
+         break;
    }
 }

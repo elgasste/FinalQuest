@@ -14,6 +14,7 @@
 
 static void qRenderer_DrawDiagnostics( qGame_t* game );
 static void qRenderer_DrawDebugBar( qGame_t* game );
+static void qRenderer_DrawScreenFade( qGame_t* game );
 static void qRenderer_SetMapView( qGame_t* game );
 static void qRenderer_DrawMap( qGame_t* game );
 static void qRenderer_DrawMapMenu( qGame_t* game );
@@ -72,6 +73,7 @@ void qRenderer_Render( qGame_t* game )
    switch ( game->state )
    {
       case qGameState_Map:
+      case qGameState_FadeMapToBattle:
          qRenderer_SetMapView( game );
          qRenderer_DrawMap( game );
          qRenderer_DrawActors( game );
@@ -84,6 +86,7 @@ void qRenderer_Render( qGame_t* game )
          break;
    }
 
+   qRenderer_DrawScreenFade( game );
    qRenderer_DrawDebugBar( game );
 
    if ( game->showDiagnostics )
@@ -152,6 +155,37 @@ static void qRenderer_DrawDebugBar( qGame_t* game )
 
       qWindow_DrawRectangleShape( game->window, objects->backgroundRect );
       qWindow_DrawText( game->window, objects->text );
+   }
+}
+
+static void qRenderer_DrawScreenFade( qGame_t* game )
+{
+   float screenFadePercentage;
+   qRenderer_t* renderer = game->renderer;
+   qScreenFadeRenderState_t* screenFadeState = renderer->renderStates->screenFade;
+   qScreenFadeRenderObjects_t* screenFadeObjects = renderer->renderObjects->screenFade;
+
+   if ( screenFadeState->isRunning )
+   {
+      screenFadePercentage = screenFadeState->isPausing ? 1.0f : screenFadeState->elapsedSeconds / screenFadeState->fadeSeconds;
+
+      if ( !screenFadeState->fadeOut )
+      {
+         screenFadePercentage = 1.0f - screenFadePercentage;
+      }
+
+      if ( screenFadeState->isLightColor )
+      {
+         screenFadeObjects->lightColor.a = (sfUint8)( 255 * screenFadePercentage );
+         sfRectangleShape_setFillColor( screenFadeObjects->screenRect, screenFadeObjects->lightColor );
+      }
+      else
+      {
+         screenFadeObjects->darkColor.a = (sfUint8)( 255 * screenFadePercentage );
+         sfRectangleShape_setFillColor( screenFadeObjects->screenRect, screenFadeObjects->darkColor );
+      }
+
+      qWindow_DrawRectangleShape( game->window, screenFadeObjects->screenRect );
    }
 }
 
