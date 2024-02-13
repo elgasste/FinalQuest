@@ -173,6 +173,9 @@ void qGame_SetState( qGame_t* game, qGameState_t state )
       case qGameState_FadeMapToBattle:
          qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfTrue, sfTrue, sfTrue, &qGame_ScreenFadeComplete );
          break;
+      case qGameState_FadeBattleOut:
+         qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfTrue, sfTrue, sfFalse, &qGame_ScreenFadeComplete );
+         break;
    }
 
    game->state = state;
@@ -210,10 +213,17 @@ static void qGame_ScreenFadeComplete( qGame_t* game )
    {
       case qGameState_FadeMapToBattle:
          qGame_SetState( game, qGameState_FadeBattleIn );
-         qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfFalse, sfFalse, sfTrue,&qGame_ScreenFadeComplete );
+         qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfFalse, sfFalse, sfTrue, &qGame_ScreenFadeComplete );
          break;
       case qGameState_FadeBattleIn:
          qGame_SetState( game, qGameState_Battle );
+         break;
+      case qGameState_FadeBattleOut:
+         qGame_SetState( game, qGameState_FadeBattleToMap );
+         qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfFalse, sfFalse, sfFalse, &qGame_ScreenFadeComplete );
+         break;
+      case qGameState_FadeBattleToMap:
+         qGame_SetState( game, qGameState_Map );
          break;
    }
 }

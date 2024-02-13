@@ -60,7 +60,7 @@ void qInputHandler_HandleInput( qGame_t* game )
       case qGameState_Battle:
          if ( game->inputState->keyWasPressed )
          {
-            qGame_SetState( game, qGameState_Map );
+            qGame_SetState( game, qGameState_FadeBattleOut );
          }
          break;
    }

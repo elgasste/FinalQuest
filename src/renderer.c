@@ -74,6 +74,7 @@ void qRenderer_Render( qGame_t* game )
    {
       case qGameState_Map:
       case qGameState_FadeMapToBattle:
+      case qGameState_FadeBattleToMap:
          qRenderer_SetMapView( game );
          qRenderer_DrawMap( game );
          qRenderer_DrawActors( game );

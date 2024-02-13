@@ -7,7 +7,9 @@ typedef enum qGameState_t
    qGameState_MapMenu,
    qGameState_FadeMapToBattle,
    qGameState_FadeBattleIn,
-   qGameState_Battle
+   qGameState_Battle,
+   qGameState_FadeBattleOut,
+   qGameState_FadeBattleToMap
 }
 qGameState_t;
 
