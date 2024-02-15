@@ -151,9 +151,8 @@ static qMenuRenderObjects_t* qRenderObjects_CreateBattleActionMenu()
    sfVector2f textScale = { GRAPHICS_SCALE, GRAPHICS_SCALE };
    qMenuRenderObjects_t* objects = (qMenuRenderObjects_t*)qAlloc( sizeof( qMenuRenderObjects_t ), sfTrue );
 
-   // MUFFINS: adjust all of this
    objects->menuPos.x = 32 * GRAPHICS_SCALE;
-   objects->menuPos.y = 32 * GRAPHICS_SCALE;
+   objects->menuPos.y = WINDOW_HEIGHT - ( 160 * GRAPHICS_SCALE );
    objects->itemsOffset.x = 32 * GRAPHICS_SCALE;
    objects->itemsOffset.y = 16 * GRAPHICS_SCALE;
    objects->caratOffset.x = -16 * GRAPHICS_SCALE;
@@ -163,9 +162,9 @@ static qMenuRenderObjects_t* qRenderObjects_CreateBattleActionMenu()
    objects->backgroundShape = qsfConvexShape_Create();
    gmRenderObjects_BuildDialogBackground( objects->backgroundShape,
                                           objects->menuPos.x, objects->menuPos.y,
-                                          136 * GRAPHICS_SCALE, 76 * GRAPHICS_SCALE,
+                                          136 * GRAPHICS_SCALE, 132 * GRAPHICS_SCALE,
                                           8 * GRAPHICS_SCALE,
-                                          DIALOG_BACKDROP_LIGHTCOLOR );
+                                          DIALOG_BACKDROP_DARKCOLOR );
 
    objects->font = qsfFont_CreateFromFile( GAME_FONT );
    objects->text = qsfText_Create();

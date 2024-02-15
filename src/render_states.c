@@ -117,7 +117,7 @@ static void qRenderStates_TicMenu( qGame_t* game )
 {
    qRenderStates_t* states = game->renderer->renderStates;
 
-   if ( game->state == qGameState_MapMenu )
+   if ( game->isMenuOpen )
    {
       states->menu->caratElapsedSeconds += game->clock->frameDeltaSeconds;
 

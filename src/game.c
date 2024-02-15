@@ -71,6 +71,8 @@ qGame_t* qGame_Create()
    qRenderer_UpdateActors( game );
    qPhysics_ResetActorTileCache( game );
 
+   game->isMenuOpen = sfFalse;
+
    game->showDiagnostics = sfFalse;
    game->cheatNoClip = sfFalse;
    game->cheatFast = sfFalse;
@@ -166,15 +168,24 @@ void qGame_SetState( qGame_t* game, qGameState_t state )
 {
    switch ( state )
    {
-      case qGameState_Map:
+      case qGameState_MapMenu:
          qRenderStates_ResetMenu( game->renderer->renderStates->menu );
          game->menus->map->selectedIndex = 0;
+         game->isMenuOpen = sfTrue;
          break;
       case qGameState_FadeMapToBattle:
          qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfTrue, sfTrue, sfTrue, &qGame_ScreenFadeComplete );
          break;
+      case qGameState_BattleChooseAction:
+         qRenderStates_ResetMenu( game->renderer->renderStates->menu );
+         game->menus->battleAction->selectedIndex = 0;
+         game->isMenuOpen = sfTrue;
+         break;
       case qGameState_FadeBattleOut:
          qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfTrue, sfTrue, sfFalse, &qGame_ScreenFadeComplete );
+         break;
+      default:
+         game->isMenuOpen = sfFalse;
          break;
    }
 
@@ -193,6 +204,9 @@ void qGame_ExecuteMenuCommand( qGame_t* game, qMenuCommand_t command )
          {
             qGame_SetState( game, qGameState_Map );
          }
+         break;
+      case qMenuCommand_BattleTemp:
+         qGame_SetState( game, qGameState_FadeBattleOut );
          break;
    }
 }
@@ -216,7 +230,7 @@ static void qGame_ScreenFadeComplete( qGame_t* game )
          qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfFalse, sfFalse, sfTrue, &qGame_ScreenFadeComplete );
          break;
       case qGameState_FadeBattleIn:
-         qGame_SetState( game, qGameState_BattleIntro );
+         qGame_SetState( game, qGameState_BattleChooseAction );
          break;
       case qGameState_FadeBattleOut:
          qGame_SetState( game, qGameState_FadeBattleToMap );
