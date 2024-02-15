@@ -216,7 +216,7 @@ static void qGame_ScreenFadeComplete( qGame_t* game )
          qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfFalse, sfFalse, sfTrue, &qGame_ScreenFadeComplete );
          break;
       case qGameState_FadeBattleIn:
-         qGame_SetState( game, qGameState_Battle );
+         qGame_SetState( game, qGameState_BattleIntro );
          break;
       case qGameState_FadeBattleOut:
          qGame_SetState( game, qGameState_FadeBattleToMap );

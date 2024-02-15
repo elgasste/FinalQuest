@@ -299,7 +299,7 @@ static void qRenderer_DrawMap( qGame_t* game )
 static void qRenderer_DrawMapMenu( qGame_t* game )
 {
    sfVector2f pos;
-   qMapMenuRenderObjects_t* objects = game->renderer->renderObjects->mapMenu;
+   qMenuRenderObjects_t* objects = game->renderer->renderObjects->mapMenu;
    qMenuRenderState_t* renderState = game->renderer->renderStates->menu;
    qMenu_t* menu = game->menus->map;
    uint32_t i;

@@ -30,7 +30,7 @@ typedef struct qMapRenderObjects_t
 }
 qMapRenderObjects_t;
 
-typedef struct qMapMenuRenderObjects_t
+typedef struct qMenuRenderObjects_t
 {
    sfConvexShape* backgroundShape;
    sfFont* font;
@@ -40,7 +40,7 @@ typedef struct qMapMenuRenderObjects_t
    sfVector2f caratOffset;
    float lineSize;
 }
-qMapMenuRenderObjects_t;
+qMenuRenderObjects_t;
 
 typedef struct qScreenFadeRenderObjects_t
 {
@@ -55,8 +55,9 @@ typedef struct qRenderObjects_t
    qDiagnosticsRenderObjects_t* diagnostics;
    qDebugBarRenderObjects_t* debugBar;
    qMapRenderObjects_t* map;
-   qMapMenuRenderObjects_t* mapMenu;
+   qMenuRenderObjects_t* mapMenu;
    qScreenFadeRenderObjects_t* screenFade;
+   qMenuRenderObjects_t* battleActionMenu;
 
    qSpriteTexture_t* spriteTextures;
    uint32_t spriteTextureCount;
