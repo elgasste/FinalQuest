@@ -33,6 +33,7 @@ qMenus_t* qMenus_Create()
 void qMenus_Destroy( qMenus_t* menus )
 {
    qFree( menus->battleAction->options, sizeof( qMenuOption_t ) * menus->battleAction->optionCount, sfTrue );
+   qFree( menus->battleAction, sizeof( qMenu_t ), sfTrue );
    qFree( menus->map->options, sizeof( qMenuOption_t ) * menus->map->optionCount, sfTrue );
    qFree( menus->map, sizeof( qMenu_t ), sfTrue );
    qFree( menus, sizeof( qMenus_t ), sfTrue );
