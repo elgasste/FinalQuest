@@ -6,11 +6,14 @@
 static qDebugBarRenderState_t* qRenderStates_CreateDebugBar();
 static qMenuRenderState_t* qRenderStates_CreateMenu();
 static qScreenFadeRenderState_t* qRenderStates_CreateScreenFade();
+static qTextScrollRenderState_t* qRenderStates_CreateTextScroll();
 static void qRenderStates_DestroyDebugBar( qDebugBarRenderState_t* state );
 static void qRenderStates_DestroyMenu( qMenuRenderState_t* state );
 static void qRenderStates_DestroyScreenFade( qScreenFadeRenderState_t* state );
+static void qRenderStates_DestroyTextScroll( qTextScrollRenderState_t* state );
 static void qRenderStates_TicMenu( qGame_t* game );
 static void qRenderStates_TicScreenFade( qGame_t* game );
+static void qRenderStates_TicTextScroll( qGame_t* game );
 
 qRenderStates_t* qRenderStates_Create()
 {
@@ -19,6 +22,7 @@ qRenderStates_t* qRenderStates_Create()
    states->debugBar = qRenderStates_CreateDebugBar();
    states->menu = qRenderStates_CreateMenu();
    states->screenFade = qRenderStates_CreateScreenFade();
+   states->textScroll = qRenderStates_CreateTextScroll();
 
    return states;
 }
@@ -57,8 +61,19 @@ static qScreenFadeRenderState_t* qRenderStates_CreateScreenFade()
    return state;
 }
 
+static qTextScrollRenderState_t* qRenderStates_CreateTextScroll()
+{
+   qTextScrollRenderState_t* state = (qTextScrollRenderState_t*)qAlloc( sizeof( qTextScrollRenderState_t ), sfTrue );
+
+   state->letterSeconds = 0.012f;
+   qRenderStates_ResetTextScroll( state );
+
+   return state;
+}
+
 void qRenderStates_Destroy( qRenderStates_t* states )
 {
+   qRenderStates_DestroyTextScroll( states->textScroll );
    qRenderStates_DestroyScreenFade( states->screenFade );
    qRenderStates_DestroyDebugBar( states->debugBar );
    qRenderStates_DestroyMenu( states->menu );
@@ -80,6 +95,11 @@ static void qRenderStates_DestroyMenu( qMenuRenderState_t* state )
 static void qRenderStates_DestroyScreenFade( qScreenFadeRenderState_t* state )
 {
    qFree( state, sizeof( qScreenFadeRenderState_t ), sfTrue );
+}
+
+static void qRenderStates_DestroyTextScroll( qTextScrollRenderState_t* state )
+{
+   qFree( state, sizeof( qTextScrollRenderState_t ), sfTrue );
 }
 
 void qRenderStates_Tic( qGame_t* game )
@@ -104,6 +124,7 @@ void qRenderStates_Tic( qGame_t* game )
    else
    {
       qRenderStates_TicMenu( game );
+      qRenderStates_TicTextScroll( game );
    }
 }
 
@@ -188,6 +209,49 @@ static void qRenderStates_TicScreenFade( qGame_t* game )
          state->isPausing = sfFalse;
          state->isRunning = sfFalse;
          ( *state->fadeCompleteFnc )( game );
+      }
+   }
+}
+
+void qRenderStates_ResetTextScroll( qTextScrollRenderState_t* state )
+{
+   state->isRunning = sfFalse;
+   state->elapsedSeconds = 0;
+   state->currentCharIndex = 0;
+}
+
+void qRenderStates_StartTextScroll( qTextScrollRenderState_t* state, uint32_t charCount )
+{
+   qRenderStates_ResetTextScroll( state );
+
+   state->charCount = charCount;
+   state->isRunning = sfTrue;
+}
+
+void qRenderStates_SkipTextScroll( qTextScrollRenderState_t* state )
+{
+   state->currentCharIndex = state->charCount - 1;
+   state->isRunning = sfFalse;
+}
+
+static void qRenderStates_TicTextScroll( qGame_t* game )
+{
+   qTextScrollRenderState_t* state = game->renderer->renderStates->textScroll;
+
+   if ( state->isRunning )
+   {
+      state->elapsedSeconds += game->clock->frameDeltaSeconds;
+
+      while ( state->elapsedSeconds > state->letterSeconds )
+      {
+         state->elapsedSeconds -= state->letterSeconds;
+         state->currentCharIndex++;
+
+         if ( state->currentCharIndex == state->charCount )
+         {
+            state->isRunning = sfFalse;
+            break;
+         }
       }
    }
 }
