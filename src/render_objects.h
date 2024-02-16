@@ -35,7 +35,7 @@ typedef struct qMenuRenderObjects_t
    sfConvexShape* backgroundShape;
    sfFont* font;
    sfText* text;
-   sfVector2f menuPos;
+   sfVector2f pos;
    sfVector2f itemsOffset;
    sfVector2f caratOffset;
    float lineSize;
@@ -50,6 +50,17 @@ typedef struct qScreenFadeRenderObjects_t
 }
 qScreenFadeRenderObjects_t;
 
+typedef struct qDialogBoxRenderObjects_t
+{
+   sfConvexShape* backgroundShape;
+   sfFont* font;
+   sfText* text;
+   sfVector2f pos;
+   sfVector2f textOffset;
+   float lineSize;
+}
+qDialogBoxRenderObjects_t;
+
 typedef struct qRenderObjects_t
 {
    qDiagnosticsRenderObjects_t* diagnostics;
@@ -58,6 +69,8 @@ typedef struct qRenderObjects_t
    qMenuRenderObjects_t* mapMenu;
    qScreenFadeRenderObjects_t* screenFade;
    qMenuRenderObjects_t* battleActionMenu;
+   qDialogBoxRenderObjects_t* battleDialogBoxLarge;
+   qDialogBoxRenderObjects_t* battleDialogBoxSmall;
 
    qSpriteTexture_t* spriteTextures;
    uint32_t spriteTextureCount;

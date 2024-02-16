@@ -316,15 +316,15 @@ static void qRenderer_DrawMenu( qMenu_t* menu, qMenuRenderObjects_t* objects, qM
    {
       if ( menu->selectedIndex == i && state->showCarat )
       {
-         pos.x = objects->menuPos.x + objects->itemsOffset.x + objects->caratOffset.x;
-         pos.y = objects->menuPos.y + objects->itemsOffset.y + objects->caratOffset.y + ( i * objects->lineSize );
+         pos.x = objects->pos.x + objects->itemsOffset.x + objects->caratOffset.x;
+         pos.y = objects->pos.y + objects->itemsOffset.y + objects->caratOffset.y + ( i * objects->lineSize );
          sfText_setPosition( objects->text, pos );
          sfText_setString( objects->text, STR_MENU_CARAT );
          qWindow_DrawText( window, objects->text );
       }
 
-      pos.x = objects->menuPos.x + objects->itemsOffset.x;
-      pos.y = objects->menuPos.y + objects->itemsOffset.y + ( i * objects->lineSize );
+      pos.x = objects->pos.x + objects->itemsOffset.x;
+      pos.y = objects->pos.y + objects->itemsOffset.y + ( i * objects->lineSize );
       sfText_setPosition( objects->text, pos );
       sfText_setString( objects->text, menu->options[i].label );
       qWindow_DrawText( window, objects->text );
