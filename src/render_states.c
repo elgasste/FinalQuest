@@ -220,11 +220,12 @@ void qRenderStates_ResetTextScroll( qTextScrollRenderState_t* state )
    state->currentCharIndex = 0;
 }
 
-void qRenderStates_StartTextScroll( qTextScrollRenderState_t* state, uint32_t charCount )
+void qRenderStates_StartTextScroll( qTextScrollRenderState_t* state, uint32_t charCount, sfBool canSkip )
 {
    qRenderStates_ResetTextScroll( state );
 
    state->charCount = charCount;
+   state->canSkip = canSkip;
    state->isRunning = sfTrue;
 }
 

@@ -30,6 +30,8 @@ void qInputHandler_Destroy( qInputHandler_t* inputHandler )
 
 void qInputHandler_HandleInput( qGame_t* game )
 {
+   qTextScrollRenderState_t* textScrollState = game->renderer->renderStates->textScroll;
+
    if ( qInputHandler_CheckCheats( game ) )
    {
       return;
@@ -47,6 +49,16 @@ void qInputHandler_HandleInput( qGame_t* game )
       {
          qGame_ShowDebugMessage( game, STR_DEBUG_DIAGNOSTICSOFF );
       }
+   }
+
+   if ( textScrollState->isRunning )
+   {
+      if ( textScrollState->canSkip && game->inputState->keyWasPressed )
+      {
+         qRenderStates_SkipTextScroll( textScrollState );
+      }
+
+      return;
    }
 
    switch ( game->state )

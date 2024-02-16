@@ -59,7 +59,7 @@ static qDiagnosticsRenderObjects_t* qRenderObjects_CreateDiagnostics()
    sfText_setFont( objects->text, objects->font );
    sfText_setCharacterSize( objects->text, 12 );
    sfText_setFillColor( objects->text, sfWhite );
-   objects->lineSpacing = sfFont_getLineSpacing( objects->font, sfText_getCharacterSize( objects->text ) );
+   objects->lineSize = sfFont_getLineSpacing( objects->font, sfText_getCharacterSize( objects->text ) );
 
    return objects;
 }
@@ -191,6 +191,7 @@ static qDialogBoxRenderObjects_t* qRenderObjects_CreateBattleDialogBoxLarge()
    objects->pos.y = WINDOW_HEIGHT - ( 160 * GRAPHICS_SCALE );
    objects->textOffset.x = 20 * GRAPHICS_SCALE;
    objects->textOffset.y = 16 * GRAPHICS_SCALE;
+   objects->textWidth = 664 * GRAPHICS_SCALE;
    objects->lineSize = 20 * GRAPHICS_SCALE;
 
    objects->backgroundShape = qsfConvexShape_Create();
@@ -222,6 +223,7 @@ static qDialogBoxRenderObjects_t* qRenderObjects_CreateBattleDialogBoxSmall()
    objects->pos.y = WINDOW_HEIGHT - ( 160 * GRAPHICS_SCALE );
    objects->textOffset.x = 20 * GRAPHICS_SCALE;
    objects->textOffset.y = 16 * GRAPHICS_SCALE;
+   objects->textWidth = 496 * GRAPHICS_SCALE;
    objects->lineSize = 20 * GRAPHICS_SCALE;
 
    objects->backgroundShape = qsfConvexShape_Create();

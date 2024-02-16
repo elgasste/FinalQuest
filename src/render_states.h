@@ -45,6 +45,7 @@ typedef struct qTextScrollRenderState_t
    uint32_t currentCharIndex;
    float letterSeconds;
    float elapsedSeconds;
+   sfBool canSkip;
 }
 qTextScrollRenderState_t;
 
@@ -68,7 +69,7 @@ void qRenderStates_StartScreenFade( qScreenFadeRenderState_t* state,
                                     sfBool isLightColor,
                                     void (*fadeCompleteFnc)(qGame_t*) );
 void qRenderStates_ResetTextScroll( qTextScrollRenderState_t* state );
-void qRenderStates_StartTextScroll( qTextScrollRenderState_t* state, uint32_t charCount );
+void qRenderStates_StartTextScroll( qTextScrollRenderState_t* state, uint32_t charCount, sfBool canSkip );
 void qRenderStates_SkipTextScroll( qTextScrollRenderState_t* state );
 
 #endif // RENDER_STATES_H

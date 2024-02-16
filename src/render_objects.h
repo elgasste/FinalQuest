@@ -11,7 +11,7 @@ typedef struct qDiagnosticsRenderObjects_t
    sfFont* font;
    sfText* text;
    sfVector2f textPosition;
-   float lineSpacing;
+   float lineSize;
 }
 qDiagnosticsRenderObjects_t;
 
@@ -57,6 +57,7 @@ typedef struct qDialogBoxRenderObjects_t
    sfText* text;
    sfVector2f pos;
    sfVector2f textOffset;
+   float textWidth;
    float lineSize;
    char message[STRLEN_DEFAULT];
 }

@@ -4,12 +4,8 @@
 #include "common.h"
 
 typedef struct qGame_t qGame_t;
+typedef struct qDialogBoxRenderObjects_t qDialogBoxRenderObjects_t;
 
-void qTextUtil_DrawWrappedScrollingText( qGame_t* game,
-                                         sfText* text,
-                                         const char* str,
-                                         sfVector2f pos,
-                                         float width,
-                                         float lineSpacing );
+void qTextUtil_DrawWrappedScrollingText( qGame_t* game, qDialogBoxRenderObjects_t* objects );
 
 #endif // TEXT_UTIL_H
