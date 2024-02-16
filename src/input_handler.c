@@ -66,6 +66,12 @@ void qInputHandler_HandleInput( qGame_t* game )
       case qGameState_BattleChooseAction:
          qInputHandler_HandleMenuInput( game, game->menus->battleAction );
          break;
+      case qGameState_BattleResult:
+         if ( game->inputState->keyWasPressed )
+         {
+            qGame_SetState( game, qGameState_FadeBattleOut );
+         }
+         break;
    }
 }
 

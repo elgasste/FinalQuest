@@ -207,11 +207,19 @@ void qGame_ExecuteMenuCommand( qGame_t* game, qMenuCommand_t command )
          }
          break;
       case qMenuCommand_BattleAttack:
+         qBattle_Attack( game );
+         break;
       case qMenuCommand_BattleDefend:
+         qBattle_Defend( game );
+         break;
       case qMenuCommand_BattleSpell:
+         qBattle_Spell( game );
+         break;
       case qMenuCommand_BattleItem:
+         qBattle_Item( game );
+         break;
       case qMenuCommand_BattleFlee:
-         qGame_SetState( game, qGameState_FadeBattleOut );
+         qBattle_Flee( game );
          break;
    }
 }

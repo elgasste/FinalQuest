@@ -94,6 +94,7 @@ void qRenderer_Render( qGame_t* game )
       case qGameState_FadeBattleOut:
       case qGameState_BattleIntro:
       case qGameState_BattleChooseAction:
+      case qGameState_BattleResult:
          qRenderer_DrawBattle( game );
          break;
    }
@@ -386,6 +387,8 @@ static void qRenderer_DrawBattle( qGame_t* game )
    switch ( game->state )
    {
       case qGameState_BattleIntro:
+      case qGameState_BattleResult:
+      case qGameState_FadeBattleOut:
          qRenderer_DrawDialogBox( largeDialogObjects, game->window );
          break;
       case qGameState_BattleChooseAction:
