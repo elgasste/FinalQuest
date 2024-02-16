@@ -378,16 +378,19 @@ static void qRenderer_DrawActors( qGame_t* game )
 static void qRenderer_DrawBattle( qGame_t* game )
 {
    qDialogBoxRenderObjects_t* largeDialogObjects = game->renderer->renderObjects->battleDialogBoxLarge;
+   qDialogBoxRenderObjects_t* smallDialogObjects = game->renderer->renderObjects->battleDialogBoxSmall;
    qMenu_t* actionMenu = game->menus->battleAction;
    qMenuRenderObjects_t* actionMenuObjects = game->renderer->renderObjects->battleActionMenu;
    qMenuRenderState_t* menuState = game->renderer->renderStates->menu;
 
-   if ( game->state == qGameState_BattleIntro )
+   switch ( game->state )
    {
-      qRenderer_DrawDialogBox( largeDialogObjects, game->window );
-   }
-   else if ( game->state == qGameState_BattleChooseAction )
-   {
-      qRenderer_DrawMenu( actionMenu, actionMenuObjects, menuState, game->window );
+      case qGameState_BattleIntro:
+         qRenderer_DrawDialogBox( largeDialogObjects, game->window );
+         break;
+      case qGameState_BattleChooseAction:
+         qRenderer_DrawMenu( actionMenu, actionMenuObjects, menuState, game->window );
+         qRenderer_DrawDialogBox( smallDialogObjects, game->window );
+         break;
    }
 }

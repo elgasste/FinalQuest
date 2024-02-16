@@ -218,7 +218,7 @@ static qDialogBoxRenderObjects_t* qRenderObjects_CreateBattleDialogBoxSmall()
 
    qDialogBoxRenderObjects_t* objects = (qDialogBoxRenderObjects_t*)qAlloc( sizeof( qDialogBoxRenderObjects_t ), sfTrue );
 
-   objects->pos.x = 168 * GRAPHICS_SCALE;
+   objects->pos.x = 200 * GRAPHICS_SCALE;
    objects->pos.y = WINDOW_HEIGHT - ( 160 * GRAPHICS_SCALE );
    objects->textOffset.x = 20 * GRAPHICS_SCALE;
    objects->textOffset.y = 16 * GRAPHICS_SCALE;
@@ -227,7 +227,7 @@ static qDialogBoxRenderObjects_t* qRenderObjects_CreateBattleDialogBoxSmall()
    objects->backgroundShape = qsfConvexShape_Create();
    gmRenderObjects_BuildDialogBackground( objects->backgroundShape,
                                           objects->pos.x, objects->pos.y,
-                                          256 * GRAPHICS_SCALE, 132 * GRAPHICS_SCALE,
+                                          536 * GRAPHICS_SCALE, 132 * GRAPHICS_SCALE,
                                           8 * GRAPHICS_SCALE,
                                           DIALOG_BACKDROP_DARKCOLOR );
 

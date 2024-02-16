@@ -5,6 +5,10 @@
 
 void qBattle_Begin( qGame_t* game )
 {
-   snprintf( game->renderer->renderObjects->battleDialogBoxLarge->message, STRLEN_DEFAULT - 1, "Something invisible approaches!" );
+   qRenderObjects_t* renderObjects = game->renderer->renderObjects;
+
+   snprintf( renderObjects->battleDialogBoxLarge->message, STRLEN_DEFAULT - 1, "Something invisible approaches!" );
+   snprintf( renderObjects->battleDialogBoxSmall->message, STRLEN_DEFAULT - 1, STR_BATTLE_SELECTACTION );
+
    qGame_SetState( game, qGameState_BattleIntro );
 }

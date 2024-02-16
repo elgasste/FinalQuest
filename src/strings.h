@@ -35,6 +35,8 @@
 #define STR_MENU_ITEM                     "Item"
 #define STR_MENU_FLEE                     "Flee"
 
+#define STR_BATTLE_SELECTACTION           "Select an action"
+
 #define STR_DEBUG_DIAGNOSTICSON           "Toggled diagnostics on"
 #define STR_DEBUG_DIAGNOSTICSOFF          "Toggled diagnostics off"
 
