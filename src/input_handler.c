@@ -9,7 +9,7 @@
 #include "physics.h"
 
 static void qInputHandler_HandleMapInput( qGame_t* game );
-static void qInputHandler_HandleMapMenuInput( qGame_t* game );
+static void qInputHandler_HandleMenuInput( qGame_t* game, qMenu_t* menu );
 static sfBool qInputHandler_HandleMenuSelection( qGame_t* game, qMenu_t* menu );
 static sfBool qInputHandler_CheckCheats( qGame_t* game );
 static void qInputHandler_ApplyCheat( qGame_t* game );
@@ -30,6 +30,8 @@ void qInputHandler_Destroy( qInputHandler_t* inputHandler )
 
 void qInputHandler_HandleInput( qGame_t* game )
 {
+   qTextScrollRenderState_t* textScrollState = game->renderer->renderStates->textScroll;
+
    if ( qInputHandler_CheckCheats( game ) )
    {
       return;
@@ -49,15 +51,34 @@ void qInputHandler_HandleInput( qGame_t* game )
       }
    }
 
+   if ( textScrollState->isRunning )
+   {
+      if ( textScrollState->canSkip && game->inputState->keyWasPressed )
+      {
+         qRenderStates_SkipTextScroll( textScrollState );
+      }
+
+      return;
+   }
+
    switch ( game->state )
    {
       case qGameState_Map:
          qInputHandler_HandleMapInput( game );
          break;
       case qGameState_MapMenu:
-         qInputHandler_HandleMapMenuInput( game );
+         qInputHandler_HandleMenuInput( game, game->menus->map );
          break;
-      case qGameState_Battle:
+      case qGameState_BattleIntro:
+         if ( game->inputState->keyWasPressed )
+         {
+            qGame_SetState( game, qGameState_BattleChooseAction );
+         }
+         break;
+      case qGameState_BattleChooseAction:
+         qInputHandler_HandleMenuInput( game, game->menus->battleAction );
+         break;
+      case qGameState_BattleResult:
          if ( game->inputState->keyWasPressed )
          {
             qGame_SetState( game, qGameState_FadeBattleOut );
@@ -153,15 +174,18 @@ static void qInputHandler_HandleMapInput( qGame_t* game )
    }
 }
 
-static void qInputHandler_HandleMapMenuInput( qGame_t* game )
+static void qInputHandler_HandleMenuInput( qGame_t* game, qMenu_t* menu )
 {
-   qMenu_t* menu = game->menus->map;
-
    if ( qInputState_WasKeyPressed( game->inputState, sfKeyEscape ) )
    {
-      qGame_SetState( game, qGameState_Map );
+      if ( game->state == qGameState_MapMenu )
+      {
+         qGame_SetState( game, qGameState_Map );
+         return;
+      }
    }
-   else if ( qInputHandler_HandleMenuSelection( game, game->menus->map ) )
+
+   if ( qInputHandler_HandleMenuSelection( game, menu ) )
    {
       qGame_ExecuteMenuCommand( game, menu->options[menu->selectedIndex].command );
    }

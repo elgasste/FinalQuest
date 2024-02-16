@@ -24,6 +24,7 @@ qMenu_t;
 typedef struct qMenus_t
 {
    qMenu_t* map;
+   qMenu_t* battleAction;
 }
 qMenus_t;
 

@@ -29,6 +29,13 @@
 #define STR_MENU_CARAT                    ">"
 #define STR_MENU_QUITGAME                 "Quit Game"
 #define STR_MENU_CLOSEMENU                "Close Menu"
+#define STR_MENU_ATTACK                   "Attack"
+#define STR_MENU_DEFEND                   "Defend"
+#define STR_MENU_SPELL                    "Spell"
+#define STR_MENU_ITEM                     "Item"
+#define STR_MENU_FLEE                     "Flee"
+
+#define STR_BATTLE_SELECTACTION           "Select an action"
 
 #define STR_DEBUG_DIAGNOSTICSON           "Toggled diagnostics on"
 #define STR_DEBUG_DIAGNOSTICSOFF          "Toggled diagnostics off"

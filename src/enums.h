@@ -7,7 +7,9 @@ typedef enum qGameState_t
    qGameState_MapMenu,
    qGameState_FadeMapToBattle,
    qGameState_FadeBattleIn,
-   qGameState_Battle,
+   qGameState_BattleIntro,
+   qGameState_BattleChooseAction,
+   qGameState_BattleResult,
    qGameState_FadeBattleOut,
    qGameState_FadeBattleToMap
 }
@@ -25,7 +27,13 @@ qDirection_t;
 typedef enum qMenuCommand_t
 {
    qMenuCommand_Quit = 0,
-   qMenuCommand_CloseMenu
+   qMenuCommand_CloseMenu,
+
+   qMenuCommand_BattleAttack,
+   qMenuCommand_BattleDefend,
+   qMenuCommand_BattleSpell,
+   qMenuCommand_BattleItem,
+   qMenuCommand_BattleFlee
 }
 qMenuCommand_t;
 

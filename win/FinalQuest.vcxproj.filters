@@ -61,6 +61,12 @@
     <ClCompile Include="..\src\menu.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\battle.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\text_util.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\clock.h">
@@ -124,6 +130,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\battle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\text_util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

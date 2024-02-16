@@ -11,15 +11,18 @@
 #include "sprite.h"
 #include "physics.h"
 #include "menu.h"
+#include "text_util.h"
 
 static void qRenderer_DrawDiagnostics( qGame_t* game );
 static void qRenderer_DrawDebugBar( qGame_t* game );
 static void qRenderer_DrawScreenFade( qGame_t* game );
 static void qRenderer_SetMapView( qGame_t* game );
 static void qRenderer_DrawMap( qGame_t* game );
-static void qRenderer_DrawMapMenu( qGame_t* game );
+static void qRenderer_DrawMenu( qMenu_t* menu, qMenuRenderObjects_t* objects, qMenuRenderState_t* state, qWindow_t* window );
+static void qRenderer_DrawDialogBox( qGame_t* game, qDialogBoxRenderObjects_t* objects, sfBool scroll );
 static void qRenderer_DrawActors( qGame_t* game );
 static void qRenderer_OrderActors( qGame_t* game );
+static void qRenderer_DrawBattle( qGame_t* game );
 
 qRenderer_t* qRenderer_Create()
 {
@@ -68,6 +71,9 @@ void qRenderer_UpdateActors( qGame_t* game )
 
 void qRenderer_Render( qGame_t* game )
 {
+   qRenderObjects_t* renderObjects = game->renderer->renderObjects;
+   qRenderStates_t* renderStates = game->renderer->renderStates;
+
    qWindow_DrawRectangleShape( game->window, game->renderer->windowBackgroundRect );
 
    switch ( game->state )
@@ -83,7 +89,14 @@ void qRenderer_Render( qGame_t* game )
          qRenderer_SetMapView( game );
          qRenderer_DrawMap( game );
          qRenderer_DrawActors( game );
-         qRenderer_DrawMapMenu( game );
+         qRenderer_DrawMenu( game->menus->map, renderObjects->mapMenu, renderStates->menu, game->window );
+         break;
+      case qGameState_FadeBattleIn:
+      case qGameState_FadeBattleOut:
+      case qGameState_BattleIntro:
+      case qGameState_BattleChooseAction:
+      case qGameState_BattleResult:
+         qRenderer_DrawBattle( game );
          break;
    }
 
@@ -125,19 +138,19 @@ static void qRenderer_DrawDiagnostics( qGame_t* game )
    sfText_setString( objects->text, msg );
    qWindow_DrawText( game->window, objects->text );
 
-   objects->textPosition.y += objects->lineSpacing;
+   objects->textPosition.y += objects->lineSize;
    sfText_setPosition( objects->text, objects->textPosition );
    snprintf( msg, STRLEN_DEFAULT - 1, STR_TOTALFRAMESFORMATTER, game->clock->totalFrameCount );
    sfText_setString( objects->text, msg );
    qWindow_DrawText( game->window, objects->text );
 
-   objects->textPosition.y += objects->lineSpacing;
+   objects->textPosition.y += objects->lineSize;
    sfText_setPosition( objects->text, objects->textPosition );
    snprintf( msg, STRLEN_DEFAULT - 1, STR_LAGFRAMESFORMATTER, game->clock->lagFrameCount );
    sfText_setString( objects->text, msg );
    qWindow_DrawText( game->window, objects->text );
 
-   objects->textPosition.y += objects->lineSpacing;
+   objects->textPosition.y += objects->lineSize;
    sfText_setPosition( objects->text, objects->textPosition );
    qTimeUtil_FormatTime( timeStr, STRLEN_SHORT - 1, (int32_t)( game->clock->realTotalDurationMicro / 1000000 ) );
    snprintf( msg, STRLEN_DEFAULT - 1, STR_ELAPSEDTIMEFORMATTER, timeStr );
@@ -296,31 +309,49 @@ static void qRenderer_DrawMap( qGame_t* game )
    }
 }
 
-static void qRenderer_DrawMapMenu( qGame_t* game )
+static void qRenderer_DrawMenu( qMenu_t* menu, qMenuRenderObjects_t* objects, qMenuRenderState_t* state, qWindow_t* window )
 {
    sfVector2f pos;
-   qMapMenuRenderObjects_t* objects = game->renderer->renderObjects->mapMenu;
-   qMenuRenderState_t* renderState = game->renderer->renderStates->menu;
-   qMenu_t* menu = game->menus->map;
    uint32_t i;
 
-   qWindow_DrawConvexShape( game->window, objects->backgroundShape );
+   qWindow_DrawConvexShape( window, objects->backgroundShape );
 
    for ( i = 0; i < menu->optionCount; i++ )
    {
-      if ( menu->selectedIndex == i && renderState->showCarat )
+      if ( menu->selectedIndex == i && state->showCarat )
       {
-         pos.x = objects->menuPos.x + objects->itemsOffset.x + objects->caratOffset.x;
-         pos.y = objects->menuPos.y + objects->itemsOffset.y + objects->caratOffset.y + ( i * objects->lineSize );
+         pos.x = objects->pos.x + objects->itemsOffset.x + objects->caratOffset.x;
+         pos.y = objects->pos.y + objects->itemsOffset.y + objects->caratOffset.y + ( i * objects->lineSize );
          sfText_setPosition( objects->text, pos );
          sfText_setString( objects->text, STR_MENU_CARAT );
-         qWindow_DrawText( game->window, objects->text );
+         qWindow_DrawText( window, objects->text );
       }
 
-      pos.x = objects->menuPos.x + objects->itemsOffset.x;
-      pos.y = objects->menuPos.y + objects->itemsOffset.y + ( i * objects->lineSize );
+      pos.x = objects->pos.x + objects->itemsOffset.x;
+      pos.y = objects->pos.y + objects->itemsOffset.y + ( i * objects->lineSize );
       sfText_setPosition( objects->text, pos );
       sfText_setString( objects->text, menu->options[i].label );
+      qWindow_DrawText( window, objects->text );
+   }
+}
+
+static void qRenderer_DrawDialogBox( qGame_t* game, qDialogBoxRenderObjects_t* objects, sfBool scroll )
+{
+   sfVector2f pos;
+
+   qWindow_DrawConvexShape( game->window, objects->backgroundShape );
+
+   if ( scroll )
+   {
+      qTextUtil_DrawWrappedScrollingText( game, objects );
+   }
+   else
+   {
+      pos.x = objects->pos.x + objects->textOffset.x;
+      pos.y = objects->pos.y + objects->textOffset.y;
+      sfText_setPosition( objects->text, pos );
+      sfText_setString( objects->text, objects->message );
+
       qWindow_DrawText( game->window, objects->text );
    }
 }
@@ -350,5 +381,27 @@ static void qRenderer_DrawActors( qGame_t* game )
 
       qSprite_SetPosition( actor->sprite, spritePos );
       qWindow_DrawSprite( game->window, actor->sprite->sfmlSprite );
+   }
+}
+
+static void qRenderer_DrawBattle( qGame_t* game )
+{
+   qDialogBoxRenderObjects_t* largeDialogObjects = game->renderer->renderObjects->battleDialogBoxLarge;
+   qDialogBoxRenderObjects_t* smallDialogObjects = game->renderer->renderObjects->battleDialogBoxSmall;
+   qMenu_t* actionMenu = game->menus->battleAction;
+   qMenuRenderObjects_t* actionMenuObjects = game->renderer->renderObjects->battleActionMenu;
+   qMenuRenderState_t* menuState = game->renderer->renderStates->menu;
+
+   switch ( game->state )
+   {
+      case qGameState_BattleIntro:
+      case qGameState_BattleResult:
+      case qGameState_FadeBattleOut:
+         qRenderer_DrawDialogBox( game, largeDialogObjects, sfTrue );
+         break;
+      case qGameState_BattleChooseAction:
+         qRenderer_DrawMenu( actionMenu, actionMenuObjects, menuState, game->window );
+         qRenderer_DrawDialogBox( game, smallDialogObjects, sfFalse );
+         break;
    }
 }

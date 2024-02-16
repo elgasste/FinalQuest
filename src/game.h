@@ -28,6 +28,8 @@ typedef struct qGame_t
    qMap_t* map;
    qMenus_t* menus;
 
+   sfBool isMenuOpen;
+
    qActor_t* actors;
    uint32_t actorCount;
    qActor_t* controllingActor;
