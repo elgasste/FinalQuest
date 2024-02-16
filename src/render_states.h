@@ -49,12 +49,22 @@ typedef struct qTextScrollRenderState_t
 }
 qTextScrollRenderState_t;
 
+typedef struct qActorSwapRenderState_t
+{
+   sfBool isRunning;
+   float swapSeconds;
+   float elapsedSeconds;
+   void (*actorSwapCompleteFnc)( qGame_t* );
+}
+qActorSwapRenderState_t;
+
 typedef struct qRenderStates_t
 {
    qDebugBarRenderState_t* debugBar;
    qMenuRenderState_t* menu;
    qScreenFadeRenderState_t* screenFade;
    qTextScrollRenderState_t* textScroll;
+   qActorSwapRenderState_t* actorSwap;
 }
 qRenderStates_t;
 
@@ -62,14 +72,13 @@ qRenderStates_t* qRenderStates_Create();
 void qRenderStates_Destroy( qRenderStates_t* states );
 void qRenderStates_Tic( qGame_t* game );
 void qRenderStates_ResetMenu( qMenuRenderState_t* state );
-void qRenderStates_ResetScreenFade( qScreenFadeRenderState_t* state );
 void qRenderStates_StartScreenFade( qScreenFadeRenderState_t* state,
                                     sfBool fadeOut,
                                     sfBool pause,
                                     sfBool isLightColor,
                                     void (*fadeCompleteFnc)(qGame_t*) );
-void qRenderStates_ResetTextScroll( qTextScrollRenderState_t* state );
 void qRenderStates_StartTextScroll( qTextScrollRenderState_t* state, uint32_t charCount, sfBool canSkip );
 void qRenderStates_SkipTextScroll( qTextScrollRenderState_t* state );
+void qRenderStates_StartActorSwap( qActorSwapRenderState_t* state, void (*actorSwapCompleteFnc)(qGame_t*) );
 
 #endif // RENDER_STATES_H

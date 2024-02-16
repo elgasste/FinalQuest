@@ -22,6 +22,7 @@ typedef struct qRenderer_t
    sfVector2u mapViewEnd;
 
    qActor_t* orderedActors[MAX_ACTORS];
+   qActor_t* controllingActorCache;
 }
 qRenderer_t;
 
@@ -29,5 +30,6 @@ qRenderer_t* qRenderer_Create();
 void qRenderer_Destroy( qRenderer_t* renderer );
 void qRenderer_UpdateActors( qGame_t* game );
 void qRenderer_Render( qGame_t* game );
+void qRenderer_SwitchControllingActor( qGame_t* game );
 
 #endif // RENDERER_H

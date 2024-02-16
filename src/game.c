@@ -162,6 +162,8 @@ void qGame_SwitchControllingActor( qGame_t* game )
    }
 
    game->controllingActor = &( game->actors[game->controllingActorIndex] );
+
+   qRenderer_SwitchControllingActor( game );
    qPhysics_ResetActorTileCache( game );
 }
 
