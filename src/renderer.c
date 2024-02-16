@@ -67,6 +67,8 @@ void qRenderer_UpdateActors( qGame_t* game )
    }
 
    qRenderer_OrderActors( game );
+
+   game->renderer->controllingActorCache = game->controllingActor;
 }
 
 void qRenderer_Render( qGame_t* game )
@@ -206,11 +208,24 @@ static void qRenderer_DrawScreenFade( qGame_t* game )
 static void qRenderer_SetMapView( qGame_t* game )
 {
    qRenderer_t* renderer = game->renderer;
+   qActor_t* actor = game->controllingActor;
    qMap_t* map = game->map;
    sfVector2f mapSize = { (float)( map->tileCount.x * MAP_TILE_SIZE ), (float)( map->tileCount.y * MAP_TILE_SIZE ) };
    sfVector2f actorCenter = {
-      game->controllingActor->entity->mapPos.x + ( game->controllingActor->entity->mapHitBoxSize.x / 2 ),
-      game->controllingActor->entity->mapPos.y + ( game->controllingActor->entity->mapHitBoxSize.y / 2 ) };
+      actor->entity->mapPos.x + ( actor->entity->mapHitBoxSize.x / 2 ),
+      actor->entity->mapPos.y + ( actor->entity->mapHitBoxSize.y / 2 ) };
+   sfVector2f oldActorCenter = {
+      game->renderer->controllingActorCache->entity->mapPos.x + ( game->renderer->controllingActorCache->entity->mapHitBoxSize.x / 2 ),
+      game->renderer->controllingActorCache->entity->mapPos.y + ( game->renderer->controllingActorCache->entity->mapHitBoxSize.y / 2 )
+   };
+   float swapPercentage;
+
+   if ( game->renderer->renderStates->actorSwap->isRunning )
+   {
+      swapPercentage = game->renderer->renderStates->actorSwap->elapsedSeconds / game->renderer->renderStates->actorSwap->swapSeconds;
+      actorCenter.x = oldActorCenter.x += ( actorCenter.x - oldActorCenter.x ) * swapPercentage;
+      actorCenter.y = oldActorCenter.y += ( actorCenter.y - oldActorCenter.y ) * swapPercentage;
+   }
 
    renderer->mapViewRect.left = actorCenter.x - ( ( WINDOW_WIDTH / GRAPHICS_SCALE ) / 2 );
    renderer->mapViewRect.top = actorCenter.y - ( ( WINDOW_HEIGHT / GRAPHICS_SCALE ) / 2 );
@@ -403,5 +418,18 @@ static void qRenderer_DrawBattle( qGame_t* game )
          qRenderer_DrawMenu( actionMenu, actionMenuObjects, menuState, game->window );
          qRenderer_DrawDialogBox( game, smallDialogObjects, sfFalse );
          break;
+   }
+}
+
+static void qRenderer_ActorSwapCompleted( qGame_t* game )
+{
+   game->renderer->controllingActorCache = game->controllingActor;
+}
+
+void qRenderer_SwitchControllingActor( qGame_t* game )
+{
+   if ( game->renderer->controllingActorCache != game->controllingActor )
+   {
+      qRenderStates_StartActorSwap( game->renderer->renderStates->actorSwap, &qRenderer_ActorSwapCompleted );
    }
 }

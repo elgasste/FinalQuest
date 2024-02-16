@@ -31,6 +31,7 @@ void qInputHandler_Destroy( qInputHandler_t* inputHandler )
 void qInputHandler_HandleInput( qGame_t* game )
 {
    qTextScrollRenderState_t* textScrollState = game->renderer->renderStates->textScroll;
+   qActorSwapRenderState_t* actorSwapState = game->renderer->renderStates->actorSwap;
 
    if ( qInputHandler_CheckCheats( game ) )
    {
@@ -58,6 +59,10 @@ void qInputHandler_HandleInput( qGame_t* game )
          qRenderStates_SkipTextScroll( textScrollState );
       }
 
+      return;
+   }
+   else if ( actorSwapState->isRunning )
+   {
       return;
    }
 
