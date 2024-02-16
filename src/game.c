@@ -12,6 +12,7 @@
 #include "sprite_texture.h"
 #include "physics.h"
 #include "menu.h"
+#include "battle.h"
 
 static void qGame_Tic( qGame_t* game );
 static void qGame_ScreenFadeComplete( qGame_t* game );
@@ -234,8 +235,7 @@ static void qGame_ScreenFadeComplete( qGame_t* game )
          qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfFalse, sfFalse, sfTrue, &qGame_ScreenFadeComplete );
          break;
       case qGameState_FadeBattleIn:
-         snprintf( game->renderer->renderObjects->battleDialogBoxLarge->message, STRLEN_DEFAULT - 1, "Something invisible approaches!" );
-         qGame_SetState( game, qGameState_BattleIntro );
+         qBattle_Begin( game );
          break;
       case qGameState_FadeBattleOut:
          qGame_SetState( game, qGameState_FadeBattleToMap );
