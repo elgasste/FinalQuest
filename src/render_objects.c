@@ -189,14 +189,14 @@ static qDialogBoxRenderObjects_t* qRenderObjects_CreateBattleDialogBoxLarge()
 
    objects->pos.x = 32 * GRAPHICS_SCALE;
    objects->pos.y = WINDOW_HEIGHT - ( 160 * GRAPHICS_SCALE );
-   objects->textOffset.x = 32 * GRAPHICS_SCALE;
+   objects->textOffset.x = 20 * GRAPHICS_SCALE;
    objects->textOffset.y = 16 * GRAPHICS_SCALE;
    objects->lineSize = 20 * GRAPHICS_SCALE;
 
    objects->backgroundShape = qsfConvexShape_Create();
    gmRenderObjects_BuildDialogBackground( objects->backgroundShape,
                                           objects->pos.x, objects->pos.y,
-                                          512 * GRAPHICS_SCALE, 132 * GRAPHICS_SCALE,
+                                          704 * GRAPHICS_SCALE, 132 * GRAPHICS_SCALE,
                                           8 * GRAPHICS_SCALE,
                                           DIALOG_BACKDROP_DARKCOLOR );
 
@@ -206,6 +206,8 @@ static qDialogBoxRenderObjects_t* qRenderObjects_CreateBattleDialogBoxLarge()
    sfText_setCharacterSize( objects->text, GAME_FONT_SIZE );
    sfText_scale( objects->text, textScale );
    sfText_setFillColor( objects->text, GAME_FONT_COLOR );
+
+   objects->message[0] = '\0';
 
    return objects;
 }
@@ -218,7 +220,7 @@ static qDialogBoxRenderObjects_t* qRenderObjects_CreateBattleDialogBoxSmall()
 
    objects->pos.x = 168 * GRAPHICS_SCALE;
    objects->pos.y = WINDOW_HEIGHT - ( 160 * GRAPHICS_SCALE );
-   objects->textOffset.x = 32 * GRAPHICS_SCALE;
+   objects->textOffset.x = 20 * GRAPHICS_SCALE;
    objects->textOffset.y = 16 * GRAPHICS_SCALE;
    objects->lineSize = 20 * GRAPHICS_SCALE;
 
@@ -235,6 +237,8 @@ static qDialogBoxRenderObjects_t* qRenderObjects_CreateBattleDialogBoxSmall()
    sfText_setCharacterSize( objects->text, GAME_FONT_SIZE );
    sfText_scale( objects->text, textScale );
    sfText_setFillColor( objects->text, GAME_FONT_COLOR );
+
+   objects->message[0] = '\0';
 
    return objects;
 }

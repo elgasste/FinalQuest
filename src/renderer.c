@@ -18,6 +18,7 @@ static void qRenderer_DrawScreenFade( qGame_t* game );
 static void qRenderer_SetMapView( qGame_t* game );
 static void qRenderer_DrawMap( qGame_t* game );
 static void qRenderer_DrawMenu( qMenu_t* menu, qMenuRenderObjects_t* objects, qMenuRenderState_t* state, qWindow_t* window );
+static void qRenderer_DrawDialogBox( qDialogBoxRenderObjects_t* objects, qWindow_t* window );
 static void qRenderer_DrawActors( qGame_t* game );
 static void qRenderer_OrderActors( qGame_t* game );
 static void qRenderer_DrawBattle( qGame_t* game );
@@ -91,6 +92,7 @@ void qRenderer_Render( qGame_t* game )
          break;
       case qGameState_FadeBattleIn:
       case qGameState_FadeBattleOut:
+      case qGameState_BattleIntro:
       case qGameState_BattleChooseAction:
          qRenderer_DrawBattle( game );
          break;
@@ -331,6 +333,20 @@ static void qRenderer_DrawMenu( qMenu_t* menu, qMenuRenderObjects_t* objects, qM
    }
 }
 
+static void qRenderer_DrawDialogBox( qDialogBoxRenderObjects_t* objects, qWindow_t* window )
+{
+   sfVector2f pos;
+
+   qWindow_DrawConvexShape( window, objects->backgroundShape );
+
+   pos.x = objects->pos.x + objects->textOffset.x;
+   pos.y = objects->pos.y + objects->textOffset.y;
+   sfText_setPosition( objects->text, pos );
+   sfText_setString( objects->text, objects->message );
+
+   qWindow_DrawText( window, objects->text );
+}
+
 static void qRenderer_DrawActors( qGame_t* game )
 {
    qRenderer_t* renderer = game->renderer;
@@ -361,11 +377,16 @@ static void qRenderer_DrawActors( qGame_t* game )
 
 static void qRenderer_DrawBattle( qGame_t* game )
 {
+   qDialogBoxRenderObjects_t* largeDialogObjects = game->renderer->renderObjects->battleDialogBoxLarge;
    qMenu_t* actionMenu = game->menus->battleAction;
    qMenuRenderObjects_t* actionMenuObjects = game->renderer->renderObjects->battleActionMenu;
    qMenuRenderState_t* menuState = game->renderer->renderStates->menu;
 
-   if ( game->state == qGameState_BattleChooseAction )
+   if ( game->state == qGameState_BattleIntro )
+   {
+      qRenderer_DrawDialogBox( largeDialogObjects, game->window );
+   }
+   else if ( game->state == qGameState_BattleChooseAction )
    {
       qRenderer_DrawMenu( actionMenu, actionMenuObjects, menuState, game->window );
    }

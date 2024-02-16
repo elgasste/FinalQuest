@@ -58,6 +58,7 @@ typedef struct qDialogBoxRenderObjects_t
    sfVector2f pos;
    sfVector2f textOffset;
    float lineSize;
+   char message[STRLEN_DEFAULT];
 }
 qDialogBoxRenderObjects_t;
 

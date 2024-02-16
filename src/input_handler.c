@@ -57,6 +57,12 @@ void qInputHandler_HandleInput( qGame_t* game )
       case qGameState_MapMenu:
          qInputHandler_HandleMenuInput( game, game->menus->map );
          break;
+      case qGameState_BattleIntro:
+         if ( game->inputState->keyWasPressed )
+         {
+            qGame_SetState( game, qGameState_BattleChooseAction );
+         }
+         break;
       case qGameState_BattleChooseAction:
          qInputHandler_HandleMenuInput( game, game->menus->battleAction );
          break;
