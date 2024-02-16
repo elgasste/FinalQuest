@@ -27,7 +27,11 @@ typedef enum qMenuCommand_t
    qMenuCommand_Quit = 0,
    qMenuCommand_CloseMenu,
 
-   qMenuCommand_BattleTemp
+   qMenuCommand_BattleAttack,
+   qMenuCommand_BattleDefend,
+   qMenuCommand_BattleSpell,
+   qMenuCommand_BattleItem,
+   qMenuCommand_BattleFlee
 }
 qMenuCommand_t;
 

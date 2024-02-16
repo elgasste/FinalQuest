@@ -205,7 +205,11 @@ void qGame_ExecuteMenuCommand( qGame_t* game, qMenuCommand_t command )
             qGame_SetState( game, qGameState_Map );
          }
          break;
-      case qMenuCommand_BattleTemp:
+      case qMenuCommand_BattleAttack:
+      case qMenuCommand_BattleDefend:
+      case qMenuCommand_BattleSpell:
+      case qMenuCommand_BattleItem:
+      case qMenuCommand_BattleFlee:
          qGame_SetState( game, qGameState_FadeBattleOut );
          break;
    }
