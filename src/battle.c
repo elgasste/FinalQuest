@@ -4,13 +4,14 @@
 #include "render_objects.h"
 #include "render_states.h"
 #include "actor.h"
+#include "character.h"
 #include "sprite.h"
 
 void qBattle_Begin( qGame_t* game )
 {
    qRenderObjects_t* renderObjects = game->renderer->renderObjects;
 
-   qSprite_Stop( game->controllingActor->sprite );
+   qSprite_Stop( game->controllingCharacter->actor->sprite );
 
    snprintf( renderObjects->battleDialogBoxLarge->message, STRLEN_DEFAULT - 1, "Something invisible approaches!" );
    snprintf( renderObjects->battleDialogBoxSmall->message, STRLEN_DEFAULT - 1, STR_BATTLE_SELECTACTION );

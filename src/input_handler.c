@@ -2,6 +2,7 @@
 #include "game.h"
 #include "input_state.h"
 #include "actor.h"
+#include "character.h"
 #include "entity.h"
 #include "menu.h"
 #include "renderer.h"
@@ -94,8 +95,7 @@ void qInputHandler_HandleInput( qGame_t* game )
 
 static void qInputHandler_HandleMapInput( qGame_t* game )
 {
-   qActor_t* actor = game->controllingActor;
-   qEntity_t* entity = actor->entity;
+   qEntity_t* entity = game->controllingCharacter->actor->entity;
 
    sfBool leftIsDown = qInputState_IsKeyDown( sfKeyLeft );
    sfBool upIsDown = qInputState_IsKeyDown( sfKeyUp );
@@ -110,7 +110,7 @@ static void qInputHandler_HandleMapInput( qGame_t* game )
 
    if ( qInputState_WasKeyPressed( game->inputState, sfKeyTab ) )
    {
-      qGame_SwitchControllingActor( game );
+      qGame_SwitchControllingCharacter( game );
       return;
    }
 

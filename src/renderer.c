@@ -8,6 +8,7 @@
 #include "map.h"
 #include "actor.h"
 #include "entity.h"
+#include "character.h"
 #include "sprite.h"
 #include "physics.h"
 #include "menu.h"
@@ -68,7 +69,7 @@ void qRenderer_UpdateActors( qGame_t* game )
 
    qRenderer_OrderActors( game );
 
-   game->renderer->controllingActorCache = game->controllingActor;
+   game->renderer->controllingActorCache = game->controllingCharacter->actor;
 }
 
 void qRenderer_Render( qGame_t* game )
@@ -208,7 +209,7 @@ static void qRenderer_DrawScreenFade( qGame_t* game )
 static void qRenderer_SetMapView( qGame_t* game )
 {
    qRenderer_t* renderer = game->renderer;
-   qActor_t* actor = game->controllingActor;
+   qActor_t* actor = game->controllingCharacter->actor;
    qMap_t* map = game->map;
    sfVector2f mapSize = { (float)( map->tileCount.x * MAP_TILE_SIZE ), (float)( map->tileCount.y * MAP_TILE_SIZE ) };
    sfVector2f actorCenter = {
@@ -421,15 +422,15 @@ static void qRenderer_DrawBattle( qGame_t* game )
    }
 }
 
-static void qRenderer_ActorSwapCompleted( qGame_t* game )
+static void qRenderer_CharacterSwapCompleted( qGame_t* game )
 {
-   game->renderer->controllingActorCache = game->controllingActor;
+   game->renderer->controllingActorCache = game->controllingCharacter->actor;
 }
 
-void qRenderer_SwitchControllingActor( qGame_t* game )
+void qRenderer_SwitchControllingCharacter( qGame_t* game )
 {
-   if ( game->renderer->controllingActorCache != game->controllingActor )
+   if ( game->renderer->controllingActorCache != game->controllingCharacter->actor )
    {
-      qRenderStates_StartActorSwap( game->renderer->renderStates->actorSwap, &qRenderer_ActorSwapCompleted );
+      qRenderStates_StartActorSwap( game->renderer->renderStates->actorSwap, &qRenderer_CharacterSwapCompleted );
    }
 }

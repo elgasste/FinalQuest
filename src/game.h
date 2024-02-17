@@ -12,6 +12,7 @@ typedef struct qRenderer_t qRenderer_t;
 typedef struct qPhysics_t qPhysics_t;
 typedef struct qMap_t qMap_t;
 typedef struct qActor_t qActor_t;
+typedef struct qCharacter_t qCharacter_t;
 typedef struct qMenus_t qMenus_t;
 
 typedef struct qGame_t
@@ -32,8 +33,10 @@ typedef struct qGame_t
 
    qActor_t* actors;
    uint32_t actorCount;
-   qActor_t* controllingActor;
-   uint32_t controllingActorIndex;
+   qCharacter_t* characters;
+   uint32_t characterCount;
+   qCharacter_t* controllingCharacter;
+   uint32_t controllingCharacterIndex;
 
    sfBool showDiagnostics;
    sfBool cheatNoClip;
@@ -47,7 +50,7 @@ void qGame_Destroy( qGame_t* game );
 void qGame_Run( qGame_t* game );
 void qGame_Close( qGame_t* game );
 void qGame_ShowDebugMessage( qGame_t* game, const char* msg );
-void qGame_SwitchControllingActor( qGame_t* game );
+void qGame_SwitchControllingCharacter( qGame_t* game );
 void qGame_SetState( qGame_t* game, qGameState_t state );
 void qGame_ExecuteMenuCommand( qGame_t* game, qMenuCommand_t command );
 void qGame_RollEncounter( qGame_t* game, uint32_t mapTileIndex, sfBool force );
