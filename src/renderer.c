@@ -20,7 +20,7 @@ static void qRenderer_DrawDebugBar( qGame_t* game );
 static void qRenderer_DrawScreenFade( qGame_t* game );
 static void qRenderer_SetMapView( qGame_t* game );
 static void qRenderer_DrawMap( qGame_t* game );
-static void qRenderer_DrawCharacterStats( qCharacter_t* character, qCharacterStatsRenderObjects_t* objects, qWindow_t* window );
+static void qRenderer_DrawCharacterStats( qCharacter_t* character, qCharacterStatsRenderObjects_t* objects, qWindow_t* window, sfBool full );
 static void qRenderer_DrawMenu( qMenu_t* menu, qMenuRenderObjects_t* objects, qMenuRenderState_t* state, qWindow_t* window );
 static void qRenderer_DrawDialogBox( qGame_t* game, qDialogBoxRenderObjects_t* objects, sfBool scroll );
 static void qRenderer_DrawActors( qGame_t* game );
@@ -94,7 +94,7 @@ void qRenderer_Render( qGame_t* game )
          qRenderer_SetMapView( game );
          qRenderer_DrawMap( game );
          qRenderer_DrawActors( game );
-         qRenderer_DrawCharacterStats( game->controllingCharacter, renderObjects->mapCharacterStats, game->window );
+         qRenderer_DrawCharacterStats( game->controllingCharacter, renderObjects->mapCharacterStats, game->window, sfTrue );
          qRenderer_DrawMenu( game->menus->map, renderObjects->mapMenu, renderStates->menu, game->window );
          break;
       case qGameState_FadeBattleIn:
@@ -328,7 +328,7 @@ static void qRenderer_DrawMap( qGame_t* game )
    }
 }
 
-static void qRenderer_DrawCharacterStats( qCharacter_t* character, qCharacterStatsRenderObjects_t* objects, qWindow_t* window )
+static void qRenderer_DrawCharacterStats( qCharacter_t* character, qCharacterStatsRenderObjects_t* objects, qWindow_t* window, sfBool full )
 {
    sfVector2f pos;
    char statVal[STRLEN_SHORT];
@@ -350,14 +350,18 @@ static void qRenderer_DrawCharacterStats( qCharacter_t* character, qCharacterSta
    sfText_setPosition( objects->text, pos );
    sfText_setString( objects->text, STR_STATS_MAGICPOINTS );
    qWindow_DrawText( window, objects->text );
-   pos.y += objects->lineSize;
-   sfText_setPosition( objects->text, pos );
-   sfText_setString( objects->text, STR_STATS_ATTACKPOWER );
-   qWindow_DrawText( window, objects->text );
-   pos.y += objects->lineSize;
-   sfText_setPosition( objects->text, pos );
-   sfText_setString( objects->text, STR_STATS_DEFENSEPOWER );
-   qWindow_DrawText( window, objects->text );
+
+   if ( full )
+   {
+      pos.y += objects->lineSize;
+      sfText_setPosition( objects->text, pos );
+      sfText_setString( objects->text, STR_STATS_ATTACKPOWER );
+      qWindow_DrawText( window, objects->text );
+      pos.y += objects->lineSize;
+      sfText_setPosition( objects->text, pos );
+      sfText_setString( objects->text, STR_STATS_DEFENSEPOWER );
+      qWindow_DrawText( window, objects->text );
+   }
 
    snprintf( statVal, STRLEN_SHORT - 1, "%d", character->stats->hitPoints );
    pos.x = objects->pos.x + objects->statsOffset.x;
@@ -370,16 +374,20 @@ static void qRenderer_DrawCharacterStats( qCharacter_t* character, qCharacterSta
    sfText_setPosition( objects->text, pos );
    sfText_setString( objects->text, statVal );
    qWindow_DrawText( window, objects->text );
-   snprintf( statVal, STRLEN_SHORT - 1, "%d", character->stats->attackPower );
-   pos.y += objects->lineSize;
-   sfText_setPosition( objects->text, pos );
-   sfText_setString( objects->text, statVal );
-   qWindow_DrawText( window, objects->text );
-   snprintf( statVal, STRLEN_SHORT - 1, "%d", character->stats->defensePower );
-   pos.y += objects->lineSize;
-   sfText_setPosition( objects->text, pos );
-   sfText_setString( objects->text, statVal );
-   qWindow_DrawText( window, objects->text );
+
+   if ( full )
+   {
+      snprintf( statVal, STRLEN_SHORT - 1, "%d", character->stats->attackPower );
+      pos.y += objects->lineSize;
+      sfText_setPosition( objects->text, pos );
+      sfText_setString( objects->text, statVal );
+      qWindow_DrawText( window, objects->text );
+      snprintf( statVal, STRLEN_SHORT - 1, "%d", character->stats->defensePower );
+      pos.y += objects->lineSize;
+      sfText_setPosition( objects->text, pos );
+      sfText_setString( objects->text, statVal );
+      qWindow_DrawText( window, objects->text );
+   }
 }
 
 static void qRenderer_DrawMenu( qMenu_t* menu, qMenuRenderObjects_t* objects, qMenuRenderState_t* state, qWindow_t* window )
@@ -461,6 +469,7 @@ static void qRenderer_DrawBattle( qGame_t* game )
 {
    qDialogBoxRenderObjects_t* largeDialogObjects = game->renderer->renderObjects->battleDialogBoxLarge;
    qDialogBoxRenderObjects_t* smallDialogObjects = game->renderer->renderObjects->battleDialogBoxSmall;
+   qCharacterStatsRenderObjects_t* characterStatsObjects = game->renderer->renderObjects->battleCharacterStats;
    qMenu_t* actionMenu = game->menus->battleAction;
    qMenuRenderObjects_t* actionMenuObjects = game->renderer->renderObjects->battleActionMenu;
    qMenuRenderState_t* menuState = game->renderer->renderStates->menu;
@@ -468,11 +477,15 @@ static void qRenderer_DrawBattle( qGame_t* game )
    switch ( game->state )
    {
       case qGameState_BattleIntro:
+         qRenderer_DrawDialogBox( game, largeDialogObjects, sfTrue );
+         break;
       case qGameState_BattleResult:
       case qGameState_FadeBattleOut:
+         qRenderer_DrawCharacterStats( game->controllingCharacter, characterStatsObjects, game->window, sfFalse );
          qRenderer_DrawDialogBox( game, largeDialogObjects, sfTrue );
          break;
       case qGameState_BattleChooseAction:
+         qRenderer_DrawCharacterStats( game->controllingCharacter, characterStatsObjects, game->window, sfFalse );
          qRenderer_DrawMenu( actionMenu, actionMenuObjects, menuState, game->window );
          qRenderer_DrawDialogBox( game, smallDialogObjects, sfFalse );
          break;

@@ -87,6 +87,7 @@ typedef struct qRenderObjects_t
    qDialogBoxRenderObjects_t* battleDialogBoxLarge;
    qDialogBoxRenderObjects_t* battleDialogBoxSmall;
    qCharacterStatsRenderObjects_t* mapCharacterStats;
+   qCharacterStatsRenderObjects_t* battleCharacterStats;
 
    qSpriteTexture_t* spriteTextures;
    uint32_t spriteTextureCount;
