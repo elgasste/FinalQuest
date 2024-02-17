@@ -70,7 +70,6 @@ qGame_t* qGame_Create()
    qActor_SetDirection( &( game->actors[1] ), qDirection_Left );
    qActor_SetDirection( &( game->actors[2] ), qDirection_Up );
 
-   // TODO: initialize the character stats
    game->characterCount = 3;
    game->characters = (qCharacter_t*)qAlloc( sizeof( qCharacter_t ) * game->characterCount, sfTrue );
    qCharacter_Setup( &( game->characters[0] ), &( game->actors[0] ) );

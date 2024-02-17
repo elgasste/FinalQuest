@@ -35,6 +35,11 @@
 #define STR_MENU_ITEM                     "Item"
 #define STR_MENU_FLEE                     "Flee"
 
+#define STR_STATS_HITPOINTS               "HP:"
+#define STR_STATS_MAGICPOINTS             "MP:"
+#define STR_STATS_ATTACKPOWER             "Att:"
+#define STR_STATS_DEFENSEPOWER            "Def:"
+
 #define STR_BATTLE_SELECTACTION           "Select an action"
 
 #define STR_DEBUG_DIAGNOSTICSON           "Toggled diagnostics on"

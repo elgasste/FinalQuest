@@ -9,12 +9,14 @@ static qScreenFadeRenderObjects_t* qRenderObjects_CreateScreenFade();
 static qMenuRenderObjects_t* qRenderObjects_CreateBattleActionMenu();
 static qDialogBoxRenderObjects_t* qRenderObjects_CreateBattleDialogBoxLarge();
 static qDialogBoxRenderObjects_t* qRenderObjects_CreateBattleDialogBoxSmall();
+static qCharacterStatsRenderObjects_t* qRenderObjects_CreateCharacterStats( sfVector2f pos, sfColor backgroundColor );
 static void qRenderObjects_DestroyDiagnostics( qDiagnosticsRenderObjects_t* objects );
 static void qRenderObjects_DestroyDebugBar( qDebugBarRenderObjects_t* objects );
 static void qRenderObjects_DestroyMap( qMapRenderObjects_t* objects );
 static void qRenderObjects_DestroyMenu( qMenuRenderObjects_t* objects );
 static void qRenderObjects_DestroyScreenFade( qScreenFadeRenderObjects_t* objects );
 static void qRenderObjects_DestroyDialogBox( qDialogBoxRenderObjects_t* objects );
+static void qRenderObjects_DestroyCharacterStats( qCharacterStatsRenderObjects_t* objects );
 static void gmRenderObjects_BuildDialogBackground( sfConvexShape* shape,
                                                    float x, float y,
                                                    float w, float h,
@@ -23,6 +25,8 @@ static void gmRenderObjects_BuildDialogBackground( sfConvexShape* shape,
 
 qRenderObjects_t* qRenderObjects_Create()
 {
+   sfVector2f mapCharacterStatsPos = { 32 * GRAPHICS_SCALE, 32 * GRAPHICS_SCALE };
+
    qRenderObjects_t* renderObjects = (qRenderObjects_t*)qAlloc( sizeof( qRenderObjects_t ), sfTrue );
    renderObjects->diagnostics = qRenderObjects_CreateDiagnostics();
    renderObjects->debugBar = qRenderObjects_CreateDebugBar();
@@ -32,6 +36,7 @@ qRenderObjects_t* qRenderObjects_Create()
    renderObjects->battleActionMenu = qRenderObjects_CreateBattleActionMenu();
    renderObjects->battleDialogBoxLarge = qRenderObjects_CreateBattleDialogBoxLarge();
    renderObjects->battleDialogBoxSmall = qRenderObjects_CreateBattleDialogBoxSmall();
+   renderObjects->mapCharacterStats = qRenderObjects_CreateCharacterStats( mapCharacterStatsPos, DIALOG_BACKDROP_LIGHTCOLOR );
 
    renderObjects->spriteTextureCount = 3;
    renderObjects->spriteTextures = (qSpriteTexture_t*)qAlloc( sizeof( qSpriteTexture_t ) * renderObjects->spriteTextureCount, sfTrue );
@@ -101,13 +106,14 @@ static qMapRenderObjects_t* qRenderObjects_CreateMap()
    return objects;
 }
 
+// TODO: try consolidating this and the battle menu creation
 static qMenuRenderObjects_t* qRenderObjects_CreateMapMenu()
 {
    sfVector2f textScale = { GRAPHICS_SCALE, GRAPHICS_SCALE };
    qMenuRenderObjects_t* objects = (qMenuRenderObjects_t*)qAlloc( sizeof( qMenuRenderObjects_t ), sfTrue );
 
    objects->pos.x = 32 * GRAPHICS_SCALE;
-   objects->pos.y = 32 * GRAPHICS_SCALE;
+   objects->pos.y = 192 * GRAPHICS_SCALE;
    objects->itemsOffset.x = 32 * GRAPHICS_SCALE;
    objects->itemsOffset.y = 16 * GRAPHICS_SCALE;
    objects->caratOffset.x = -16 * GRAPHICS_SCALE;
@@ -245,6 +251,38 @@ static qDialogBoxRenderObjects_t* qRenderObjects_CreateBattleDialogBoxSmall()
    return objects;
 }
 
+qCharacterStatsRenderObjects_t* qRenderObjects_CreateCharacterStats( sfVector2f pos, sfColor backgroundColor )
+{
+   sfVector2f textScale = { GRAPHICS_SCALE, GRAPHICS_SCALE };
+
+   qCharacterStatsRenderObjects_t* objects = (qCharacterStatsRenderObjects_t*)qAlloc( sizeof( qCharacterStatsRenderObjects_t ), sfTrue );
+
+   objects->lineSize = 20 * GRAPHICS_SCALE;
+   objects->pos = pos;
+   objects->nameOffset.x = 20 * GRAPHICS_SCALE;
+   objects->nameOffset.y = 16 * GRAPHICS_SCALE;
+   objects->labelsOffset.x = 36 * GRAPHICS_SCALE;
+   objects->labelsOffset.y = objects->nameOffset.y + objects->lineSize;
+   objects->statsOffset.x = 72 * GRAPHICS_SCALE;
+   objects->statsOffset.y = objects->labelsOffset.y;
+
+   objects->backgroundShape = qsfConvexShape_Create();
+   gmRenderObjects_BuildDialogBackground( objects->backgroundShape,
+                                          objects->pos.x, objects->pos.y,
+                                          136 * GRAPHICS_SCALE, 136 * GRAPHICS_SCALE,
+                                          8 * GRAPHICS_SCALE,
+                                          backgroundColor );
+
+   objects->font = qsfFont_CreateFromFile( GAME_FONT );
+   objects->text = qsfText_Create();
+   sfText_setFont( objects->text, objects->font );
+   sfText_setCharacterSize( objects->text, GAME_FONT_SIZE );
+   sfText_scale( objects->text, textScale );
+   sfText_setFillColor( objects->text, GAME_FONT_COLOR );
+
+   return objects;
+}
+
 void qRenderObjects_Destroy( qRenderObjects_t* objects )
 {
    uint32_t i;
@@ -256,6 +294,7 @@ void qRenderObjects_Destroy( qRenderObjects_t* objects )
 
    qFree( objects->spriteTextures, sizeof( qSpriteTexture_t ) * objects->spriteTextureCount, sfTrue );
 
+   qRenderObjects_DestroyCharacterStats( objects->mapCharacterStats );
    qRenderObjects_DestroyDialogBox( objects->battleDialogBoxSmall );
    qRenderObjects_DestroyDialogBox( objects->battleDialogBoxLarge );
    qRenderObjects_DestroyMenu( objects->battleActionMenu );
@@ -317,6 +356,15 @@ static void qRenderObjects_DestroyDialogBox( qDialogBoxRenderObjects_t* objects 
    qsfConvexShape_Destroy( objects->backgroundShape );
 
    qFree( objects, sizeof( qDialogBoxRenderObjects_t ), sfTrue );
+}
+
+static void qRenderObjects_DestroyCharacterStats( qCharacterStatsRenderObjects_t* objects )
+{
+   qsfText_Destroy( objects->text );
+   qsfFont_Destroy( objects->font );
+   qsfConvexShape_Destroy( objects->backgroundShape );
+
+   qFree( objects, sizeof( qCharacterStatsRenderObjects_t ), sfTrue );
 }
 
 static void gmRenderObjects_BuildDialogBackground( sfConvexShape* shape,

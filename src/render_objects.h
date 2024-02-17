@@ -63,6 +63,19 @@ typedef struct qDialogBoxRenderObjects_t
 }
 qDialogBoxRenderObjects_t;
 
+typedef struct qCharacterStatsRenderObjects_t
+{
+   sfConvexShape* backgroundShape;
+   sfFont* font;
+   sfText* text;
+   sfVector2f pos;
+   sfVector2f nameOffset;
+   sfVector2f labelsOffset;
+   sfVector2f statsOffset;
+   float lineSize;
+}
+qCharacterStatsRenderObjects_t;
+
 typedef struct qRenderObjects_t
 {
    qDiagnosticsRenderObjects_t* diagnostics;
@@ -73,6 +86,7 @@ typedef struct qRenderObjects_t
    qMenuRenderObjects_t* battleActionMenu;
    qDialogBoxRenderObjects_t* battleDialogBoxLarge;
    qDialogBoxRenderObjects_t* battleDialogBoxSmall;
+   qCharacterStatsRenderObjects_t* mapCharacterStats;
 
    qSpriteTexture_t* spriteTextures;
    uint32_t spriteTextureCount;
