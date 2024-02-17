@@ -14,6 +14,7 @@
 #include "physics.h"
 #include "menu.h"
 #include "battle.h"
+#include "battle_stats.h"
 
 static void qGame_Tic( qGame_t* game );
 static void qGame_ScreenFadeComplete( qGame_t* game );
@@ -77,6 +78,24 @@ qGame_t* qGame_Create()
    qCharacter_Setup( &( game->characters[2] ), &( game->actors[2] ) );
    game->controllingCharacter = &( game->characters[0] );
    game->controllingCharacterIndex = 0;
+
+   snprintf( game->characters[0].name, STRLEN_SHORT - 1, "Heroman" );
+   game->characters[0].stats->hitPoints = 100;
+   game->characters[0].stats->magicPoints = 25;
+   game->characters[0].stats->attackPower = 30;
+   game->characters[0].stats->defensePower = 40;
+
+   snprintf( game->characters[1].name, STRLEN_SHORT - 1, "Gurrrl" );
+   game->characters[1].stats->hitPoints = 80;
+   game->characters[1].stats->magicPoints = 60;
+   game->characters[1].stats->attackPower = 10;
+   game->characters[1].stats->defensePower = 15;
+
+   snprintf( game->characters[2].name, STRLEN_SHORT - 1, "Dawg" );
+   game->characters[2].stats->hitPoints = 10000;
+   game->characters[2].stats->magicPoints = 0;
+   game->characters[2].stats->attackPower = 500;
+   game->characters[2].stats->defensePower = 500;
 
    qRenderer_UpdateActors( game );
    qPhysics_ResetActorTileCache( game );
