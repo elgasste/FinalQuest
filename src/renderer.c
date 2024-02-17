@@ -25,7 +25,6 @@ static void qRenderer_DrawMenu( qMenu_t* menu, qMenuRenderObjects_t* objects, qM
 static void qRenderer_DrawDialogBox( qGame_t* game, qDialogBoxRenderObjects_t* objects, sfBool scroll );
 static void qRenderer_DrawActors( qGame_t* game );
 static void qRenderer_OrderActors( qGame_t* game );
-static void qRenderer_DrawBattle( qGame_t* game );
 
 qRenderer_t* qRenderer_Create()
 {
@@ -97,12 +96,18 @@ void qRenderer_Render( qGame_t* game )
          qRenderer_DrawCharacterStats( game->controllingCharacter, renderObjects->mapCharacterStats, game->window, sfTrue );
          qRenderer_DrawMenu( game->menus->map, renderObjects->mapMenu, renderStates->menu, game->window );
          break;
-      case qGameState_FadeBattleIn:
-      case qGameState_FadeBattleOut:
       case qGameState_BattleIntro:
-      case qGameState_BattleChooseAction:
+         qRenderer_DrawDialogBox( game, renderObjects->battleDialogBoxLarge, sfTrue );
+         break;
       case qGameState_BattleResult:
-         qRenderer_DrawBattle( game );
+      case qGameState_FadeBattleOut:
+         qRenderer_DrawCharacterStats( game->controllingCharacter, renderObjects->battleCharacterStats, game->window, sfFalse );
+         qRenderer_DrawDialogBox( game, renderObjects->battleDialogBoxLarge, sfTrue );
+         break;
+      case qGameState_BattleChooseAction:
+         qRenderer_DrawCharacterStats( game->controllingCharacter, renderObjects->battleCharacterStats, game->window, sfFalse );
+         qRenderer_DrawMenu( game->menus->battleAction, renderObjects->battleActionMenu, renderStates->menu, game->window );
+         qRenderer_DrawDialogBox( game, renderObjects->battleDialogBoxSmall, sfFalse );
          break;
    }
 
@@ -462,33 +467,6 @@ static void qRenderer_DrawActors( qGame_t* game )
 
       qSprite_SetPosition( actor->sprite, spritePos );
       qWindow_DrawSprite( game->window, actor->sprite->sfmlSprite );
-   }
-}
-
-static void qRenderer_DrawBattle( qGame_t* game )
-{
-   qDialogBoxRenderObjects_t* largeDialogObjects = game->renderer->renderObjects->battleDialogBoxLarge;
-   qDialogBoxRenderObjects_t* smallDialogObjects = game->renderer->renderObjects->battleDialogBoxSmall;
-   qCharacterStatsRenderObjects_t* characterStatsObjects = game->renderer->renderObjects->battleCharacterStats;
-   qMenu_t* actionMenu = game->menus->battleAction;
-   qMenuRenderObjects_t* actionMenuObjects = game->renderer->renderObjects->battleActionMenu;
-   qMenuRenderState_t* menuState = game->renderer->renderStates->menu;
-
-   switch ( game->state )
-   {
-      case qGameState_BattleIntro:
-         qRenderer_DrawDialogBox( game, largeDialogObjects, sfTrue );
-         break;
-      case qGameState_BattleResult:
-      case qGameState_FadeBattleOut:
-         qRenderer_DrawCharacterStats( game->controllingCharacter, characterStatsObjects, game->window, sfFalse );
-         qRenderer_DrawDialogBox( game, largeDialogObjects, sfTrue );
-         break;
-      case qGameState_BattleChooseAction:
-         qRenderer_DrawCharacterStats( game->controllingCharacter, characterStatsObjects, game->window, sfFalse );
-         qRenderer_DrawMenu( actionMenu, actionMenuObjects, menuState, game->window );
-         qRenderer_DrawDialogBox( game, smallDialogObjects, sfFalse );
-         break;
    }
 }
 
