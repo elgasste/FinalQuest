@@ -4,9 +4,8 @@
 static qDiagnosticsRenderObjects_t* qRenderObjects_CreateDiagnostics();
 static qDebugBarRenderObjects_t* qRenderObjects_CreateDebugBar();
 static qMapRenderObjects_t* qRenderObjects_CreateMap();
-static qMenuRenderObjects_t* qRenderObjects_CreateMapMenu();
+static qMenuRenderObjects_t* qRenderObjects_CreateMenu( sfVector2f pos, sfVector2f size, sfColor backgroundColor );
 static qScreenFadeRenderObjects_t* qRenderObjects_CreateScreenFade();
-static qMenuRenderObjects_t* qRenderObjects_CreateBattleActionMenu();
 static qDialogBoxRenderObjects_t* qRenderObjects_CreateBattleDialogBoxLarge();
 static qDialogBoxRenderObjects_t* qRenderObjects_CreateBattleDialogBoxSmall();
 static qCharacterStatsRenderObjects_t* qRenderObjects_CreateCharacterStats( sfVector2f pos, float height, sfColor backgroundColor );
@@ -25,15 +24,19 @@ static void gmRenderObjects_BuildDialogBackground( sfConvexShape* shape,
 
 qRenderObjects_t* qRenderObjects_Create()
 {
+   sfVector2f mapMenuPos = { 32 * GRAPHICS_SCALE, 192 * GRAPHICS_SCALE };
+   sfVector2f mapMenuSize = { 136 * GRAPHICS_SCALE, 76 * GRAPHICS_SCALE };
+   sfVector2f battleMenuPos = { 32 * GRAPHICS_SCALE, WINDOW_HEIGHT - ( 160 * GRAPHICS_SCALE ) };
+   sfVector2f battleMenuSize = { 136 * GRAPHICS_SCALE, 132 * GRAPHICS_SCALE };
    sfVector2f characterStatsPos = { 32 * GRAPHICS_SCALE, ( 32 - 4 ) * GRAPHICS_SCALE };
 
    qRenderObjects_t* renderObjects = (qRenderObjects_t*)qAlloc( sizeof( qRenderObjects_t ), sfTrue );
    renderObjects->diagnostics = qRenderObjects_CreateDiagnostics();
    renderObjects->debugBar = qRenderObjects_CreateDebugBar();
    renderObjects->map = qRenderObjects_CreateMap();
-   renderObjects->mapMenu = qRenderObjects_CreateMapMenu();
+   renderObjects->mapMenu = qRenderObjects_CreateMenu( mapMenuPos, mapMenuSize, DIALOG_BACKDROP_LIGHTCOLOR );
    renderObjects->screenFade = qRenderObjects_CreateScreenFade();
-   renderObjects->battleActionMenu = qRenderObjects_CreateBattleActionMenu();
+   renderObjects->battleActionMenu = qRenderObjects_CreateMenu( battleMenuPos, battleMenuSize, DIALOG_BACKDROP_DARKCOLOR );
    renderObjects->battleDialogBoxLarge = qRenderObjects_CreateBattleDialogBoxLarge();
    renderObjects->battleDialogBoxSmall = qRenderObjects_CreateBattleDialogBoxSmall();
    renderObjects->mapCharacterStats = qRenderObjects_CreateCharacterStats( characterStatsPos, 140 * GRAPHICS_SCALE, DIALOG_BACKDROP_LIGHTCOLOR );
@@ -107,14 +110,13 @@ static qMapRenderObjects_t* qRenderObjects_CreateMap()
    return objects;
 }
 
-// TODO: try consolidating this and the battle menu creation
-static qMenuRenderObjects_t* qRenderObjects_CreateMapMenu()
+static qMenuRenderObjects_t* qRenderObjects_CreateMenu( sfVector2f pos, sfVector2f size, sfColor backgroundColor )
 {
    sfVector2f textScale = { GRAPHICS_SCALE, GRAPHICS_SCALE };
+
    qMenuRenderObjects_t* objects = (qMenuRenderObjects_t*)qAlloc( sizeof( qMenuRenderObjects_t ), sfTrue );
 
-   objects->pos.x = 32 * GRAPHICS_SCALE;
-   objects->pos.y = 192 * GRAPHICS_SCALE;
+   objects->pos = pos;
    objects->itemsOffset.x = 32 * GRAPHICS_SCALE;
    objects->itemsOffset.y = 16 * GRAPHICS_SCALE;
    objects->caratOffset.x = -16 * GRAPHICS_SCALE;
@@ -124,9 +126,9 @@ static qMenuRenderObjects_t* qRenderObjects_CreateMapMenu()
    objects->backgroundShape = qsfConvexShape_Create();
    gmRenderObjects_BuildDialogBackground( objects->backgroundShape,
                                           objects->pos.x, objects->pos.y,
-                                          136 * GRAPHICS_SCALE, 76 * GRAPHICS_SCALE,
+                                          size.x, size.y,
                                           8 * GRAPHICS_SCALE,
-                                          DIALOG_BACKDROP_LIGHTCOLOR );
+                                          backgroundColor );
 
    objects->font = qsfFont_CreateFromFile( GAME_FONT );
    objects->text = qsfText_Create();
@@ -153,37 +155,6 @@ static qScreenFadeRenderObjects_t* qRenderObjects_CreateScreenFade()
 
    objects->lightColor = sfWhite;
    objects->darkColor = sfBlack;
-
-   return objects;
-}
-
-static qMenuRenderObjects_t* qRenderObjects_CreateBattleActionMenu()
-{
-   sfVector2f textScale = { GRAPHICS_SCALE, GRAPHICS_SCALE };
-
-   qMenuRenderObjects_t* objects = (qMenuRenderObjects_t*)qAlloc( sizeof( qMenuRenderObjects_t ), sfTrue );
-
-   objects->pos.x = 32 * GRAPHICS_SCALE;
-   objects->pos.y = WINDOW_HEIGHT - ( 160 * GRAPHICS_SCALE );
-   objects->itemsOffset.x = 32 * GRAPHICS_SCALE;
-   objects->itemsOffset.y = 16 * GRAPHICS_SCALE;
-   objects->caratOffset.x = -16 * GRAPHICS_SCALE;
-   objects->caratOffset.y = 0;
-   objects->lineSize = 20 * GRAPHICS_SCALE;
-
-   objects->backgroundShape = qsfConvexShape_Create();
-   gmRenderObjects_BuildDialogBackground( objects->backgroundShape,
-                                          objects->pos.x, objects->pos.y,
-                                          136 * GRAPHICS_SCALE, 132 * GRAPHICS_SCALE,
-                                          8 * GRAPHICS_SCALE,
-                                          DIALOG_BACKDROP_DARKCOLOR );
-
-   objects->font = qsfFont_CreateFromFile( GAME_FONT );
-   objects->text = qsfText_Create();
-   sfText_setFont( objects->text, objects->font );
-   sfText_setCharacterSize( objects->text, GAME_FONT_SIZE );
-   sfText_scale( objects->text, textScale );
-   sfText_setFillColor( objects->text, GAME_FONT_COLOR );
 
    return objects;
 }
