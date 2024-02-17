@@ -25,7 +25,7 @@ static void gmRenderObjects_BuildDialogBackground( sfConvexShape* shape,
 
 qRenderObjects_t* qRenderObjects_Create()
 {
-   sfVector2f characterStatsPos = { 32 * GRAPHICS_SCALE, 32 * GRAPHICS_SCALE };
+   sfVector2f characterStatsPos = { 32 * GRAPHICS_SCALE, ( 32 - 4 ) * GRAPHICS_SCALE };
 
    qRenderObjects_t* renderObjects = (qRenderObjects_t*)qAlloc( sizeof( qRenderObjects_t ), sfTrue );
    renderObjects->diagnostics = qRenderObjects_CreateDiagnostics();
@@ -36,8 +36,8 @@ qRenderObjects_t* qRenderObjects_Create()
    renderObjects->battleActionMenu = qRenderObjects_CreateBattleActionMenu();
    renderObjects->battleDialogBoxLarge = qRenderObjects_CreateBattleDialogBoxLarge();
    renderObjects->battleDialogBoxSmall = qRenderObjects_CreateBattleDialogBoxSmall();
-   renderObjects->mapCharacterStats = qRenderObjects_CreateCharacterStats( characterStatsPos, 136 * GRAPHICS_SCALE, DIALOG_BACKDROP_LIGHTCOLOR );
-   renderObjects->battleCharacterStats = qRenderObjects_CreateCharacterStats( characterStatsPos, 96 * GRAPHICS_SCALE, DIALOG_BACKDROP_DARKCOLOR );
+   renderObjects->mapCharacterStats = qRenderObjects_CreateCharacterStats( characterStatsPos, 140 * GRAPHICS_SCALE, DIALOG_BACKDROP_LIGHTCOLOR );
+   renderObjects->battleCharacterStats = qRenderObjects_CreateCharacterStats( characterStatsPos, 100 * GRAPHICS_SCALE, DIALOG_BACKDROP_DARKCOLOR );
 
    renderObjects->spriteTextureCount = 3;
    renderObjects->spriteTextures = (qSpriteTexture_t*)qAlloc( sizeof( qSpriteTexture_t ) * renderObjects->spriteTextureCount, sfTrue );
@@ -263,7 +263,7 @@ qCharacterStatsRenderObjects_t* qRenderObjects_CreateCharacterStats( sfVector2f 
    objects->nameOffset.x = 20 * GRAPHICS_SCALE;
    objects->nameOffset.y = 16 * GRAPHICS_SCALE;
    objects->labelsOffset.x = 36 * GRAPHICS_SCALE;
-   objects->labelsOffset.y = objects->nameOffset.y + objects->lineSize;
+   objects->labelsOffset.y = objects->nameOffset.y + objects->lineSize + ( 4 * GRAPHICS_SCALE );
    objects->statsOffset.x = 72 * GRAPHICS_SCALE;
    objects->statsOffset.y = objects->labelsOffset.y;
 
