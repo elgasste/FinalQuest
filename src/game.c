@@ -9,10 +9,12 @@
 #include "map.h"
 #include "random.h"
 #include "actor.h"
+#include "character.h"
 #include "sprite_texture.h"
 #include "physics.h"
 #include "menu.h"
 #include "battle.h"
+#include "battle_stats.h"
 
 static void qGame_Tic( qGame_t* game );
 static void qGame_ScreenFadeComplete( qGame_t* game );
@@ -67,8 +69,33 @@ qGame_t* qGame_Create()
    qActor_SetDirection( &( game->actors[0] ), qDirection_Right );
    qActor_SetDirection( &( game->actors[1] ), qDirection_Left );
    qActor_SetDirection( &( game->actors[2] ), qDirection_Up );
-   game->controllingActor = &( game->actors[0] );
-   game->controllingActorIndex = 0;
+
+   game->characterCount = 3;
+   game->characters = (qCharacter_t*)qAlloc( sizeof( qCharacter_t ) * game->characterCount, sfTrue );
+   qCharacter_Setup( &( game->characters[0] ), &( game->actors[0] ) );
+   qCharacter_Setup( &( game->characters[1] ), &( game->actors[1] ) );
+   qCharacter_Setup( &( game->characters[2] ), &( game->actors[2] ) );
+   game->controllingCharacter = &( game->characters[0] );
+   game->controllingCharacterIndex = 0;
+
+   snprintf( game->characters[0].name, STRLEN_SHORT - 1, "Heroman" );
+   game->characters[0].stats->hitPoints = 100;
+   game->characters[0].stats->magicPoints = 25;
+   game->characters[0].stats->attackPower = 30;
+   game->characters[0].stats->defensePower = 40;
+
+   snprintf( game->characters[1].name, STRLEN_SHORT - 1, "Gurrrl" );
+   game->characters[1].stats->hitPoints = 80;
+   game->characters[1].stats->magicPoints = 60;
+   game->characters[1].stats->attackPower = 10;
+   game->characters[1].stats->defensePower = 15;
+
+   snprintf( game->characters[2].name, STRLEN_SHORT - 1, "Dawg" );
+   game->characters[2].stats->hitPoints = 10000;
+   game->characters[2].stats->magicPoints = 0;
+   game->characters[2].stats->attackPower = 500;
+   game->characters[2].stats->defensePower = 500;
+
    qRenderer_UpdateActors( game );
    qPhysics_ResetActorTileCache( game );
 
@@ -85,6 +112,13 @@ qGame_t* qGame_Create()
 void qGame_Destroy( qGame_t* game )
 {
    uint32_t i;
+
+   for ( i = 0; i < game->characterCount; i++ )
+   {
+      qCharacter_Cleanup( &( game->characters[i] ) );
+   }
+
+   qFree( game->characters, sizeof( qCharacter_t ) * game->characterCount, sfTrue );
 
    for ( i = 0; i < game->actorCount; i++ )
    {
@@ -152,18 +186,18 @@ void qGame_ShowDebugMessage( qGame_t* game, const char* msg )
    state->elapsedSeconds = 0;
 }
 
-void qGame_SwitchControllingActor( qGame_t* game )
+void qGame_SwitchControllingCharacter( qGame_t* game )
 {
-   game->controllingActorIndex++;
+   game->controllingCharacterIndex++;
 
-   if ( game->controllingActorIndex >= game->actorCount )
+   if ( game->controllingCharacterIndex >= game->characterCount )
    {
-      game->controllingActorIndex = 0;
+      game->controllingCharacterIndex = 0;
    }
 
-   game->controllingActor = &( game->actors[game->controllingActorIndex] );
+   game->controllingCharacter = &( game->characters[game->controllingCharacterIndex] );
 
-   qRenderer_SwitchControllingActor( game );
+   qRenderer_SwitchControllingCharacter( game );
    qPhysics_ResetActorTileCache( game );
 }
 

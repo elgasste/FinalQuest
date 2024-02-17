@@ -30,6 +30,6 @@ qRenderer_t* qRenderer_Create();
 void qRenderer_Destroy( qRenderer_t* renderer );
 void qRenderer_UpdateActors( qGame_t* game );
 void qRenderer_Render( qGame_t* game );
-void qRenderer_SwitchControllingActor( qGame_t* game );
+void qRenderer_SwitchControllingCharacter( qGame_t* game );
 
 #endif // RENDERER_H

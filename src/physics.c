@@ -2,6 +2,7 @@
 #include "game.h"
 #include "actor.h"
 #include "entity.h"
+#include "character.h"
 #include "map.h"
 #include "clock.h"
 #include "math_util.h"
@@ -40,7 +41,7 @@ void qPhysics_Tic( qGame_t* game )
 
 void qPhysics_ResetActorTileCache( qGame_t* game )
 {
-   qEntity_t* entity = game->controllingActor->entity;
+   qEntity_t* entity = game->controllingCharacter->actor->entity;
    sfVector2f entityCenterPos = { entity->mapPos.x + entity->mapHitBoxSize.x, entity->mapPos.y + entity->mapHitBoxSize.y };
 
    game->physics->actorTileCache = qMap_TileIndexFromPos( game->map, entityCenterPos );
@@ -65,7 +66,7 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
    sfVector2f entityCenterPos;
    uint32_t newTileIndex;
 
-   if ( actor == game->controllingActor && game->cheatFast && entity->velocity.x != 0 )
+   if ( actor == game->controllingCharacter->actor && game->cheatFast && entity->velocity.x != 0 )
    {
       newPos.x += ( entity->velocity.x < 0 )
          ? -FAST_VELOCITY * game->clock->frameDeltaSeconds
@@ -79,7 +80,7 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
    qPhysics_ClipActorToMapHorizontal( game, actor, &newPos );
    qPhysics_ClipActorToActors( game, actor, &newPos, sfTrue );
 
-   if ( actor == game->controllingActor && game->cheatFast && entity->velocity.y != 0 )
+   if ( actor == game->controllingCharacter->actor && game->cheatFast && entity->velocity.y != 0 )
    {
       newPos.y += ( entity->velocity.y < 0 )
          ? -FAST_VELOCITY * game->clock->frameDeltaSeconds
@@ -106,7 +107,7 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
    entityCenterPos.x = entity->mapPos.x + ( entity->mapHitBoxSize.x / 2 );
    entityCenterPos.y = entity->mapPos.y + ( entity->mapHitBoxSize.y / 2 );
 
-   if ( actor == game->controllingActor )
+   if ( actor == game->controllingCharacter->actor )
    {
       newTileIndex = qMap_TileIndexFromPos( game->map, entityCenterPos );
 
