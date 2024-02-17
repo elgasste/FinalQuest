@@ -3,21 +3,13 @@
 
 #include "common.h"
 
+typedef struct qBattleStats_t qBattleStats_t;
 typedef struct qActor_t qActor_t;
-
-typedef struct qCharacterStats_t
-{
-   uint32_t hitPoints;
-   uint32_t magicPoints;
-   uint32_t attackPower;
-   uint32_t defensePower;
-}
-qCharacterStats_t;
 
 typedef struct qCharacter_t
 {
    char name[STRLEN_SHORT];
-   qCharacterStats_t* stats;
+   qBattleStats_t* stats;
    qActor_t* actor;
 }
 qCharacter_t;

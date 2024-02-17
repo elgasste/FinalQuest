@@ -70,6 +70,9 @@
     <ClCompile Include="..\src\character.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\battle_stats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\clock.h">
@@ -142,6 +145,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\character.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\battle_stats.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
