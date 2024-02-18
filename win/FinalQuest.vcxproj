@@ -96,6 +96,7 @@ xcopy "$(SolutionDir)..\src\resources" "$(OutDir)\resources\" /S /Y</Command>
     <ClInclude Include="..\src\character.h" />
     <ClInclude Include="..\src\clock.h" />
     <ClInclude Include="..\src\common.h" />
+    <ClInclude Include="..\src\enemy.h" />
     <ClInclude Include="..\src\entity.h" />
     <ClInclude Include="..\src\enums.h" />
     <ClInclude Include="..\src\game.h" />
@@ -123,6 +124,7 @@ xcopy "$(SolutionDir)..\src\resources" "$(OutDir)\resources\" /S /Y</Command>
     <ClCompile Include="..\src\character.c" />
     <ClCompile Include="..\src\clock.c" />
     <ClCompile Include="..\src\common.c" />
+    <ClCompile Include="..\src\enemy.c" />
     <ClCompile Include="..\src\entity.c" />
     <ClCompile Include="..\src\game.c" />
     <ClCompile Include="..\src\input_handler.c" />

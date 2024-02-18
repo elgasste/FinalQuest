@@ -73,6 +73,9 @@
     <ClCompile Include="..\src\battle_stats.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\enemy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\clock.h">
@@ -148,6 +151,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\battle_stats.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\enemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
