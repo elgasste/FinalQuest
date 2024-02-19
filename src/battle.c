@@ -16,6 +16,7 @@ qBattle_t* qBattle_Create()
    battle->enemy = qEnemy_Create();
 
    snprintf( battle->enemy->name, STRLEN_SHORT, "batfuck" );
+   battle->enemy->indefiniteArticle = qIndefiniteArticle_A;
    battle->enemy->stats->hitPoints = 12;
    battle->enemy->stats->defensePower = 5;
    battle->enemy->stats->attackPower = 5;

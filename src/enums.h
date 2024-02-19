@@ -37,4 +37,11 @@ typedef enum qMenuCommand_t
 }
 qMenuCommand_t;
 
+typedef enum qIndefiniteArticle_t
+{
+   qIndefiniteArticle_A = 0,
+   qIndefiniteArticle_An
+}
+qIndefiniteArticle_t;
+
 #endif // ENUMS_H
