@@ -99,6 +99,8 @@ qGame_t* qGame_Create()
    qRenderer_UpdateActors( game );
    qPhysics_ResetActorTileCache( game );
 
+   game->battle = 0;
+
    game->isMenuOpen = sfFalse;
 
    game->showDiagnostics = sfFalse;
@@ -174,6 +176,11 @@ static void qGame_Tic( qGame_t* game )
 
 void qGame_Close( qGame_t* game )
 {
+   if ( game->battle )
+   {
+      qBattle_Destroy( game->battle );
+   }
+
    qWindow_Close( game->window );
 }
 
@@ -264,8 +271,14 @@ void qGame_RollEncounter( qGame_t* game, uint32_t mapTileIndex, sfBool force )
 {
    qMapTile_t* tile = &( game->map->tiles[mapTileIndex] );
 
+   if ( game->battle )
+   {
+      qBattle_Destroy( game->battle );
+   }
+
    if ( force || ( !game->cheatNoEncounters && tile->encounterRate > 0 && qRandom_Percent() <= tile->encounterRate ) )
    {
+      game->battle = qBattle_Create();
       qGame_SetState( game, qGameState_FadeMapToBattle );
    }
 }

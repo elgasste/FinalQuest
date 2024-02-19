@@ -3,8 +3,17 @@
 
 #include "common.h"
 
+typedef struct qEnemy_t qEnemy_t;
 typedef struct qGame_t qGame_t;
 
+typedef struct qBattle_t
+{
+   qEnemy_t* enemy;
+}
+qBattle_t;
+
+qBattle_t* qBattle_Create();
+void qBattle_Destroy( qBattle_t* battle );
 void qBattle_Begin( qGame_t* game );
 void qBattle_Attack( qGame_t* game );
 void qBattle_Defend( qGame_t* game );

@@ -6,6 +6,30 @@
 #include "actor.h"
 #include "character.h"
 #include "sprite.h"
+#include "enemy.h"
+#include "battle_stats.h"
+
+qBattle_t* qBattle_Create()
+{
+   qBattle_t* battle = (qBattle_t*)qAlloc( sizeof( qBattle_t ), sfTrue );
+
+   battle->enemy = qEnemy_Create();
+
+   snprintf( battle->enemy->name, STRLEN_SHORT, "batfuck" );
+   battle->enemy->stats->hitPoints = 12;
+   battle->enemy->stats->defensePower = 5;
+   battle->enemy->stats->attackPower = 5;
+   battle->enemy->stats->defensePower = 5;
+
+   return battle;
+}
+
+void qBattle_Destroy( qBattle_t* battle )
+{
+   qEnemy_Destroy( battle->enemy );
+
+   qFree( battle, sizeof( qBattle_t ), sfTrue );
+}
 
 void qBattle_Begin( qGame_t* game )
 {
