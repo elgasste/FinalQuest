@@ -10,7 +10,7 @@
 #include "random.h"
 #include "actor.h"
 #include "character.h"
-#include "sprite_texture.h"
+#include "actor_sprite_texture.h"
 #include "physics.h"
 #include "menu.h"
 #include "battle.h"

@@ -5,7 +5,7 @@
 #include "render_states.h"
 #include "actor.h"
 #include "character.h"
-#include "sprite.h"
+#include "actor_sprite.h"
 #include "enemy.h"
 #include "battle_stats.h"
 #include "text_util.h"
@@ -38,7 +38,7 @@ void qBattle_Begin( qGame_t* game )
    qBattle_t* battle = game->battle;
    qRenderObjects_t* renderObjects = game->renderer->renderObjects;
 
-   qSprite_Stop( game->controllingCharacter->actor->sprite );
+   qActorSprite_Stop( game->controllingCharacter->actor->sprite );
 
    snprintf( renderObjects->battleDialogBoxLarge->message,
              STRLEN_DEFAULT - 1,

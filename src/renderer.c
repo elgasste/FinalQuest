@@ -9,7 +9,7 @@
 #include "actor.h"
 #include "entity.h"
 #include "character.h"
-#include "sprite.h"
+#include "actor_sprite.h"
 #include "physics.h"
 #include "menu.h"
 #include "text_util.h"
@@ -465,7 +465,7 @@ static void qRenderer_DrawActors( qGame_t* game )
          ? ( actor->entity->mapPos.y + actor->spriteOffset.y + renderer->mapViewPadding.y ) * GRAPHICS_SCALE
          : ( actor->entity->mapPos.y + actor->spriteOffset.y - renderer->mapViewRect.top ) * GRAPHICS_SCALE;
 
-      qSprite_SetPosition( actor->sprite, spritePos );
+      qActorSprite_SetPosition( actor->sprite, spritePos );
       qWindow_DrawSprite( game->window, actor->sprite->sfmlSprite );
    }
 }

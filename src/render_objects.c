@@ -1,5 +1,5 @@
 #include "render_objects.h"
-#include "sprite_texture.h"
+#include "actor_sprite_texture.h"
 
 static qDiagnosticsRenderObjects_t* qRenderObjects_CreateDiagnostics();
 static qDebugBarRenderObjects_t* qRenderObjects_CreateDebugBar();
@@ -43,10 +43,10 @@ qRenderObjects_t* qRenderObjects_Create()
    renderObjects->battleCharacterStats = qRenderObjects_CreateCharacterStats( characterStatsPos, 100 * GRAPHICS_SCALE, DIALOG_BACKDROP_DARKCOLOR );
 
    renderObjects->spriteTextureCount = 3;
-   renderObjects->spriteTextures = (qSpriteTexture_t*)qAlloc( sizeof( qSpriteTexture_t ) * renderObjects->spriteTextureCount, sfTrue );
-   qSpriteTexture_Setup( &( renderObjects->spriteTextures[0] ), "resources/textures/sprites/male0.png", 4 );
-   qSpriteTexture_Setup( &( renderObjects->spriteTextures[1] ), "resources/textures/sprites/female0.png", 4 );
-   qSpriteTexture_Setup( &( renderObjects->spriteTextures[2] ), "resources/textures/sprites/dog0.png", 4 );
+   renderObjects->spriteTextures = (qActorSpriteTexture_t*)qAlloc( sizeof( qActorSpriteTexture_t ) * renderObjects->spriteTextureCount, sfTrue );
+   qActorSpriteTexture_Setup( &( renderObjects->spriteTextures[0] ), "resources/textures/sprites/male0.png", 4 );
+   qActorSpriteTexture_Setup( &( renderObjects->spriteTextures[1] ), "resources/textures/sprites/female0.png", 4 );
+   qActorSpriteTexture_Setup( &( renderObjects->spriteTextures[2] ), "resources/textures/sprites/dog0.png", 4 );
 
    return renderObjects;
 }
@@ -261,10 +261,10 @@ void qRenderObjects_Destroy( qRenderObjects_t* objects )
 
    for ( i = 0; i < objects->spriteTextureCount; i++ )
    {
-      qSpriteTexture_Cleanup( &( objects->spriteTextures[i] ) );
+      qActorSpriteTexture_Cleanup( &( objects->spriteTextures[i] ) );
    }
 
-   qFree( objects->spriteTextures, sizeof( qSpriteTexture_t ) * objects->spriteTextureCount, sfTrue );
+   qFree( objects->spriteTextures, sizeof( qActorSpriteTexture_t ) * objects->spriteTextureCount, sfTrue );
 
    qRenderObjects_DestroyCharacterStats( objects->battleCharacterStats );
    qRenderObjects_DestroyCharacterStats( objects->mapCharacterStats );
