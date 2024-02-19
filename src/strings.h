@@ -21,6 +21,11 @@
 #define STR_ON                            "on"
 #define STR_OFF                           "off"
 
+#define STR_INDEFINITE_LOWERA             "a"
+#define STR_INDEFINITE_UPPERA             "A"
+#define STR_INDEFINITE_LOWERAN            "an"
+#define STR_INDEFINITE_UPPERAN            "An"
+
 #define STR_FRAMERATEFORMATTER            "  Frame Rate: %d"
 #define STR_TOTALFRAMESFORMATTER          "Total Frames: %d"
 #define STR_LAGFRAMESFORMATTER            "  Lag Frames: %d"
@@ -40,6 +45,7 @@
 #define STR_STATS_ATTACKPOWER             "Att:"
 #define STR_STATS_DEFENSEPOWER            "Def:"
 
+#define STR_BATTLE_INTROFORMATTER         "%s %s approaches!"
 #define STR_BATTLE_SELECTACTION           "Select an action"
 
 #define STR_DEBUG_DIAGNOSTICSON           "Toggled diagnostics on"

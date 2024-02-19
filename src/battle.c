@@ -8,6 +8,7 @@
 #include "sprite.h"
 #include "enemy.h"
 #include "battle_stats.h"
+#include "text_util.h"
 
 qBattle_t* qBattle_Create()
 {
@@ -34,11 +35,16 @@ void qBattle_Destroy( qBattle_t* battle )
 
 void qBattle_Begin( qGame_t* game )
 {
+   qBattle_t* battle = game->battle;
    qRenderObjects_t* renderObjects = game->renderer->renderObjects;
 
    qSprite_Stop( game->controllingCharacter->actor->sprite );
 
-   snprintf( renderObjects->battleDialogBoxLarge->message, STRLEN_DEFAULT - 1, "Something invisible approaches!" );
+   snprintf( renderObjects->battleDialogBoxLarge->message,
+             STRLEN_DEFAULT - 1,
+             STR_BATTLE_INTROFORMATTER,
+             qTextUtil_IndefiniteArticleFromEnum( battle->enemy->indefiniteArticle, sfFalse ),
+             battle->enemy->name );
    snprintf( renderObjects->battleDialogBoxSmall->message, STRLEN_DEFAULT - 1, STR_BATTLE_SELECTACTION );
 
    qGame_SetState( game, qGameState_BattleIntro );
