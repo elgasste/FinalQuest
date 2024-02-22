@@ -9,11 +9,14 @@
 #include "actor.h"
 #include "entity.h"
 #include "character.h"
-#include "sprite.h"
+#include "actor_sprite.h"
 #include "physics.h"
 #include "menu.h"
 #include "text_util.h"
+#include "battle.h"
 #include "battle_stats.h"
+#include "enemy.h"
+#include "battle_sprite.h"
 
 static void qRenderer_DrawDiagnostics( qGame_t* game );
 static void qRenderer_DrawDebugBar( qGame_t* game );
@@ -24,6 +27,7 @@ static void qRenderer_DrawCharacterStats( qCharacter_t* character, qCharacterSta
 static void qRenderer_DrawMenu( qMenu_t* menu, qMenuRenderObjects_t* objects, qMenuRenderState_t* state, qWindow_t* window );
 static void qRenderer_DrawDialogBox( qGame_t* game, qDialogBoxRenderObjects_t* objects, sfBool scroll );
 static void qRenderer_DrawActors( qGame_t* game );
+static void qRenderer_DrawEnemies( qGame_t* game );
 static void qRenderer_OrderActors( qGame_t* game );
 
 qRenderer_t* qRenderer_Create()
@@ -96,18 +100,25 @@ void qRenderer_Render( qGame_t* game )
          qRenderer_DrawCharacterStats( game->controllingCharacter, renderObjects->mapCharacterStats, game->window, sfTrue );
          qRenderer_DrawMenu( game->menus->map, renderObjects->mapMenu, renderStates->menu, game->window );
          break;
+      case qGameState_FadeBattleIn:
+         qRenderer_DrawEnemies( game );
+         break;
       case qGameState_BattleIntro:
          qRenderer_DrawDialogBox( game, renderObjects->battleDialogBoxLarge, sfTrue );
+         qRenderer_DrawEnemies( game );
          break;
+      case qGameState_BattleAction:
       case qGameState_BattleResult:
       case qGameState_FadeBattleOut:
          qRenderer_DrawCharacterStats( game->controllingCharacter, renderObjects->battleCharacterStats, game->window, sfFalse );
          qRenderer_DrawDialogBox( game, renderObjects->battleDialogBoxLarge, sfTrue );
+         qRenderer_DrawEnemies( game );
          break;
       case qGameState_BattleChooseAction:
          qRenderer_DrawCharacterStats( game->controllingCharacter, renderObjects->battleCharacterStats, game->window, sfFalse );
          qRenderer_DrawMenu( game->menus->battleAction, renderObjects->battleActionMenu, renderStates->menu, game->window );
          qRenderer_DrawDialogBox( game, renderObjects->battleDialogBoxSmall, sfFalse );
+         qRenderer_DrawEnemies( game );
          break;
    }
 
@@ -465,9 +476,19 @@ static void qRenderer_DrawActors( qGame_t* game )
          ? ( actor->entity->mapPos.y + actor->spriteOffset.y + renderer->mapViewPadding.y ) * GRAPHICS_SCALE
          : ( actor->entity->mapPos.y + actor->spriteOffset.y - renderer->mapViewRect.top ) * GRAPHICS_SCALE;
 
-      qSprite_SetPosition( actor->sprite, spritePos );
+      qActorSprite_SetPosition( actor->sprite, spritePos );
       qWindow_DrawSprite( game->window, actor->sprite->sfmlSprite );
    }
+}
+
+static void qRenderer_DrawEnemies( qGame_t* game )
+{
+   qBattleSprite_t* sprite = game->battle->enemy->sprite;
+   sfVector2f pos = { ( WINDOW_WIDTH / 2 ) - ( ( (float)sprite->size.x / 2 ) * GRAPHICS_SCALE ),
+                      ( WINDOW_HEIGHT / 2 ) - ( ( (float)sprite->size.y / 2 ) * GRAPHICS_SCALE ) };
+
+   qBattleSprite_SetPosition( sprite, pos );
+   qWindow_DrawSprite( game->window, sprite->sfmlSprite );
 }
 
 static void qRenderer_CharacterSwapCompleted( qGame_t* game )

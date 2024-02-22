@@ -46,10 +46,10 @@
     <ClCompile Include="..\src\actor.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\sprite.c">
+    <ClCompile Include="..\src\actor_sprite.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\sprite_texture.c">
+    <ClCompile Include="..\src\actor_sprite_texture.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\math_util.c">
@@ -71,6 +71,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\battle_stats.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\enemy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\battle_sprite.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\battle_sprite_texture.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -123,10 +132,10 @@
     <ClInclude Include="..\src\actor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\sprite.h">
+    <ClInclude Include="..\src\actor_sprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\sprite_texture.h">
+    <ClInclude Include="..\src\actor_sprite_texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\math_util.h">
@@ -148,6 +157,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\battle_stats.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\enemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\battle_sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\battle_sprite_texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

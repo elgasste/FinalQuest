@@ -5,6 +5,19 @@
 #include "render_objects.h"
 #include "window.h"
 
+const char* qTextUtil_IndefiniteArticleFromEnum( qIndefiniteArticle_t article, sfBool lower )
+{
+   switch ( article )
+   {
+      case qIndefiniteArticle_A:
+         return lower ? STR_INDEFINITE_LOWERA : STR_INDEFINITE_UPPERA;
+      case qIndefiniteArticle_An:
+         return lower ? STR_INDEFINITE_LOWERAN : STR_INDEFINITE_UPPERAN;
+      default:
+         return "";
+   }
+}
+
 void qTextUtil_DrawWrappedScrollingText( qGame_t* game, qDialogBoxRenderObjects_t* objects )
 {
    qTextScrollRenderState_t* scrollState = game->renderer->renderStates->textScroll;

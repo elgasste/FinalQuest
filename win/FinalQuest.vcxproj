@@ -92,10 +92,13 @@ xcopy "$(SolutionDir)..\src\resources" "$(OutDir)\resources\" /S /Y</Command>
   <ItemGroup>
     <ClInclude Include="..\src\actor.h" />
     <ClInclude Include="..\src\battle.h" />
+    <ClInclude Include="..\src\battle_sprite.h" />
+    <ClInclude Include="..\src\battle_sprite_texture.h" />
     <ClInclude Include="..\src\battle_stats.h" />
     <ClInclude Include="..\src\character.h" />
     <ClInclude Include="..\src\clock.h" />
     <ClInclude Include="..\src\common.h" />
+    <ClInclude Include="..\src\enemy.h" />
     <ClInclude Include="..\src\entity.h" />
     <ClInclude Include="..\src\enums.h" />
     <ClInclude Include="..\src\game.h" />
@@ -109,8 +112,8 @@ xcopy "$(SolutionDir)..\src\resources" "$(OutDir)\resources\" /S /Y</Command>
     <ClInclude Include="..\src\renderer.h" />
     <ClInclude Include="..\src\render_objects.h" />
     <ClInclude Include="..\src\render_states.h" />
-    <ClInclude Include="..\src\sprite.h" />
-    <ClInclude Include="..\src\sprite_texture.h" />
+    <ClInclude Include="..\src\actor_sprite.h" />
+    <ClInclude Include="..\src\actor_sprite_texture.h" />
     <ClInclude Include="..\src\strings.h" />
     <ClInclude Include="..\src\text_util.h" />
     <ClInclude Include="..\src\time_util.h" />
@@ -119,10 +122,13 @@ xcopy "$(SolutionDir)..\src\resources" "$(OutDir)\resources\" /S /Y</Command>
   <ItemGroup>
     <ClCompile Include="..\src\actor.c" />
     <ClCompile Include="..\src\battle.c" />
+    <ClCompile Include="..\src\battle_sprite.c" />
+    <ClCompile Include="..\src\battle_sprite_texture.c" />
     <ClCompile Include="..\src\battle_stats.c" />
     <ClCompile Include="..\src\character.c" />
     <ClCompile Include="..\src\clock.c" />
     <ClCompile Include="..\src\common.c" />
+    <ClCompile Include="..\src\enemy.c" />
     <ClCompile Include="..\src\entity.c" />
     <ClCompile Include="..\src\game.c" />
     <ClCompile Include="..\src\input_handler.c" />
@@ -136,8 +142,8 @@ xcopy "$(SolutionDir)..\src\resources" "$(OutDir)\resources\" /S /Y</Command>
     <ClCompile Include="..\src\renderer.c" />
     <ClCompile Include="..\src\render_objects.c" />
     <ClCompile Include="..\src\render_states.c" />
-    <ClCompile Include="..\src\sprite.c" />
-    <ClCompile Include="..\src\sprite_texture.c" />
+    <ClCompile Include="..\src\actor_sprite.c" />
+    <ClCompile Include="..\src\actor_sprite_texture.c" />
     <ClCompile Include="..\src\text_util.c" />
     <ClCompile Include="..\src\time_util.c" />
     <ClCompile Include="..\src\window.c" />

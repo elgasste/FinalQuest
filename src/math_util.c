@@ -1,4 +1,5 @@
 #include "math_util.h"
+#include "random.h"
 
 sfBool qMathUtil_Vector2fEqual( sfVector2f* v1, sfVector2f* v2 )
 {
@@ -18,4 +19,27 @@ sfBool qMathUtil_RectsOverlap( float l1x, float t1y, float r1x, float b1y, float
    }
 
    return sfTrue;
+}
+
+uint32_t qMathUtil_ApplySpread( uint32_t* base, uint32_t* spread, sfBool allowZero )
+{
+   uint32_t result;
+   uint32_t delta = qRandom_UInt32( 0, *spread );
+   sfBool add = qRandom_UInt32( 0, 1 );
+
+   if ( add )
+   {
+      result = *base + delta;
+   }
+   else
+   {
+      result = ( delta <= *base ) ? *base - delta : 0;
+
+      if ( result == 0 && !allowZero )
+      {
+         result = 1;
+      }
+   }
+
+   return result;
 }

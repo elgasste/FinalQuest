@@ -14,6 +14,8 @@ typedef struct qMap_t qMap_t;
 typedef struct qActor_t qActor_t;
 typedef struct qCharacter_t qCharacter_t;
 typedef struct qMenus_t qMenus_t;
+typedef struct qBattle_t qBattle_t;
+typedef struct qEnemyTemplate_t qEnemyTemplate_t;
 
 typedef struct qGame_t
 {
@@ -28,6 +30,7 @@ typedef struct qGame_t
 
    qMap_t* map;
    qMenus_t* menus;
+   qBattle_t* battle;
 
    sfBool isMenuOpen;
 
@@ -35,6 +38,9 @@ typedef struct qGame_t
    uint32_t actorCount;
    qCharacter_t* characters;
    uint32_t characterCount;
+   qEnemyTemplate_t* enemyTemplates;
+   uint32_t enemyTemplateCount;
+
    qCharacter_t* controllingCharacter;
    uint32_t controllingCharacterIndex;
 

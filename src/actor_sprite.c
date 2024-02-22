@@ -1,13 +1,13 @@
-#include "sprite.h"
-#include "sprite_texture.h"
+#include "actor_sprite.h"
+#include "actor_sprite_texture.h"
 #include "clock.h"
 
-qSprite_t* qSprite_Create( qSpriteTexture_t* texture, float frameSeconds )
+qActorSprite_t* qActorSprite_Create( qActorSpriteTexture_t* texture, float frameSeconds )
 {
    sfIntRect textureRect = { 0, 0, 32, 32 };
    sfVector2f scale = { GRAPHICS_SCALE, GRAPHICS_SCALE };
 
-   qSprite_t* sprite = (qSprite_t*)qAlloc( sizeof( qSprite_t ), sfTrue );
+   qActorSprite_t* sprite = (qActorSprite_t*)qAlloc( sizeof( qActorSprite_t ), sfTrue );
 
    sprite->texture = texture;
    sprite->sfmlSprite = qsfSprite_Create();
@@ -22,26 +22,26 @@ qSprite_t* qSprite_Create( qSpriteTexture_t* texture, float frameSeconds )
    return sprite;
 }
 
-void qSprite_Destroy( qSprite_t* sprite )
+void qActorSprite_Destroy( qActorSprite_t* sprite )
 {
    qsfSprite_Destroy( sprite->sfmlSprite );
 
-   qFree( sprite, sizeof( qSprite_t ), sfTrue );
+   qFree( sprite, sizeof( qActorSprite_t ), sfTrue );
 }
 
-void qSprite_SetPosition( qSprite_t* sprite, sfVector2f pos )
+void qActorSprite_SetPosition( qActorSprite_t* sprite, sfVector2f pos )
 {
    sfSprite_setPosition( sprite->sfmlSprite, pos );
 }
 
-void qSprite_SetDirection( qSprite_t* sprite, qDirection_t direction )
+void qActorSprite_SetDirection( qActorSprite_t* sprite, qDirection_t direction )
 {
    sfIntRect textureRect = sfSprite_getTextureRect( sprite->sfmlSprite );
    textureRect.top = (int32_t)direction * textureRect.height;
    sfSprite_setTextureRect( sprite->sfmlSprite, textureRect );
 }
 
-void qSprite_Tic( qSprite_t* sprite, qDirection_t direction, qClock_t* clock )
+void qActorSprite_Tic( qActorSprite_t* sprite, qDirection_t direction, qClock_t* clock )
 {
    sfIntRect textureRect = sfSprite_getTextureRect( sprite->sfmlSprite );
    textureRect.top = (int32_t)direction * textureRect.height;
@@ -62,7 +62,7 @@ void qSprite_Tic( qSprite_t* sprite, qDirection_t direction, qClock_t* clock )
    sfSprite_setTextureRect( sprite->sfmlSprite, textureRect );
 }
 
-void qSprite_Stop( qSprite_t* sprite )
+void qActorSprite_Stop( qActorSprite_t* sprite )
 {
    sfIntRect textureRect = sfSprite_getTextureRect( sprite->sfmlSprite );
    textureRect.left = 0;

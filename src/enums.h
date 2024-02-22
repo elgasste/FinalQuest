@@ -9,6 +9,7 @@ typedef enum qGameState_t
    qGameState_FadeBattleIn,
    qGameState_BattleIntro,
    qGameState_BattleChooseAction,
+   qGameState_BattleAction,
    qGameState_BattleResult,
    qGameState_FadeBattleOut,
    qGameState_FadeBattleToMap
@@ -36,5 +37,32 @@ typedef enum qMenuCommand_t
    qMenuCommand_BattleFlee
 }
 qMenuCommand_t;
+
+typedef enum qIndefiniteArticle_t
+{
+   qIndefiniteArticle_A = 0,
+   qIndefiniteArticle_An
+}
+qIndefiniteArticle_t;
+
+typedef enum qBattleSpriteState_t
+{
+   qBattleSpriteState_Idle = 0,
+   qBattleSpriteState_Attack,
+   qBattleSpriteState_Damage,
+   qBattleSpriteState_Death,
+   qBattleSpriteState_Dead
+}
+qBattleSpriteState_t;
+
+typedef enum qBattleAction_t
+{
+   qBattleAction_Attack = 0,
+   qBattleAction_Defend,
+   qBattleAction_Spell,
+   qBattleAction_Item,
+   qBattleAction_Flee
+}
+qBattleAction_t;
 
 #endif // ENUMS_H
