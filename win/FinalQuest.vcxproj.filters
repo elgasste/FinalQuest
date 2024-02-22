@@ -76,6 +76,12 @@
     <ClCompile Include="..\src\enemy.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\battle_sprite.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\battle_sprite_texture.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\clock.h">
@@ -154,6 +160,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\enemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\battle_sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\battle_sprite_texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

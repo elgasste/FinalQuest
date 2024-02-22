@@ -44,4 +44,14 @@ typedef enum qIndefiniteArticle_t
 }
 qIndefiniteArticle_t;
 
+typedef enum qBattleSpriteState_t
+{
+   qBattleSpriteState_Idle = 0,
+   qBattleSpriteState_Attack,
+   qBattleSpriteState_Damage,
+   qBattleSpriteState_Death,
+   qBattleSpriteState_Dead
+}
+qBattleSpriteState_t;
+
 #endif // ENUMS_H
