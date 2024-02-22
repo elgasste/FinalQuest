@@ -4,6 +4,7 @@
 #include "common.h"
 
 typedef struct qActorSpriteTexture_t qActorSpriteTexture_t;
+typedef struct qBattleSpriteTexture_t qBattleSpriteTexture_t;
 
 typedef struct qDiagnosticsRenderObjects_t
 {
@@ -89,8 +90,10 @@ typedef struct qRenderObjects_t
    qCharacterStatsRenderObjects_t* mapCharacterStats;
    qCharacterStatsRenderObjects_t* battleCharacterStats;
 
-   qActorSpriteTexture_t* spriteTextures;
-   uint32_t spriteTextureCount;
+   qActorSpriteTexture_t* actorSpriteTextures;
+   uint32_t actorSpriteTextureCount;
+   qBattleSpriteTexture_t* battleSpriteTextures;
+   uint32_t battleSpriteTextureCount;
 }
 qRenderObjects_t;
 

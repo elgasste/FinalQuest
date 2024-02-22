@@ -63,9 +63,9 @@ qGame_t* qGame_Create()
 
    game->actorCount = 3;
    game->actors = (qActor_t*)qAlloc( sizeof( qActor_t ) * game->actorCount, sfTrue );
-   qActor_Setup( &( game->actors[0] ), actor1Pos, humanHitBoxSize, 100.0f, &( game->renderer->renderObjects->spriteTextures[0] ), humanSpriteOffset, 0.15f );
-   qActor_Setup( &( game->actors[1] ), actor2Pos, humanHitBoxSize, 90.0f, &( game->renderer->renderObjects->spriteTextures[1] ), humanSpriteOffset, 0.15f );
-   qActor_Setup( &( game->actors[2] ), actor3Pos, dogHitBoxSize, 150.0f, &( game->renderer->renderObjects->spriteTextures[2] ), dogSpriteOffset, 0.15f );
+   qActor_Setup( &( game->actors[0] ), actor1Pos, humanHitBoxSize, 100.0f, &( game->renderer->renderObjects->actorSpriteTextures[0] ), humanSpriteOffset, 0.15f );
+   qActor_Setup( &( game->actors[1] ), actor2Pos, humanHitBoxSize, 90.0f, &( game->renderer->renderObjects->actorSpriteTextures[1] ), humanSpriteOffset, 0.15f );
+   qActor_Setup( &( game->actors[2] ), actor3Pos, dogHitBoxSize, 150.0f, &( game->renderer->renderObjects->actorSpriteTextures[2] ), dogSpriteOffset, 0.15f );
    qActor_SetDirection( &( game->actors[0] ), qDirection_Right );
    qActor_SetDirection( &( game->actors[1] ), qDirection_Left );
    qActor_SetDirection( &( game->actors[2] ), qDirection_Up );
