@@ -4,6 +4,7 @@
 #include "common.h"
 
 typedef struct qGame_t qGame_t;
+typedef struct qBattleSprite_t qBattleSprite_t;
 
 typedef struct qDebugBarRenderState_t
 {
@@ -46,6 +47,7 @@ typedef struct qTextScrollRenderState_t
    float letterSeconds;
    float elapsedSeconds;
    sfBool canSkip;
+   void (*scrollCompleteFnc)( qGame_t* );
 }
 qTextScrollRenderState_t;
 
@@ -58,6 +60,24 @@ typedef struct qActorSwapRenderState_t
 }
 qActorSwapRenderState_t;
 
+typedef struct qBattleAttackRenderState_t
+{
+   sfBool isRunning;
+   float elapsedSeconds;
+   qBattleSprite_t* sprite;
+   void (*attackCompleteFnc)( qGame_t* );
+}
+qBattleAttackRenderState_t;
+
+typedef struct qPauseRenderState_t
+{
+   sfBool isRunning;
+   float pauseSeconds;
+   float elapsedSeconds;
+   void (*pauseCompleteFnc)( qGame_t* );
+}
+qPauseRenderState_t;
+
 typedef struct qRenderStates_t
 {
    qDebugBarRenderState_t* debugBar;
@@ -65,6 +85,8 @@ typedef struct qRenderStates_t
    qScreenFadeRenderState_t* screenFade;
    qTextScrollRenderState_t* textScroll;
    qActorSwapRenderState_t* actorSwap;
+   qBattleAttackRenderState_t* battleAttack;
+   qPauseRenderState_t* pause;
 }
 qRenderStates_t;
 
@@ -76,9 +98,16 @@ void qRenderStates_StartScreenFade( qScreenFadeRenderState_t* state,
                                     sfBool fadeOut,
                                     sfBool pause,
                                     sfBool isLightColor,
-                                    void (*fadeCompleteFnc)(qGame_t*) );
-void qRenderStates_StartTextScroll( qTextScrollRenderState_t* state, uint32_t charCount, sfBool canSkip );
+                                    void (*fadeCompleteFnc)( qGame_t* ) );
+void qRenderStates_StartTextScroll( qTextScrollRenderState_t* state,
+                                    uint32_t charCount,
+                                    sfBool canSkip,
+                                    void (*scrollCompleteFnc)( qGame_t* ) );
 void qRenderStates_SkipTextScroll( qTextScrollRenderState_t* state );
-void qRenderStates_StartActorSwap( qActorSwapRenderState_t* state, void (*actorSwapCompleteFnc)(qGame_t*) );
+void qRenderStates_StartActorSwap( qActorSwapRenderState_t* state, void (*actorSwapCompleteFnc)( qGame_t* ) );
+void qRenderStates_StartBattleAttack( qBattleAttackRenderState_t* state,
+                                      qBattleSprite_t* sprite,
+                                      void (*attackCompleteFnc)( qGame_t* ) );
+void qRenderStates_StartPause( qPauseRenderState_t* state, float seconds, void (*pauseCompleteFnc)( qGame_t* ) );
 
 #endif // RENDER_STATES_H

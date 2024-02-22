@@ -107,6 +107,7 @@ void qRenderer_Render( qGame_t* game )
          qRenderer_DrawDialogBox( game, renderObjects->battleDialogBoxLarge, sfTrue );
          qRenderer_DrawEnemies( game );
          break;
+      case qGameState_BattleAction:
       case qGameState_BattleResult:
       case qGameState_FadeBattleOut:
          qRenderer_DrawCharacterStats( game->controllingCharacter, renderObjects->battleCharacterStats, game->window, sfFalse );

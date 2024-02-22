@@ -42,6 +42,8 @@
 
 #define MAX_ACTORS                  256
 
+#define BATTLE_ACTION_PAUSESECONDS  0.6f
+
 #define TOGGLE_BOOL( x ) x = x ? sfFalse : sfTrue;
 
 // globals

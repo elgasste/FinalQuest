@@ -47,6 +47,11 @@
 
 #define STR_BATTLE_INTROFORMATTER         "%s %s approaches!"
 #define STR_BATTLE_SELECTACTION           "Select an action"
+#define STR_BATTLE_ATTACKFORMATTER        "%s attacks"
+#define STR_BATTLE_DEFENDFORMATTER        "%s defends"
+#define STR_BATTLE_SPELLFORMATTER         "%s casts a spell"
+#define STR_BATTLE_ITEMFORMATTER          "%s uses an item"
+#define STR_BATTLE_FLEEFORMATTER          "%s attemps to flee"
 
 #define STR_DEBUG_DIAGNOSTICSON           "Toggled diagnostics on"
 #define STR_DEBUG_DIAGNOSTICSOFF          "Toggled diagnostics off"

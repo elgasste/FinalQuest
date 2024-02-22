@@ -2,17 +2,25 @@
 #include "clock.h"
 #include "game.h"
 #include "renderer.h"
+#include "battle.h"
+#include "battle_sprite.h"
+#include "battle_sprite_texture.h"
+#include "enemy.h"
 
 static qDebugBarRenderState_t* qRenderStates_CreateDebugBar();
 static qMenuRenderState_t* qRenderStates_CreateMenu();
 static qScreenFadeRenderState_t* qRenderStates_CreateScreenFade();
 static qTextScrollRenderState_t* qRenderStates_CreateTextScroll();
 static qActorSwapRenderState_t* qRenderStates_CreateActorSwap();
+static qBattleAttackRenderState_t* qRenderStates_CreateBattleAttack();
+static qPauseRenderState_t* qRenderStates_CreatePause();
 static void qRenderStates_DestroyDebugBar( qDebugBarRenderState_t* state );
 static void qRenderStates_DestroyMenu( qMenuRenderState_t* state );
 static void qRenderStates_DestroyScreenFade( qScreenFadeRenderState_t* state );
 static void qRenderStates_DestroyTextScroll( qTextScrollRenderState_t* state );
 static void qRenderStates_DestroyActorSwap( qActorSwapRenderState_t* state );
+static void qRenderStates_DestroyBattleAttack( qBattleAttackRenderState_t* state );
+static void qRenderStates_DestroyPause( qPauseRenderState_t* state );
 static void qRenderStates_TicMenu( qGame_t* game );
 static void qRenderStates_ResetScreenFade( qScreenFadeRenderState_t* state );
 static void qRenderStates_TicScreenFade( qGame_t* game );
@@ -20,6 +28,10 @@ static void qRenderStates_ResetTextScroll( qTextScrollRenderState_t* state );
 static void qRenderStates_TicTextScroll( qGame_t* game );
 static void qRenderStates_ResetActorSwap( qActorSwapRenderState_t* state );
 static void qRenderStates_TicActorSwap( qGame_t* game );
+static void qRenderStates_ResetBattleAttack( qBattleAttackRenderState_t* state );
+static void qRenderStates_TicBattleAttack( qGame_t* game );
+static void qRenderStates_ResetPause( qPauseRenderState_t* state );
+static void qRenderStates_TicPause( qGame_t* game );
 
 qRenderStates_t* qRenderStates_Create()
 {
@@ -30,6 +42,8 @@ qRenderStates_t* qRenderStates_Create()
    states->screenFade = qRenderStates_CreateScreenFade();
    states->textScroll = qRenderStates_CreateTextScroll();
    states->actorSwap = qRenderStates_CreateActorSwap();
+   states->battleAttack = qRenderStates_CreateBattleAttack();
+   states->pause = qRenderStates_CreatePause();
 
    return states;
 }
@@ -88,8 +102,28 @@ static qActorSwapRenderState_t* qRenderStates_CreateActorSwap()
    return state;
 }
 
+static qBattleAttackRenderState_t* qRenderStates_CreateBattleAttack()
+{
+   qBattleAttackRenderState_t* state = (qBattleAttackRenderState_t*)qAlloc( sizeof( qBattleAttackRenderState_t ), sfTrue );
+
+   qRenderStates_ResetBattleAttack( state );
+
+   return state;
+}
+
+static qPauseRenderState_t* qRenderStates_CreatePause()
+{
+   qPauseRenderState_t* state = (qPauseRenderState_t*)qAlloc( sizeof( qPauseRenderState_t ), sfTrue );
+
+   qRenderStates_ResetPause( state );
+
+   return state;
+}
+
 void qRenderStates_Destroy( qRenderStates_t* states )
 {
+   qRenderStates_DestroyPause( states->pause );
+   qRenderStates_DestroyBattleAttack( states->battleAttack );
    qRenderStates_DestroyActorSwap( states->actorSwap );
    qRenderStates_DestroyTextScroll( states->textScroll );
    qRenderStates_DestroyScreenFade( states->screenFade );
@@ -125,6 +159,16 @@ static void qRenderStates_DestroyActorSwap( qActorSwapRenderState_t* state )
    qFree( state, sizeof( qActorSwapRenderState_t ), sfTrue );
 }
 
+static void qRenderStates_DestroyBattleAttack( qBattleAttackRenderState_t* state )
+{
+   qFree( state, sizeof( qBattleAttackRenderState_t ), sfTrue );
+}
+
+static void qRenderStates_DestroyPause( qPauseRenderState_t* state )
+{
+   qFree( state, sizeof( qPauseRenderState_t ), sfTrue );
+}
+
 void qRenderStates_Tic( qGame_t* game )
 {
    qRenderStates_t* states = game->renderer->renderStates;
@@ -144,11 +188,20 @@ void qRenderStates_Tic( qGame_t* game )
    {
       qRenderStates_TicScreenFade( game );
    }
+   else if ( states->pause->isRunning )
+   {
+      qRenderStates_TicPause( game );
+   }
    else
    {
       qRenderStates_TicMenu( game );
       qRenderStates_TicTextScroll( game );
       qRenderStates_TicActorSwap( game );
+
+      if ( game->battle )
+      {
+         qRenderStates_TicBattleAttack( game );
+      }
    }
 }
 
@@ -186,7 +239,7 @@ void qRenderStates_StartScreenFade( qScreenFadeRenderState_t* state,
                                     sfBool fadeOut,
                                     sfBool pause,
                                     sfBool isLightColor,
-                                    void (*fadeCompleteFnc)(qGame_t*) )
+                                    void (*fadeCompleteFnc)( qGame_t* ) )
 {
    qRenderStates_ResetScreenFade( state );
    state->fadeOut = fadeOut;
@@ -244,12 +297,16 @@ static void qRenderStates_ResetTextScroll( qTextScrollRenderState_t* state )
    state->currentCharIndex = 0;
 }
 
-void qRenderStates_StartTextScroll( qTextScrollRenderState_t* state, uint32_t charCount, sfBool canSkip )
+void qRenderStates_StartTextScroll( qTextScrollRenderState_t* state,
+                                    uint32_t charCount,
+                                    sfBool canSkip,
+                                    void (*scrollCompleteFnc)( qGame_t* ) )
 {
    qRenderStates_ResetTextScroll( state );
 
    state->charCount = charCount;
    state->canSkip = canSkip;
+   state->scrollCompleteFnc = scrollCompleteFnc;
    state->isRunning = sfTrue;
 }
 
@@ -275,6 +332,12 @@ static void qRenderStates_TicTextScroll( qGame_t* game )
          if ( state->currentCharIndex == state->charCount )
          {
             state->isRunning = sfFalse;
+
+            if ( state->scrollCompleteFnc )
+            {
+               (*state->scrollCompleteFnc)( game );
+            }
+
             break;
          }
       }
@@ -287,7 +350,7 @@ static void qRenderStates_ResetActorSwap( qActorSwapRenderState_t* state )
    state->elapsedSeconds = 0;
 }
 
-void qRenderStates_StartActorSwap( qActorSwapRenderState_t* state, void (*actorSwapCompleteFnc)(qGame_t*) )
+void qRenderStates_StartActorSwap( qActorSwapRenderState_t* state, void (*actorSwapCompleteFnc)( qGame_t* ) )
 {
    qRenderStates_ResetActorSwap( state );
    state->actorSwapCompleteFnc = actorSwapCompleteFnc;
@@ -305,7 +368,71 @@ static void qRenderStates_TicActorSwap( qGame_t* game )
       if ( state->elapsedSeconds > state->swapSeconds )
       {
          state->isRunning = sfFalse;
-         ( *state->actorSwapCompleteFnc )( game );
+         (*state->actorSwapCompleteFnc)( game );
+      }
+   }
+}
+
+static void qRenderStates_ResetBattleAttack( qBattleAttackRenderState_t* state )
+{
+   state->isRunning = sfFalse;
+   state->elapsedSeconds = 0;
+}
+
+void qRenderStates_StartBattleAttack( qBattleAttackRenderState_t* state,
+                                      qBattleSprite_t* sprite,
+                                      void (*attackCompleteFnc)( qGame_t* ) )
+{
+   qRenderStates_ResetBattleAttack( state );
+   state->sprite = sprite;
+   state->attackCompleteFnc = attackCompleteFnc;
+   state->isRunning = sfTrue;
+}
+
+static void qRenderStates_TicBattleAttack( qGame_t* game )
+{
+   qBattleAttackRenderState_t* state = game->renderer->renderStates->battleAttack;
+   qBattleSprite_t* sprite = game->battle->enemy->sprite;
+   qBattleSpriteTexture_t* texture = sprite->texture;
+
+   if ( state->isRunning )
+   {
+      state->elapsedSeconds += game->clock->frameDeltaSeconds;
+
+      if ( state->elapsedSeconds > ( sprite->frameSeconds * texture->damageFrameCount ) )
+      {
+         state->isRunning = sfFalse;
+         (*state->attackCompleteFnc)( game );
+      }
+   }
+}
+
+static void qRenderStates_ResetPause( qPauseRenderState_t* state )
+{
+   state->isRunning = sfFalse;
+   state->elapsedSeconds = 0;
+}
+
+void qRenderStates_StartPause( qPauseRenderState_t* state, float seconds, void ( *pauseCompleteFnc )( qGame_t* ) )
+{
+   qRenderStates_ResetPause( state );
+   state->pauseSeconds = seconds;
+   state->pauseCompleteFnc = pauseCompleteFnc;
+   state->isRunning = sfTrue;
+}
+
+static void qRenderStates_TicPause( qGame_t* game )
+{
+   qPauseRenderState_t* state = game->renderer->renderStates->pause;
+   
+   if ( state->isRunning )
+   {
+      state->elapsedSeconds += game->clock->frameDeltaSeconds;
+
+      if ( state->elapsedSeconds > state->pauseSeconds )
+      {
+         state->isRunning = sfFalse;
+         (*state->pauseCompleteFnc)( game );
       }
    }
 }

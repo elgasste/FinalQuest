@@ -46,7 +46,7 @@ void qBattleSprite_SetState( qBattleSprite_t* sprite, qBattleSpriteState_t state
 
    if ( state == qBattleSpriteState_Dead )
    {
-      textureRect.left = sprite->size.x * ( qBattleSpriteTexture_GetFrameCountFromState( sprite->texture, state ) - 1 );
+      textureRect.left = sprite->size.x * ( qBattleSpriteTexture_GetFrameCountFromState( sprite->texture, qBattleSpriteState_Death ) - 1 );
       textureRect.top = sprite->size.y * (uint32_t)qBattleSpriteState_Death;
    }
    else
