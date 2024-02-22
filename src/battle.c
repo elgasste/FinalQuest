@@ -47,51 +47,30 @@ void qBattle_Begin( qGame_t* game )
    qRenderStates_StartTextScroll( game->renderer->renderStates->textScroll, (uint32_t)strlen( renderObjects->battleDialogBoxLarge->message ), sfTrue );
 }
 
-void qBattle_Attack( qGame_t* game )
+void qBattle_Action( qGame_t* game, qBattleAction_t action )
 {
    qRenderObjects_t* renderObjects = game->renderer->renderObjects;
 
-   snprintf( renderObjects->battleDialogBoxLarge->message, STRLEN_DEFAULT - 1, "You flailed your arms so comically that the enemy died of laughter." );
+   game->battle->action = action;
 
-   qGame_SetState( game, qGameState_BattleResult );
-   qRenderStates_StartTextScroll( game->renderer->renderStates->textScroll, (uint32_t)strlen( renderObjects->battleDialogBoxLarge->message ), sfTrue );
-}
-
-void qBattle_Defend( qGame_t* game )
-{
-   qRenderObjects_t* renderObjects = game->renderer->renderObjects;
-
-   snprintf( renderObjects->battleDialogBoxLarge->message, STRLEN_DEFAULT - 1, "You hid behind your shield so well that the enemy forgot you were even there, and ran off." );
-
-   qGame_SetState( game, qGameState_BattleResult );
-   qRenderStates_StartTextScroll( game->renderer->renderStates->textScroll, (uint32_t)strlen( renderObjects->battleDialogBoxLarge->message ), sfTrue );
-}
-
-void qBattle_Spell( qGame_t* game )
-{
-   qRenderObjects_t* renderObjects = game->renderer->renderObjects;
-
-   snprintf( renderObjects->battleDialogBoxLarge->message, STRLEN_DEFAULT - 1, "You cast \"Brazilius Waxus\", and the enemy died just thinking of the pain." );
-
-   qGame_SetState( game, qGameState_BattleResult );
-   qRenderStates_StartTextScroll( game->renderer->renderStates->textScroll, (uint32_t)strlen( renderObjects->battleDialogBoxLarge->message ), sfTrue );
-}
-
-void qBattle_Item( qGame_t* game )
-{
-   qRenderObjects_t* renderObjects = game->renderer->renderObjects;
-
-   snprintf( renderObjects->battleDialogBoxLarge->message, STRLEN_DEFAULT - 1, "You threw your spare change right into the enemy's eye, and it died." );
-
-   qGame_SetState( game, qGameState_BattleResult );
-   qRenderStates_StartTextScroll( game->renderer->renderStates->textScroll, (uint32_t)strlen( renderObjects->battleDialogBoxLarge->message ), sfTrue );
-}
-
-void qBattle_Flee( qGame_t* game )
-{
-   qRenderObjects_t* renderObjects = game->renderer->renderObjects;
-
-   snprintf( renderObjects->battleDialogBoxLarge->message, STRLEN_DEFAULT - 1, "You ran away, like a little girl. Like a tiny, helpless little girl." );
+   switch ( action )
+   {
+      case qBattleAction_Attack:
+         snprintf( renderObjects->battleDialogBoxLarge->message, STRLEN_DEFAULT - 1, "You flailed your arms so comically that the enemy died of laughter." );
+         break;
+      case qBattleAction_Defend:
+         snprintf( renderObjects->battleDialogBoxLarge->message, STRLEN_DEFAULT - 1, "You hid behind your shield so well that the enemy forgot you were even there, and ran off." );
+         break;
+      case qBattleAction_Spell:
+         snprintf( renderObjects->battleDialogBoxLarge->message, STRLEN_DEFAULT - 1, "You cast \"Brazilius Waxus\", and the enemy died just thinking of the pain." );
+         break;
+      case qBattleAction_Item:
+         snprintf( renderObjects->battleDialogBoxLarge->message, STRLEN_DEFAULT - 1, "You threw your spare change right into the enemy's eye, and it died." );
+         break;
+      case qBattleAction_Flee:
+         snprintf( renderObjects->battleDialogBoxLarge->message, STRLEN_DEFAULT - 1, "You ran away, like a little girl. Like a tiny, helpless little girl." );
+         break;
+   }
 
    qGame_SetState( game, qGameState_BattleResult );
    qRenderStates_StartTextScroll( game->renderer->renderStates->textScroll, (uint32_t)strlen( renderObjects->battleDialogBoxLarge->message ), sfTrue );

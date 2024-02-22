@@ -54,4 +54,14 @@ typedef enum qBattleSpriteState_t
 }
 qBattleSpriteState_t;
 
+typedef enum qBattleAction_t
+{
+   qBattleAction_Attack = 0,
+   qBattleAction_Defend,
+   qBattleAction_Spell,
+   qBattleAction_Item,
+   qBattleAction_Flee
+}
+qBattleAction_t;
+
 #endif // ENUMS_H
