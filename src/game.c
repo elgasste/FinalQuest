@@ -16,6 +16,7 @@
 #include "battle.h"
 #include "battle_stats.h"
 #include "enemy.h"
+#include "battle_sprite.h"
 
 static void qGame_Tic( qGame_t* game );
 static void qGame_ScreenFadeComplete( qGame_t* game );
@@ -201,6 +202,11 @@ static void qGame_Tic( qGame_t* game )
    }
 
    qRenderStates_Tic( game );
+
+   if ( game->battle )
+   {
+      qBattleSprite_Tic( game->battle->enemy->sprite, game->clock );
+   }
 }
 
 void qGame_Close( qGame_t* game )
@@ -300,12 +306,6 @@ void qGame_RollEncounter( qGame_t* game, uint32_t mapTileIndex, sfBool force )
 {
    qMapTile_t* tile = &( game->map->tiles[mapTileIndex] );
 
-   if ( game->battle )
-   {
-      qBattle_Destroy( game->battle );
-      game->battle = 0;
-   }
-
    if ( force || ( !game->cheatNoEncounters && tile->encounterRate > 0 && qRandom_Percent() <= tile->encounterRate ) )
    {
       game->battle = qBattle_Create( game );
@@ -327,6 +327,8 @@ static void qGame_ScreenFadeComplete( qGame_t* game )
       case qGameState_FadeBattleOut:
          qGame_SetState( game, qGameState_FadeBattleToMap );
          qRenderStates_StartScreenFade( game->renderer->renderStates->screenFade, sfFalse, sfFalse, sfFalse, &qGame_ScreenFadeComplete );
+         qBattle_Destroy( game->battle );
+         game->battle = 0;
          break;
       case qGameState_FadeBattleToMap:
          qGame_SetState( game, qGameState_Map );

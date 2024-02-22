@@ -9,12 +9,15 @@
 #include "enemy.h"
 #include "battle_stats.h"
 #include "text_util.h"
+#include "battle_sprite.h"
 
 qBattle_t* qBattle_Create( qGame_t* game )
 {
    qBattle_t* battle = (qBattle_t*)qAlloc( sizeof( qBattle_t ), sfTrue );
 
    battle->enemy = qEnemy_Create( &( game->enemyTemplates[0] ), game->renderer->renderObjects );
+
+   qBattleSprite_SetState( battle->enemy->sprite, qBattleSpriteState_Idle );
 
    return battle;
 }

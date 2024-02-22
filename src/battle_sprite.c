@@ -77,6 +77,8 @@ void qBattleSprite_Tic( qBattleSprite_t* sprite, qClock_t* clock )
          {
             textureRect.left = 0;
          }
+
+         sfSprite_setTextureRect( sprite->sfmlSprite, textureRect );
       }
    }
 }
