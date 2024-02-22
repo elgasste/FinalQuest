@@ -274,6 +274,7 @@ void qGame_RollEncounter( qGame_t* game, uint32_t mapTileIndex, sfBool force )
    if ( game->battle )
    {
       qBattle_Destroy( game->battle );
+      game->battle = 0;
    }
 
    if ( force || ( !game->cheatNoEncounters && tile->encounterRate > 0 && qRandom_Percent() <= tile->encounterRate ) )
