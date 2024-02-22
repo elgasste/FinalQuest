@@ -6,7 +6,7 @@ void qActor_Setup( qActor_t* actor, sfVector2f mapPos, sfVector2f mapHitBoxSize,
                    qActorSpriteTexture_t* spriteTexture, sfVector2f spriteOffset, float spriteFrameSeconds )
 {
    actor->entity = qEntity_Create( mapPos, mapHitBoxSize, maxVelocity );
-   actor->sprite = qSprite_Create( spriteTexture, spriteFrameSeconds );
+   actor->sprite = qActorSprite_Create( spriteTexture, spriteFrameSeconds );
    actor->spriteOffset = spriteOffset;
 }
 

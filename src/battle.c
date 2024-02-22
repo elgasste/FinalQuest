@@ -10,18 +10,11 @@
 #include "battle_stats.h"
 #include "text_util.h"
 
-qBattle_t* qBattle_Create()
+qBattle_t* qBattle_Create( qGame_t* game )
 {
    qBattle_t* battle = (qBattle_t*)qAlloc( sizeof( qBattle_t ), sfTrue );
 
-   battle->enemy = qEnemy_Create();
-
-   snprintf( battle->enemy->name, STRLEN_SHORT, "batfuck" );
-   battle->enemy->indefiniteArticle = qIndefiniteArticle_A;
-   battle->enemy->stats->hitPoints = 12;
-   battle->enemy->stats->defensePower = 5;
-   battle->enemy->stats->attackPower = 5;
-   battle->enemy->stats->defensePower = 5;
+   battle->enemy = qEnemy_Create( &( game->enemyTemplates[0] ), game->renderer->renderObjects );
 
    return battle;
 }

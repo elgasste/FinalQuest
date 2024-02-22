@@ -15,6 +15,7 @@
 #include "menu.h"
 #include "battle.h"
 #include "battle_stats.h"
+#include "enemy.h"
 
 static void qGame_Tic( qGame_t* game );
 static void qGame_ScreenFadeComplete( qGame_t* game );
@@ -96,6 +97,26 @@ qGame_t* qGame_Create()
    game->characters[2].stats->attackPower = 500;
    game->characters[2].stats->defensePower = 500;
 
+   game->enemyTemplateCount = 1;
+   game->enemyTemplates = (qEnemyTemplate_t*)qAlloc( sizeof( qEnemyTemplate_t ) * game->enemyTemplateCount, sfTrue );
+
+   snprintf( game->enemyTemplates[0].name, STRLEN_SHORT - 1, "Batfuck" );
+   game->enemyTemplates[0].indefiniteArticle = qIndefiniteArticle_A;
+   game->enemyTemplates[0].spriteTextureIndex = 0;
+   game->enemyTemplates[0].spriteSize.x = 64;
+   game->enemyTemplates[0].spriteSize.y = 64;
+   game->enemyTemplates[0].spriteFrameSeconds = 0.11f;
+   game->enemyTemplates[0].baseStats = (qBattleStats_t*)qAlloc( sizeof( qBattleStats_t ), sfTrue );
+   game->enemyTemplates[0].baseStats->attackPower = 8;
+   game->enemyTemplates[0].baseStats->defensePower = 4;
+   game->enemyTemplates[0].baseStats->hitPoints = 20;
+   game->enemyTemplates[0].baseStats->magicPoints = 0;
+   game->enemyTemplates[0].statsSpread = (qBattleStats_t*)qAlloc( sizeof( qBattleStats_t ), sfTrue );
+   game->enemyTemplates[0].statsSpread->attackPower = 0;
+   game->enemyTemplates[0].statsSpread->defensePower = 0;
+   game->enemyTemplates[0].statsSpread->hitPoints = 2;
+   game->enemyTemplates[0].statsSpread->magicPoints = 0;
+
    qRenderer_UpdateActors( game );
    qPhysics_ResetActorTileCache( game );
 
@@ -114,6 +135,14 @@ qGame_t* qGame_Create()
 void qGame_Destroy( qGame_t* game )
 {
    uint32_t i;
+
+   for ( i = 0; i < game->enemyTemplateCount; i++ )
+   {
+      qFree( game->enemyTemplates[i].statsSpread, sizeof( qBattleStats_t ), sfTrue );
+      qFree( game->enemyTemplates[i].baseStats, sizeof( qBattleStats_t ), sfTrue );
+   }
+
+   qFree( game->enemyTemplates, sizeof( qEnemyTemplate_t ) * game->enemyTemplateCount, sfTrue );
 
    for ( i = 0; i < game->characterCount; i++ )
    {
@@ -279,7 +308,7 @@ void qGame_RollEncounter( qGame_t* game, uint32_t mapTileIndex, sfBool force )
 
    if ( force || ( !game->cheatNoEncounters && tile->encounterRate > 0 && qRandom_Percent() <= tile->encounterRate ) )
    {
-      game->battle = qBattle_Create();
+      game->battle = qBattle_Create( game );
       qGame_SetState( game, qGameState_FadeMapToBattle );
    }
 }

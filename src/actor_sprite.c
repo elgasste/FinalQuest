@@ -2,7 +2,7 @@
 #include "actor_sprite_texture.h"
 #include "clock.h"
 
-qActorSprite_t* qSprite_Create( qActorSpriteTexture_t* texture, float frameSeconds )
+qActorSprite_t* qActorSprite_Create( qActorSpriteTexture_t* texture, float frameSeconds )
 {
    sfIntRect textureRect = { 0, 0, 32, 32 };
    sfVector2f scale = { GRAPHICS_SCALE, GRAPHICS_SCALE };

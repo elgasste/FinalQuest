@@ -12,7 +12,7 @@ typedef struct qBattle_t
 }
 qBattle_t;
 
-qBattle_t* qBattle_Create();
+qBattle_t* qBattle_Create( qGame_t* game );
 void qBattle_Destroy( qBattle_t* battle );
 void qBattle_Begin( qGame_t* game );
 void qBattle_Attack( qGame_t* game );

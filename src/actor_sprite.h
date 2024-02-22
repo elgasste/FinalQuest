@@ -16,7 +16,7 @@ typedef struct qActorSprite_t
 }
 qActorSprite_t;
 
-qActorSprite_t* qSprite_Create( qActorSpriteTexture_t* texture, float frameSeconds );
+qActorSprite_t* qActorSprite_Create( qActorSpriteTexture_t* texture, float frameSeconds );
 void qActorSprite_Destroy( qActorSprite_t* sprite );
 void qActorSprite_SetPosition( qActorSprite_t* sprite, sfVector2f pos );
 void qActorSprite_SetDirection( qActorSprite_t* sprite, qDirection_t direction );
