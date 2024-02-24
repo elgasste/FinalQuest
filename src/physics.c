@@ -78,7 +78,11 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
    }
 
    qPhysics_ClipActorToMapHorizontal( game, actor, &newPos );
-   qPhysics_ClipActorToActors( game, actor, &newPos, sfTrue );
+
+   if ( !game->cheatNoClip )
+   {
+      qPhysics_ClipActorToActors( game, actor, &newPos, sfTrue );
+   }
 
    if ( actor == game->controllingCharacter->actor && game->cheatFast && entity->velocity.y != 0 )
    {
@@ -92,7 +96,11 @@ void qPhysics_TicActor( qGame_t* game, qActor_t* actor )
    }
 
    qPhysics_ClipActorToMapVertical( game, actor, &newPos );
-   qPhysics_ClipActorToActors( game, actor, &newPos, sfFalse );
+
+   if ( !game->cheatNoClip )
+   {
+      qPhysics_ClipActorToActors( game, actor, &newPos, sfFalse );
+   }
 
    if ( qMathUtil_Vector2fEqual( &( entity->mapPos ), &newPos ) )
    {
